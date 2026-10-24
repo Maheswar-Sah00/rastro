@@ -39,7 +39,7 @@ export const BASEMAP_SOURCES = [
 
 export const TEAM = {
   name: 'Team Rastro',
-  repo: 'https://github.com/',
+  repo: 'https://github.com/Maheswar-Sah00/rastro',
   video: '',
   members: ['Team member 1', 'Team member 2', 'Team member 3'],
 };

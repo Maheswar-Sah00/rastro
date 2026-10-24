@@ -1,4 +1,5 @@
 import { useData } from '../lib/data';
+import { TEAM } from '../lib/content';
 import { fmtDate } from '../lib/format';
 
 export function Footer() {
@@ -25,6 +26,15 @@ export function Footer() {
           {meta.data?.generated_at && <div>Data run {fmtDate(meta.data.generated_at.slice(0, 10))}</div>}
           <div>
             <a href="./console.html">Analyst console</a> (needs the Rastro API)
+          </div>
+          <div>
+            <a href={TEAM.repo} target="_blank" rel="noreferrer">
+              Code on GitHub ↗
+            </a>{' '}
+            ·{' '}
+            <a href={`${TEAM.repo}#13-limitations-and-roadmap`} target="_blank" rel="noreferrer">
+              Limitations and roadmap ↗
+            </a>
           </div>
         </div>
       </div>
