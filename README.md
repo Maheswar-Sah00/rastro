@@ -17,6 +17,8 @@
 
 IEEE ClimateChain Global Hackathon 2026 · Track: **Sustainable Supply Chains** · Team **Rastro**
 
+**[Live demo](https://maheswar-sah00.github.io/rastro/)** · [Investigator console](https://maheswar-sah00.github.io/rastro/console.html) · [Demo video](#)
+
 <img src="docs/screenshots/landing-hero.png" alt="Rastro landing page over a Sentinel-2 image of São Félix do Xingu" width="900">
 
 </div>
@@ -263,6 +265,10 @@ npm run dev                       # landing: http://localhost:5173  console: htt
 ```
 
 If port 8000 is taken, run the API on another port and build the console with `VITE_API_URL=http://127.0.0.1:<port>`.
+
+**Static demo (GitHub Pages).** The hosted console runs in a labelled **DEMO MODE**: it serves API responses recorded
+from a live run (`web/scripts/capture-fixtures.py` → `web/src/console/fixtures/`), so judges can click through without
+a server. Build it with `VITE_BASE=/rastro/ VITE_CONSOLE_DEMO=1 npm run build`.
 
 **Certificates, red team and resets:**
 

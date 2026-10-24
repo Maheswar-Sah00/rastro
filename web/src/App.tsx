@@ -109,7 +109,7 @@ export default function App() {
     <>
       <Header active={active} onTrace={trace} entered={entered} />
       <main>
-        <Hero onEnter={enter} onTrace={trace} entered={entered} />
+        <Hero onEnter={enter} entered={entered} />
         {entered && (
           <>
             <Problem />

@@ -5,7 +5,7 @@ import { SourceTag } from './Tags';
 
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export function Hero({ onEnter, onTrace, entered }: { onEnter: () => void; onTrace: () => void; entered: boolean }) {
+export function Hero({ onEnter, entered }: { onEnter: () => void; entered: boolean }) {
   const img = useRef<HTMLImageElement>(null);
   const [imgReady, setImgReady] = useState(false);
   const ref = HELDOUT.reference;
@@ -53,9 +53,9 @@ export function Hero({ onEnter, onTrace, entered }: { onEnter: () => void; onTra
             <button className="btn btn-primary btn-lg" onClick={onEnter}>
               Explore Rastro <span aria-hidden>→</span>
             </button>
-            <button className="btn btn-glass btn-lg" onClick={onTrace}>
-              Trace a ship to Türkiye <span aria-hidden>↗</span>
-            </button>
+            <a className="btn btn-glass btn-lg" href="./console.html">
+              Open the console <span aria-hidden>↗</span>
+            </a>
           </div>
           <p className="hero-note" data-enter="settle" style={{ ['--i' as string]: 2 }}>
             <span className="sq" aria-hidden>

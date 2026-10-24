@@ -58,9 +58,6 @@ export function Header({ active, onTrace, entered }: { active: string | null; on
               {label}
             </a>
           ))}
-          <a href="./console.html" className="nav-ext" data-enter="drop" style={{ ['--i' as string]: NAV.length + 1 }}>
-            Console <span aria-hidden>↗</span>
-          </a>
         </nav>
         <div className="header-right" data-enter="drop" style={{ ['--i' as string]: NAV.length + 2 }}>
           <ThemeButton />

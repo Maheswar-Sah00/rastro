@@ -7,7 +7,7 @@ Copy each block into the matching Devpost field.
 | **Project name** | Rastro |
 | **Elevator pitch** (≤ 200 chars) | AI that traces every head of Amazon cattle back to the ranch it was born on, and a shared on-chain ledger that refuses the paperwork laundering depends on. |
 | **Track** | Sustainable Supply Chains |
-| **Try it out** | https://github.com/Maheswar-Sah00/rastro |
+| **Try it out** | Live demo: https://maheswar-sah00.github.io/rastro/ · Code: https://github.com/Maheswar-Sah00/rastro |
 | **Video** | *(YouTube or Vimeo link, 3–5 min; see [VIDEO_SCRIPT.md](VIDEO_SCRIPT.md))* |
 | **Team** | Meghana Pabba · Naga Bhargav Reddy |
 
@@ -18,8 +18,10 @@ Copy each block into the matching Devpost field.
 **Sustainable Supply Chains: product lifecycle tracking and verification of sustainability claims.** Rastro follows the
 life of beef cattle from the ranch where a calf is born, through every farm it passes, to the slaughterhouse or export
 ship, and checks the claim every buyer now has to make: that the animal did not come from land deforested after 2020,
-from an Indigenous territory or from an embargoed ranch. It also uses real deforestation data, so it touches Climate
-Data & Environmental Monitoring, but its job is supply-chain verification.
+from an Indigenous territory or from an embargoed ranch. In the track's terms it is **product lifecycle tracking** for
+cattle, and its one-time lot certificate works as a **digital product passport** for a batch of animals: a signed,
+verifiable claim that can be spent only once. It also uses real deforestation data, so it touches Climate Data &
+Environmental Monitoring, but its job is supply-chain verification.
 
 ## Inspiration
 
@@ -53,6 +55,38 @@ competing buyers to use it.
 - **Lets anyone verify.** Each certificate anchors the SHA-256 of an RFC 8785 canonical evidence bundle. The console
   re-hashes the evidence, recovers the signer, checks it is an authorised oracle and reads the ledger: 11 checks, all
   read-only.
+
+## Target users
+
+| User | What Rastro gives them |
+| --- | --- |
+| **Ibama and the Federal Prosecutors (MPF)**, who run the meatpacking monitoring protocol | A ranked list of ranches and permits worth inspecting, each with its evidence |
+| **Meatpackers and live-cattle exporters** | Indirect-supplier checks across the whole chain, without seeing competitors' data |
+| **EU importers** | EUDR due-diligence evidence from 30 Dec 2026, as a certificate that can't be reused |
+| **Importers in Türkiye, Egypt, Iraq and beyond** | The same assurance for live-cattle buyers that no EU law covers |
+| **Banks** lending under Brazil's rural-credit environmental rules | A check on where a borrower's cattle really come from |
+
+## How it scales
+
+- **By data, not hardware.** The geospatial engine runs on public layers (PRODES, FUNAI, IBGE) that cover the whole
+  Brazilian Amazon, and PRODES-style data exists for the Cerrado too. A new municipality is a new bounding box.
+- **Same code for real permits.** The pipeline reads a canonical permit table. When a state publishes its GTA feed,
+  it replaces the simulator with no change to the detectors, the API or the contract.
+- **Cheap on-chain footprint.** Only salted hashes, counts and certificates go on-chain; the heavy analysis stays
+  off-chain. Permits are batched into few transactions.
+- **Deterministic and testable.** Every run is pinned to a dataset digest, so results can be reproduced and audited
+  as coverage grows.
+
+## How easily it can be adopted
+
+- **No new data collection.** It uses the permits ranchers already file and satellite data that is already public.
+- **No change for ranchers.** Nobody installs anything; the burden falls on the buyers who already run supplier checks.
+- **Fits existing workflows.** Regulators get a ranked inspection list, buyers a PASS / REVIEW / FLAGGED answer per
+  lot, and importers a certificate they can attach to an EUDR statement.
+- **Open and verifiable.** MIT-licensed code, a read-only API, and certificates that anyone can verify without trusting
+  Rastro.
+- **Privacy-preserving.** Only salted hashes go on-chain, which addresses the data-protection objection that has kept
+  GTAs closed.
 
 ## Results (synthetic ranches on a real landscape)
 
