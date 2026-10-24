@@ -1,24 +1,15 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { useData } from '../lib/data';
 import { fmt } from '../lib/format';
+import { HELDOUT, HELDOUT_LABEL } from '../lib/heldout';
 import { SourceTag } from './Tags';
 
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function Hero({ onEnter, onTrace, entered }: { onEnter: () => void; onTrace: () => void; entered: boolean }) {
-  const metrics = useData('metrics');
-  const m = metrics.data;
   const img = useRef<HTMLImageElement>(null);
   const [imgReady, setImgReady] = useState(false);
-
-  const caught = m?.eval?.rastro?.tainted_head_caught_pct ?? m?.headline?.tainted_head_pct_caught_rastro;
-  const caughtSq = m?.eval?.status_quo?.tainted_head_caught_pct;
-  const found = m?.headline?.laundering_ranches_found;
-  const total = m?.headline?.laundering_ranches_total;
-  const foundSq = total != null && m?.eval?.status_quo?.network_recall != null ? Math.round(m.eval.status_quo.network_recall * total) : null;
-  const blocked = m?.eval?.rastro?.clean_lots_failed_pct;
-  const blockedSq = m?.eval?.status_quo?.clean_lots_failed_pct;
-  const tag = metrics.origin === 'mock' ? 'mock' : 'synthetic';
+  const ref = HELDOUT.reference;
+  const red = HELDOUT.redteam;
 
   useEffect(() => entrance(img.current), []);
 
@@ -75,11 +66,11 @@ export function Hero({ onEnter, onTrace, entered }: { onEnter: () => void; onTra
         </div>
 
         <div className="hero-cards" role="list" aria-label="Results on the simulated supply chain">
-          <Glass i={0} label="Tainted head caught" icon={<IconTrace />} value={caught != null ? `${fmt(caught, 1)}%` : '–'} sub={caughtSq != null ? `vs ${fmt(caughtSq, 1)}% today` : 'before slaughter or export'} accent />
-          <Glass i={1} label="Launderers found" icon={<IconRanch />} value={found != null && total != null ? `${found}/${total}` : '–'} sub={foundSq != null ? `vs ${foundSq} today` : 'laundering ranches'} />
-          <Glass i={2} label="Clean lots blocked" icon={<IconShield />} value={blocked != null ? `${fmt(blocked, 1)}%` : '–'} sub={blockedSq != null ? `vs ${fmt(blockedSq, 1)}% today` : 'false alarms'} />
+          <Glass i={0} label="Tainted head flagged" icon={<IconTrace />} value={`${fmt(ref.flaggedPct, 1)}%`} sub={`vs ${fmt(ref.baselinePct, 1)}% today`} note={`${fmt(ref.flagOrReviewPct, 1)}% incl. human review`} />
+          <Glass i={1} label="Clean lots blocked" icon={<IconShield />} value={`${fmt(ref.cleanBlockedPct, 1)}%`} sub={`vs ${fmt(ref.baselineCleanBlockedPct, 1)}% today`} />
+          <Glass i={2} label="Red team: flagged" icon={<IconRanch />} value={`${fmt(red.flaggedPct, 1)}%`} sub={`vs ${fmt(red.baselinePct, 1)}% today`} note="patient, two-hop launderers" />
           <p className="hero-cards-note" data-enter="settle" style={{ ['--i' as string]: 3 }}>
-            <SourceTag kind={tag} title="Measured on the simulated supply chain against its ground truth" /> 409 ranches · 10,844 permits ·{' '}
+            <SourceTag kind="synthetic" title={HELDOUT_LABEL} /> held-out world, never used for tuning ·{' '}
             <button className="linkish" onClick={onEnter}>results</button>
           </p>
         </div>
@@ -109,15 +100,16 @@ export function Hero({ onEnter, onTrace, entered }: { onEnter: () => void; onTra
 // Frontiers where cattle ranching is a leading driver of forest loss. Rastro's pilot data is the first one.
 const FRONTIERS = ['Amazon', 'Cerrado', 'Gran Chaco', 'Colombian Amazon', 'Central America'];
 
-function Glass({ i, label, icon, value, sub, accent }: { i: number; label: string; icon: ReactNode; value: string; sub: string; accent?: boolean }) {
+function Glass({ i, label, icon, value, sub, note }: { i: number; label: string; icon: ReactNode; value: string; sub: string; note?: string }) {
   return (
     <article className="glass" role="listitem" data-enter="card" style={{ ['--i' as string]: i }}>
       <span className="glass-label">
         {icon}
         {label}
       </span>
-      <span className={`glass-value${accent ? ' accent' : ''}`}>{value}</span>
+      <span className="glass-value">{value}</span>
       <span className="glass-sub">{sub}</span>
+      {note && <span className="glass-note">{note}</span>}
     </article>
   );
 }

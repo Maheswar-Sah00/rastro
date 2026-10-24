@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { useData } from '../lib/data';
 import { ChartCard, DataTable, PairBars, SERIES, STATUS, StackBars } from './charts';
+import { HELDOUT, HELDOUT_LABEL } from '../lib/heldout';
 import { useNear } from './MapSection';
 import { SourceTag } from './Tags';
 
@@ -12,27 +13,18 @@ const VERDICT = [
 ];
 
 export function ResultsSection() {
-  const metrics = useData('metrics');
-  const m = metrics.data;
   const [run, setRun] = useState<'base' | 'stress'>('base');
   const ref = useRef<HTMLElement>(null);
   const near = useNear(ref, '600px');
   const ships = useData('shipments', near);
-  const tag = <SourceTag kind={metrics.origin === 'mock' ? 'mock' : 'synthetic'} title="Measured on the simulated supply chain against its ground truth" />;
+  const tag = <SourceTag kind="synthetic" title={HELDOUT_LABEL} />;
 
-  const block = run === 'stress' && m?.stress_test ? m.stress_test : m?.eval;
-  const rows = block
-    ? [
-        { label: 'Tainted head caught', note: 'higher is better', a: block.status_quo.tainted_head_caught_pct ?? 0, b: block.rastro.tainted_head_caught_pct ?? 0 },
-        {
-          label: 'Dirty sources found',
-          note: 'higher is better',
-          a: pctOf(block.status_quo.dirty_sources_found, block.status_quo.dirty_sources_total),
-          b: pctOf(block.rastro.dirty_sources_found, block.rastro.dirty_sources_total),
-        },
-        { label: 'Clean lots blocked', note: 'lower is better', a: block.status_quo.clean_lots_failed_pct ?? 0, b: block.rastro.clean_lots_failed_pct ?? 0 },
-      ]
-    : [];
+  const h = run === 'stress' ? HELDOUT.redteam : HELDOUT.reference;
+  const rows = [
+    { label: 'Tainted head flagged', note: 'higher is better', a: h.baselinePct, b: h.flaggedPct },
+    { label: 'Flagged or sent to review', note: 'today has no review step', a: h.baselinePct, b: h.flagOrReviewPct },
+    { label: 'Clean lots blocked', note: 'lower is better', a: h.baselineCleanBlockedPct, b: h.cleanBlockedPct },
+  ];
 
   const markets = useMemo(() => {
     const list = (ships.data ?? []).filter((s) => s.kind === 'voyage');
@@ -67,11 +59,11 @@ export function ResultsSection() {
           <button aria-pressed={run === 'base'} onClick={() => setRun('base')}>
             Normal launderers
           </button>
-          <button aria-pressed={run === 'stress'} onClick={() => setRun('stress')} disabled={!m?.stress_test}>
+          <button aria-pressed={run === 'stress'} onClick={() => setRun('stress')}>
             Red team: patient, two hops
           </button>
           <span className="viz-filters-note">
-            {block && 'lots' in block && block.lots ? `${block.lots.toLocaleString('en')} lots scored` : ''}
+            {HELDOUT_LABEL}
           </span>
         </div>
 
@@ -79,7 +71,7 @@ export function ResultsSection() {
           <ChartCard
             id="how-eval"
             title="Today's check vs Rastro"
-            sub="Share of each, on the simulated Pará supply chain"
+            sub="Share of tainted cattle and clean lots, on a world the model never saw"
             tag={tag}
             legend={[
               { label: 'Rastro', color: SERIES.rastro },
@@ -87,7 +79,7 @@ export function ResultsSection() {
             ]}
             table={<DataTable head={['Metric', "Today's check", 'Rastro']} rows={rows.map((r) => [r.label, `${r.a.toFixed(1)}%`, `${r.b.toFixed(1)}%`])} />}
           >
-            {rows.length ? <PairBars rows={rows} /> : <p className="viz-empty">Metrics not available yet.</p>}
+            <PairBars rows={rows} />
           </ChartCard>
 
           <ChartCard
@@ -105,9 +97,6 @@ export function ResultsSection() {
   );
 }
 
-function pctOf(a?: number, b?: number) {
-  return a != null && b ? Math.round((a / b) * 1000) / 10 : 0;
-}
 function sum(r: Record<string, number>) {
   return Object.values(r).reduce((a, b) => a + b, 0);
 }

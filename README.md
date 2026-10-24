@@ -136,10 +136,8 @@ has tainted head because embargoes and real post-2020 clearing exist without any
 - **Where it struggles:** with 10% of permits missing, unknown origins push 43.6% of clean lots to FLAGGED. Split lots
   and fast legitimate traders also raise false alarms. See [Limitations](#13-limitations-and-roadmap).
 
-> The landing page's headline cards (90.4% caught, 7.0% of clean lots blocked) come from the first-pass detector scored
-> on the published demo world it was developed on. The held-out table above is the number to quote. Method, leakage
-> controls and per-detector tables: [docs/evaluation.md](docs/evaluation.md) and
-> [reports/evaluation/](reports/evaluation/).
+> The site and this README quote the held-out numbers. Method, leakage controls and per-detector tables:
+> [docs/evaluation.md](docs/evaluation.md) and [reports/evaluation/](reports/evaluation/).
 
 ## 4. System overview
 
