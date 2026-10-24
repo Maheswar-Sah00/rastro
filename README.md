@@ -407,7 +407,8 @@ More documentation: [architecture](docs/architecture.md) Â· [API](docs/api.md) Â
 
 **Team Rastro**, IEEE ClimateChain Global Hackathon 2026
 
-- **Maheswar Sahoo**
+- **Meghana Pabba**
+- **Naga Bhargav Reddy**
 
 <div align="center">
 

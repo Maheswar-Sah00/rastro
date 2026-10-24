@@ -41,7 +41,7 @@ export const TEAM = {
   name: 'Team Rastro',
   repo: 'https://github.com/Maheswar-Sah00/rastro',
   video: '',
-  members: ['Team member 1', 'Team member 2', 'Team member 3'],
+  members: ['Meghana Pabba', 'Naga Bhargav Reddy'],
 };
 
 /** Display repair for place names that lost their accents upstream. */

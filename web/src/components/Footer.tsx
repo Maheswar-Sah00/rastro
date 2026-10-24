@@ -23,6 +23,7 @@ export function Footer() {
             <b style={{ color: 'var(--ink)' }}>Rastro</b> · IEEE ClimateChain Global Hackathon 2026
           </div>
           <div>Sustainable supply chains track</div>
+          <div>Team: {TEAM.members.join(' · ')}</div>
           {meta.data?.generated_at && <div>Data run {fmtDate(meta.data.generated_at.slice(0, 10))}</div>}
           <div>
             <a href="./console.html">Analyst console</a> (needs the Rastro API)
