@@ -1,0 +1,63 @@
+# Ready-to-copy GitHub Pages workflow for the Rastro web app.
+# Copy this file to .github/workflows/pages.yml at the repository root.
+# It assumes the app lives in ./web (adjust WEB_DIR if not).
+name: Deploy web to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  WEB_DIR: web
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ env.WEB_DIR }}/package-lock.json
+
+      - name: Install
+        working-directory: ${{ env.WEB_DIR }}
+        run: npm ci
+
+      - name: Build
+        working-directory: ${{ env.WEB_DIR }}
+        # './' works from any Pages sub-path (hash routing). Set e.g. /rastro/ to pin it.
+        env:
+          VITE_BASE: ./
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.WEB_DIR }}/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

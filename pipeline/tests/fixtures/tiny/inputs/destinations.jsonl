@@ -1,0 +1,3 @@
+{"data_source":"synthetic","destination_id":"P:BARCARENA","destination_type":"export_port","inspection":"SIF","lat":-1.546,"licence":null,"lon":-48.757,"name":"Synthetic export port"}
+{"data_source":"synthetic","destination_id":"S:SIE_01","destination_type":"slaughterhouse","inspection":"SIE","lat":-6.7,"licence":null,"lon":-52.05,"name":"Synthetic slaughterhouse 2"}
+{"data_source":"synthetic","destination_id":"S:SIF_01","destination_type":"slaughterhouse","inspection":"SIF","lat":-6.64,"licence":null,"lon":-51.98,"name":"Synthetic slaughterhouse 1"}

@@ -1,0 +1,40 @@
+{
+  "name": "rastro-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Rastro: tracing laundered cattle in the Amazon. Judge-facing web app.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "mock": "node scripts/gen-mock.mjs",
+    "test": "vitest run",
+    "console": "vite --open /console.html",
+    "e2e": "node e2e/console.e2e.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@fontsource-variable/jetbrains-mono": "5.3.0",
+    "@fontsource-variable/manrope": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.1",
+    "d3-sankey": "0.12.3",
+    "maplibre-gl": "5.24.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "viem": "2.57.10"
+  },
+  "devDependencies": {
+    "@types/d3-sankey": "0.12.5",
+    "@types/node": "22.20.5",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "d3-delaunay": "6.0.4",
+    "typescript": "5.9.3",
+    "vite": "6.4.5",
+    "vitest": "5.0.5",
+    "ws": "8.21.0"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "kind": "lot_certificate",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "shipment": "SHP-0006",
+  "lot_id": "0xf005429adae167fc68e529e538c4b567f7714337b49d0ece4a2f4a3887ce6796",
+  "destination": "S:SIE_MOCK03",
+  "market": "BR",
+  "head": 552,
+  "date": "2024-01-22",
+  "gtas": [
+    "GTA-PA-2024-118475",
+    "GTA-PA-2024-118503"
+  ],
+  "trace": {
+    "clean_pct": 83.2,
+    "watch_pct": 14.3,
+    "flagged_pct": 0,
+    "unknown_pct": 2.4,
+    "max_hops": 3,
+    "by_ranch": [
+      {
+        "ranch": "R0037",
+        "head_equiv": 139,
+        "risk_class": "clean",
+        "hops": 2
+      },
+      {
+        "ranch": "R0019",
+        "head_equiv": 131.6,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0032",
+        "head_equiv": 79.1,
+        "risk_class": "watch",
+        "hops": 2
+      },
+      {
+        "ranch": "R0002",
+        "head_equiv": 66,
+        "risk_class": "clean",
+        "hops": 2
+      },
+      {
+        "ranch": "R0006",
+        "head_equiv": 65.1,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0023",
+        "head_equiv": 57.7,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R9002",
+        "head_equiv": 13.5,
+        "risk_class": "unknown",
+        "hops": 3
+      }
+    ]
+  },
+  "verdict": "clean",
+  "rule": "fail if flagged >= 2%"
+}

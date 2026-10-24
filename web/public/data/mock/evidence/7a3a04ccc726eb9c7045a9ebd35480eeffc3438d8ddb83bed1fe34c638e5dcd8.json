@@ -1,0 +1,54 @@
+{
+  "kind": "risk_attestation",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "ranch": "R0028",
+  "onchain_id": "0x131df069df16d9ef60d979e310b9b7e52b309fd8152edca5b1c986737c1c7cd6",
+  "as_of": "2026-10-24",
+  "model": "rastro-detect (mock run)",
+  "risk": {
+    "class": "high",
+    "score": 0.82
+  },
+  "inputs": {
+    "head_now": 9720,
+    "capacity_head": 6138,
+    "pasture_ha": 4091.9,
+    "breeding_cows": 0,
+    "births_declared": 0,
+    "births_biological_max": 0,
+    "inflow_head": 5260,
+    "outflow_head": 4402,
+    "median_holding_days": 197,
+    "defor_post2020_ha": 0,
+    "upstream_taint_pct": 100
+  },
+  "flags": [
+    {
+      "code": "OVER_CAPACITY",
+      "severity": "high",
+      "evidence": {
+        "head_now": 9720,
+        "capacity_head": 6138,
+        "pasture_ha": 4091.9,
+        "ratio": 1.58,
+        "head_per_ha_max": 1.5
+      }
+    },
+    {
+      "code": "TAINTED_SUPPLY",
+      "severity": "high",
+      "evidence": {
+        "upstream_taint_pct": 100,
+        "flagged_suppliers": [
+          "R0027",
+          "R0040",
+          "R0039",
+          "R0012",
+          "R0018",
+          "R0026"
+        ],
+        "hops_checked": 4
+      }
+    }
+  ]
+}

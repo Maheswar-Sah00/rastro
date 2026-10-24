@@ -1,0 +1,30 @@
+{
+ "status_quo": {
+  "precision": 0.397,
+  "recall": 0.649,
+  "tp": 48,
+  "predicted": 121,
+  "actual": 74,
+  "network_recall": 0.214,
+  "dirty_sources_found": 48,
+  "dirty_sources_total": 74,
+  "tainted_head_caught_pct": 45.2,
+  "clean_lots_failed_pct": 26.4
+ },
+ "rastro": {
+  "precision": 0.986,
+  "recall": 0.946,
+  "tp": 70,
+  "predicted": 71,
+  "actual": 74,
+  "network_recall": 0.714,
+  "dirty_sources_found": 70,
+  "dirty_sources_total": 74,
+  "tainted_head_caught_pct": 83.0,
+  "clean_lots_failed_pct": 6.0,
+  "clean_lots_reviewed_pct": 13.6
+ },
+ "lots": 3817,
+ "tainted_head_at_sinks": 86003,
+ "head_at_sinks": 316567
+}

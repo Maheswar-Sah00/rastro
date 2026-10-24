@@ -1,0 +1,21 @@
+{
+  "name": "rastro-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HerdLedger: on-chain conservation-of-cattle ledger for Rastro (Foundry + Node replay helper)",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test",
+    "replay": "node replay/replay.mjs",
+    "demo:local": "node replay/local-demo.mjs",
+    "sample-seed": "node replay/make-sample-seed.mjs"
+  },
+  "dependencies": {
+    "ethers": "6.17.0"
+  }
+}

@@ -1,0 +1,428 @@
+{
+ "config": {
+  "calving": [
+   0.62,
+   0.76
+  ],
+  "capacity": 1.5,
+  "conceal_phantom": false,
+  "cover_buying": 0.0,
+  "drop_gta_share": 0.0,
+  "embargoes": true,
+  "generated_at": "2026-10-24T00:00:00Z",
+  "landscape": "synthetic",
+  "launderer_hold": null,
+  "launderer_split": [
+   40,
+   260
+  ],
+  "months": 24,
+  "mortality_annual": 0.02,
+  "n_external": 2,
+  "n_fronts": 1,
+  "n_launderers": 3,
+  "n_phantom": 1,
+  "n_ranches": 48,
+  "n_traders": 3,
+  "phantom_declared_cows": 40,
+  "scenarios": [
+   "embargo_attempts",
+   "laundering",
+   "over_capacity",
+   "phantom_births"
+  ],
+  "seed": 21,
+  "start": "2023-01-01",
+  "stocking": 1.0,
+  "trader_hold": [
+   5,
+   40
+  ],
+  "two_hop": false
+ },
+ "dataset_id": "rastro-synth-tiny",
+ "dataset_version": "1.0.0",
+ "deliberate_anomalies": {
+  "BirthsExceedBiology:phantom_births": {
+   "events": 16,
+   "head": 240
+  },
+  "InsufficientHerd:phantom_births": {
+   "events": 2,
+   "head": 233
+  },
+  "OriginEmbargoed:embargo_attempts": {
+   "events": 2,
+   "head": 18
+  }
+ },
+ "generated_at": "2026-10-24T00:00:00Z",
+ "generator": {
+  "name": "rastro.synth",
+  "version": "1.0.0"
+ },
+ "landscape": "synthetic",
+ "logical_digest": "22922674101a8bae1bdd4808d22a4de442165fe2d466fa9e7e849c6592aa016f",
+ "notice": "Ranches, herds, births, deaths, GTAs, embargoes, shipments and all labels are synthetic. They are not government records and describe no real ranch or company.",
+ "preset": "tiny",
+ "raw_inputs": [],
+ "schema_version": "1.0.0",
+ "seed": 21,
+ "tables": {
+  "anomalies": {
+   "data_status": "derived",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/anomalies.jsonl",
+   "rows": 20,
+   "sha256": "4c884e6a822d5be0d3a2ce4d5aa39ce5caf350e298c1aa0e27dc69bfbcd2590c",
+   "sources": [
+    "ledger_refusals",
+    "truth"
+   ],
+   "transformations": [
+    "each refusal attributed to the scenario that planted it"
+   ]
+  },
+  "birth_declarations": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/birth_declarations.jsonl",
+   "rows": 227,
+   "sha256": "371a46f7c086f192e31a41af53246c39c4369169c9dd7234fee6376998a11fc7",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "calving drawn per breeding cow",
+    "biology bound = declared cows x 0.85, band +/-15 %"
+   ]
+  },
+  "conservation_units": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/conservation_units.jsonl",
+   "rows": 1,
+   "sha256": "96247b375b325a4e10ebf262bb6ab8e775bec0946352483344fe56d279f9a6f2",
+   "sources": [
+    "rastro.synth synthetic landscape (fixture; not real data)"
+   ],
+   "transformations": [
+    "clipped to the study window"
+   ]
+  },
+  "death_declarations": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/death_declarations.jsonl",
+   "rows": 264,
+   "sha256": "a5f0a0e04f97aa9541a78f02ed5b9367451498214a32f50619c1f25621117357",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "monthly binomial mortality (0 in the evaluation preset)"
+   ]
+  },
+  "destinations": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/destinations.jsonl",
+   "rows": 3,
+   "sha256": "b6bb81e9b76032231445547df66ff97633367a8d38cfa427682a2c7c28159b1d",
+   "sources": [
+    "rastro.synth synthetic landscape (fixture; not real data)"
+   ],
+   "transformations": [
+    "filtered to active SIF/SIE plants near the window",
+    "names anonymised"
+   ]
+  },
+  "embargoes": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/embargoes.jsonl",
+   "rows": 2,
+   "sha256": "6395ef5cfcfd1833e66688f9716e15d50eb411c0fb3d06bc5068653e9933cfcf",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "half of the ranches with >= 100 ha post-2020 clearing, embargoed in 2023-2024; not Ibama records"
+   ]
+  },
+  "gta_movements": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/gta_movements.jsonl",
+   "rows": 682,
+   "sha256": "40d6d07d389510c92cf3bd68a26c4df6e0afd876bccc554527bbd9f94301db40",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "FIFO lots moved between roles",
+    "issue date 0-3 days before movement"
+   ]
+  },
+  "herd_inventory": {
+   "data_status": "derived",
+   "detector_visible": true,
+   "partition": "derived",
+   "path": "derived/herd_inventory.jsonl",
+   "rows": 1152,
+   "sha256": "dddc5e309e8233a711b031c92345fddfdbf6dc5c8be95dfefcb13fbc92f5e986",
+   "sources": [
+    "ranches",
+    "birth_declarations",
+    "death_declarations",
+    "gta_movements",
+    "embargoes"
+   ],
+   "transformations": [
+    "HerdLedger rules replayed in date order (rastro.ledger)",
+    "monthly buckets"
+   ]
+  },
+  "indigenous_territories": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/indigenous_territories.jsonl",
+   "rows": 4,
+   "sha256": "53c0169c10d828821dc025483cc1e02de28641babf88b8a1bcfba20f9c42d27b",
+   "sources": [
+    "rastro.synth synthetic landscape (fixture; not real data)"
+   ],
+   "transformations": [
+    "clipped to the study window"
+   ]
+  },
+  "ledger_refusals": {
+   "data_status": "derived",
+   "detector_visible": true,
+   "partition": "derived",
+   "path": "derived/ledger_refusals.jsonl",
+   "rows": 20,
+   "sha256": "5227d7e79206051a44f7dac4cb1111d78b89be3ab3beeb602a20bac8f864757d",
+   "sources": [
+    "ranches",
+    "birth_declarations",
+    "death_declarations",
+    "gta_movements",
+    "embargoes"
+   ],
+   "transformations": [
+    "events HerdLedger would revert"
+   ]
+  },
+  "lot_allocations": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/lot_allocations.jsonl",
+   "rows": 1653,
+   "sha256": "ff6fcf4521def1089b786d261220410fad6945b9fbf2d928bd82d70db9c0744f",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "physical lot-to-lot flows; evaluation only"
+   ]
+  },
+  "lots": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/lots.jsonl",
+   "rows": 1938,
+   "sha256": "46f77d22fdaea22020dc2bd9672393d78f23c8fcba94ac6b0e5a089a5e273b3b",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "physical single-origin lots; evaluation only"
+   ]
+  },
+  "missing_records": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/missing_records.jsonl",
+   "rows": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "permits removed from the agency records by the red team; evaluation only"
+   ]
+  },
+  "movement_labels": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/movement_labels.jsonl",
+   "rows": 682,
+   "sha256": "1e1d2a7a50a4a52966a05a57a02851cbb1132800adf354f88277439b214230fe",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "ground truth; evaluation only"
+   ]
+  },
+  "prodes_deforestation": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/prodes_deforestation.jsonl",
+   "rows": 62,
+   "sha256": "ecabbbf3bff05346096a5df94ab06f308ffa0664ee803a2152b2e861bebf1547",
+   "sources": [
+    "rastro.synth synthetic landscape (fixture; not real data)"
+   ],
+   "transformations": [
+    "clipped to the study window by fetch_real.py",
+    "PRODES year mapped to its 1 Aug-31 Jul period"
+   ]
+  },
+  "ranch_boundaries": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/ranch_boundaries.geojson",
+   "rows": 48,
+   "sha256": "49a611780b9d7c6c28c469d5071852a84fe6f4ca4948d668e123345f6de282de",
+   "sources": [
+    "synthetic grid"
+   ],
+   "transformations": [
+    "UTM 22S -> WGS84",
+    "coordinates rounded to 1e-6 deg"
+   ]
+  },
+  "ranch_labels": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/ranch_labels.jsonl",
+   "rows": 50,
+   "sha256": "0c84f7c049b97d8f791746e3854f66112510db128a38594fd770bfee86f6d7a8",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "ground truth; evaluation only"
+   ]
+  },
+  "ranches": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/ranches.jsonl",
+   "rows": 50,
+   "sha256": "f7f0a6366d6adbfb40de37aec565b54b2fe5db285915832f85c0f6e4e0eb9ba0",
+   "sources": [
+    "rastro.synth simulation",
+    "landscape cells"
+   ],
+   "transformations": [
+    "roles and herds simulated",
+    "areas measured on real layers (real landscape)",
+    "display names and owner groups hashed / drawn from the seed"
+   ]
+  },
+  "shipment_truth": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/shipment_truth.jsonl",
+   "rows": 147,
+   "sha256": "bd1fd7d869d47d3e5b25336d1a3bdee07e1fe099d3cdf31762738086dce68255",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "true origin mix of each shipment; evaluation only"
+   ]
+  },
+  "shipments": {
+   "data_status": "derived",
+   "detector_visible": true,
+   "partition": "inputs",
+   "path": "inputs/shipments.jsonl",
+   "rows": 147,
+   "sha256": "28c40cd3f6663ae0fe06c3ce33f11a62eaf6c7c28937fc3044c0ade1fc7b5f4f",
+   "sources": [
+    "gta_movements"
+   ],
+   "transformations": [
+    "one delivery per slaughterhouse GTA",
+    "one voyage per port-month"
+   ]
+  },
+  "smuggled_transfers": {
+   "data_status": "synthetic",
+   "detector_visible": false,
+   "partition": "truth",
+   "path": "truth/smuggled_transfers.jsonl",
+   "rows": 19,
+   "sha256": "b599fbdd74eae1eb54b1b5cd84d20a8ce48e388255e6a302816663d53cb37130",
+   "sources": [
+    "rastro.synth simulation"
+   ],
+   "transformations": [
+    "movements without GTA; evaluation only"
+   ]
+  },
+  "synthetic_deforestation": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/synthetic_deforestation.geojson",
+   "rows": 62,
+   "sha256": "2addcc98538be5909255d13c5df7c69436d414d02b8bb476cf8ddb9836a50dce",
+   "sources": [
+    "rastro.synth synthetic layer (fixture; not real data)"
+   ],
+   "transformations": [
+    "rectangles in grid metres -> WGS84"
+   ]
+  },
+  "synthetic_indigenous": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/synthetic_indigenous.geojson",
+   "rows": 4,
+   "sha256": "fea17b10931d565c2d7efae8eae8868d3529606253e8cd98836c3c0390149a21",
+   "sources": [
+    "rastro.synth synthetic layer (fixture; not real data)"
+   ],
+   "transformations": [
+    "rectangles in grid metres -> WGS84"
+   ]
+  },
+  "synthetic_protected": {
+   "data_status": "synthetic",
+   "detector_visible": true,
+   "partition": "environment",
+   "path": "environment/synthetic_protected.geojson",
+   "rows": 1,
+   "sha256": "024b1997ead3f1e7c2131cbf81b937bc458eb9cf69c4905f98b08b7e3af429e3",
+   "sources": [
+    "rastro.synth synthetic layer (fixture; not real data)"
+   ],
+   "transformations": [
+    "rectangles in grid metres -> WGS84"
+   ]
+  }
+ }
+}

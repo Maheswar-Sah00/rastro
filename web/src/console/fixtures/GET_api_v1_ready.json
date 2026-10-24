@@ -1,0 +1,1 @@
+{"ready": true, "checks": {"manifest": true, "ranches": true, "gtas": true, "shipments": true, "geo": true, "lineage": true, "decisions": true, "findings": true, "ranch_risk": true, "risk_current": true, "published_bundle": true}, "missing": []}

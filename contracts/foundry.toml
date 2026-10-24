@@ -1,0 +1,67 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+# Artifacts go to out/forge so `forge clean` never deletes the replay output in out/onchain.json.
+out = "out/forge"
+libs = ["dependencies"]
+solc = "0.8.30"
+# Cancun is supported by every target network (anvil, Polygon Amoy, Base Sepolia).
+evm_version = "cancun"
+optimizer = true
+# 1,000 keeps HerdLedger under the 24,576-byte EIP-170 limit (23,215 bytes); 10,000 does not.
+optimizer_runs = 1_000
+via_ir = false
+# The seed-replay test reads the committed pipeline fixture.
+fs_permissions = [{ access = "read", path = "./test/fixtures" }]
+remappings = [
+  "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.7.0/",
+  "forge-std/=dependencies/forge-std-1.17.0/src/",
+]
+
+[profile.default.fuzz]
+runs = 1_000
+seed = "0x52617374726f" # "Rastro": reproducible CI runs; override with --fuzz-seed
+
+[profile.default.invariant]
+runs = 256
+depth = 100
+fail_on_revert = true # honest handler actions must never revert
+show_metrics = true
+
+# Long soak run (about 10x the default campaign):
+#   FOUNDRY_PROFILE=deep forge test
+[profile.deep.fuzz]
+runs = 20_000
+
+[profile.deep.invariant]
+runs = 1_000
+depth = 200
+fail_on_revert = true
+show_metrics = true
+
+[dependencies]
+"@openzeppelin-contracts" = "5.7.0"
+forge-std = "1.17.0"
+
+[soldeer]
+remappings_generate = false
+remappings_regenerate = false
+recursive_deps = false
+
+[rpc_endpoints]
+anvil = "http://127.0.0.1:8545"
+amoy = "https://rpc-amoy.polygon.technology"
+base_sepolia = "https://sepolia.base.org"
+
+[etherscan]
+amoy = { key = "${ETHERSCAN_API_KEY}", chain = 80002 }
+base_sepolia = { key = "${ETHERSCAN_API_KEY}", chain = 84532 }
+
+[fmt]
+line_length = 110
+tab_width = 4
+bracket_spacing = false
+int_types = "long"
+quote_style = "double"
+number_underscore = "thousands"

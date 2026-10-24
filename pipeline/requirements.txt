@@ -1,0 +1,8 @@
+geopandas>=1.1.2
+shapely>=2.0
+pyproj>=3.6
+pandas>=2.1
+numpy>=1.26
+scikit-learn>=1.4
+requests>=2.31
+pydantic>=2.6

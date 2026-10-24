@@ -1,0 +1,50 @@
+{
+  "kind": "risk_attestation",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "ranch": "R0020",
+  "onchain_id": "0x04f65213202dd3cb7a0e92d2f34bb6e7a6cd6839096458b04cb2b6cd41084d1a",
+  "as_of": "2026-10-24",
+  "model": "rastro-detect (mock run)",
+  "risk": {
+    "class": "high",
+    "score": 0.8
+  },
+  "inputs": {
+    "head_now": 2422,
+    "capacity_head": 3017,
+    "pasture_ha": 2011.5,
+    "breeding_cows": 969,
+    "births_declared": 607,
+    "births_biological_max": 823,
+    "inflow_head": 0,
+    "outflow_head": 2242,
+    "median_holding_days": null,
+    "defor_post2020_ha": 177.2,
+    "upstream_taint_pct": 0
+  },
+  "flags": [
+    {
+      "code": "POST2020_DEFORESTATION",
+      "severity": "high",
+      "evidence": {
+        "defor_post2020_ha": 177.2,
+        "polygons": 4,
+        "years": [
+          2021,
+          2023,
+          2025
+        ],
+        "source": "PRODES (mock)"
+      }
+    },
+    {
+      "code": "PROTECTED_AREA",
+      "severity": "high",
+      "evidence": {
+        "protected_name": "Indigenous land (mock outline)",
+        "overlap_ha": 3752.9,
+        "kind": "indigenous"
+      }
+    }
+  ]
+}

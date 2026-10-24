@@ -1,0 +1,31 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+pipeline/data/raw/
+pipeline/data/derived/
+
+# node / web
+node_modules/
+web/dist/
+
+# contracts
+contracts/.tools/
+contracts/cache/
+contracts/broadcast/
+contracts/out/*.json.tmp
+
+# secrets
+.env
+*.key
+.env.*
+!.env.example
+
+# python tooling
+.pytest_cache/
+backend/.venv/
+pipeline/.venv/
+
+# canonical synthetic datasets: regenerate with `python -m rastro.synth.generate`; manifests are kept
+data/synthetic/*/*
+!data/synthetic/*/manifest.json

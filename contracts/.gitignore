@@ -1,0 +1,20 @@
+# Foundry build output (artifacts live in out/forge/); keep the replay results
+/out/*
+!/out/onchain.json
+!/out/onchain.*.json
+/cache/
+# Local-chain broadcasts are throwaway; public-testnet broadcasts are worth keeping
+/broadcast/**/31337/
+/broadcast/**/dry-run/
+
+# Dependencies (restore with `forge soldeer install` and `npm install`)
+/dependencies/
+/node_modules/
+
+# Local Foundry binaries
+/.tools/
+
+# Secrets: never commit keys
+.env
+.env.*
+!.env.example

@@ -1,0 +1,55 @@
+{
+  "kind": "lot_certificate",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "shipment": "SHP-0002",
+  "lot_id": "0x2befde81e49624e7e04fe22b80ad3180c64af590ac33cbfeb0cba5dc84dd31b3",
+  "destination": "S:SIF_MOCK01",
+  "market": "EU",
+  "head": 437,
+  "date": "2024-04-15",
+  "gtas": [
+    "GTA-PA-2024-119343",
+    "GTA-PA-2024-119423"
+  ],
+  "trace": {
+    "clean_pct": 93.1,
+    "watch_pct": 0,
+    "flagged_pct": 0,
+    "unknown_pct": 6.9,
+    "max_hops": 3,
+    "by_ranch": [
+      {
+        "ranch": "R0017",
+        "head_equiv": 131.9,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0006",
+        "head_equiv": 109.8,
+        "risk_class": "clean",
+        "hops": 2
+      },
+      {
+        "ranch": "R0037",
+        "head_equiv": 102.2,
+        "risk_class": "clean",
+        "hops": 2
+      },
+      {
+        "ranch": "R0035",
+        "head_equiv": 63,
+        "risk_class": "clean",
+        "hops": 1
+      },
+      {
+        "ranch": "R9002",
+        "head_equiv": 30.1,
+        "risk_class": "unknown",
+        "hops": 3
+      }
+    ]
+  },
+  "verdict": "clean",
+  "rule": "EU: fail if flagged + watch >= 2%"
+}

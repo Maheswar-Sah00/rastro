@@ -1,0 +1,2 @@
+{"data_status":"synthetic","embargo_id":"EMB-0001","end_date":null,"ingested_at":"2026-10-24T00:00:00Z","ranch_id":"R0012","reason":"simulated: large post-2020 clearing on the real PRODES layer","source":"simulated embargo (not an Ibama record)","start_date":"2023-06-01","status":"active"}
+{"data_status":"synthetic","embargo_id":"EMB-0002","end_date":null,"ingested_at":"2026-10-24T00:00:00Z","ranch_id":"R0029","reason":"simulated: large post-2020 clearing on the real PRODES layer","source":"simulated embargo (not an Ibama record)","start_date":"2023-04-19","status":"active"}

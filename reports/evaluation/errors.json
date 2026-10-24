@@ -1,0 +1,2484 @@
+{
+ "DEV-reference": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 62,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 62
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000761",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.567,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000843",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 15.93,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001012",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 23.82,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001244",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 16.647,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001325",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.736,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001340",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 13.914,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001362",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 15.226,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001425",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 13.113,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001552",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 2.021,
+     "blocking_origin_pro_rata": 22.276,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001556",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.818,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 154,
+   "by_cause": {
+    "direct supplier has a blocking finding": 6,
+    "lineage attributed blocking origins to clean cattle": 148
+   },
+   "by_direct_supplier_label": {
+    "phantom_births": 6,
+    "honest": 130,
+    "over_capacity": 18
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000080",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000740",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000778",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000791",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000804",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000805",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000810",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000823",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "over_capacity"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000868",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000880",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S00-clean": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 81,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 81
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000724",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.322,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000844",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.318,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000851",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.285,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000904",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.872,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000926",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.0,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000986",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.998,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001124",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 13.56,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001206",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 3.768,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001259",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 15.949,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001274",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 20.428,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 142,
+   "by_cause": {
+    "lineage attributed blocking origins to clean cattle": 132,
+    "direct supplier has a blocking finding": 10
+   },
+   "by_direct_supplier_label": {
+    "honest": 132,
+    "dirty_source": 10
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000662",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000744",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000793",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000818",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000838",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000843",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000847",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000900",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000901",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000902",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S01-reference": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 80,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 80
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000654",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.568,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000686",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 2.5,
+     "blocking_origin_pro_rata": 13.79,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000812",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 11.869,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000873",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 12.697,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000980",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.159,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000988",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.09,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001014",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.408,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001027",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.796,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001079",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.577,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001552",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 23.363,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 142,
+   "by_cause": {
+    "direct supplier has a blocking finding": 5,
+    "lineage attributed blocking origins to clean cattle": 137
+   },
+   "by_direct_supplier_label": {
+    "phantom_births": 2,
+    "honest": 105,
+    "over_capacity": 32,
+    "dirty_source": 3
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000057",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000632",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000646",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000688",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000693",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000764",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000768",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000773",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000779",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000788",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S02-hold-60": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 57,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 57
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000623",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 11.508,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000701",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 22.593,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000719",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0.606,
+     "blocking_origin_pro_rata": 15.903,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000736",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.039,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000840",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.122,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000861",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.504,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000887",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.912,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001561",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 17.731,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001960",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.477,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001971",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 20.944,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 139,
+   "by_cause": {
+    "direct supplier has a blocking finding": 6,
+    "lineage attributed blocking origins to clean cattle": 133
+   },
+   "by_direct_supplier_label": {
+    "phantom_births": 6,
+    "honest": 103,
+    "over_capacity": 30
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000057",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000423",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000650",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000659",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "over_capacity"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000717",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000745",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000758",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000762",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000764",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000777",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S03-hold-120": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 74,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 74
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000710",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 17.823,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000782",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 22.803,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000849",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.438,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000870",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.419,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000874",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.752,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000905",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.942,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000936",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 17.783,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001025",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 11.568,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001096",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 4.381,
+     "blocking_origin_pro_rata": 22.607,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001191",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 5.123,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 112,
+   "by_cause": {
+    "direct supplier has a blocking finding": 7,
+    "lineage attributed blocking origins to clean cattle": 105
+   },
+   "by_direct_supplier_label": {
+    "phantom_births": 2,
+    "honest": 82,
+    "over_capacity": 23,
+    "dirty_source": 5
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000057",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000423",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000697",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000698",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000735",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000750",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "over_capacity"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000793",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000808",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000811",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000842",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S04-two-hop": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 81,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 81
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000757",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 22.789,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000766",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 17.64,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000851",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.412,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000888",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.047,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000907",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 22.789,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000951",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.611,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000973",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 18.472,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000978",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.944,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000993",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 23.193,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001051",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 16.509,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 161,
+   "by_cause": {
+    "direct supplier has a blocking finding": 4,
+    "lineage attributed blocking origins to clean cattle": 157
+   },
+   "by_direct_supplier_label": {
+    "launderer": 4,
+    "honest": 118,
+    "over_capacity": 38,
+    "dirty_source": 1
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000030",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "launderer"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000055",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "launderer"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000160",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "launderer"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000232",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "launderer"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000593",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000618",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000700",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000703",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000704",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000706",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S05-redteam": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 80,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 80
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000669",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.916,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000802",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 10.869,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000871",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 10.869,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000899",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 18.793,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001006",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 18.793,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001039",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.27,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001088",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.228,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001093",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.407,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001204",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 16.566,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001216",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.577,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 148,
+   "by_cause": {
+    "direct supplier has a blocking finding": 3,
+    "lineage attributed blocking origins to clean cattle": 145
+   },
+   "by_direct_supplier_label": {
+    "phantom_births": 1,
+    "launderer": 1,
+    "honest": 117,
+    "over_capacity": 27,
+    "dirty_source": 2
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000143",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000230",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "launderer"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000638",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000659",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000696",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000709",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000724",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000736",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000767",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000777",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S06-incomplete": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 41,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 41
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000654",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.559,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000686",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 2.5,
+     "blocking_origin_pro_rata": 13.805,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000873",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 16.37,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001027",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.407,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001079",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.545,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001110",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 10.528,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001354",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.717,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001589",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.977,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-002084",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.63,
+     "coverage": 76.667,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-002290",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 10.796,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 588,
+   "by_cause": {
+    "direct supplier has a blocking finding": 465,
+    "lineage attributed blocking origins to clean cattle": 123
+   },
+   "by_direct_supplier_label": {
+    "honest": 515,
+    "over_capacity": 71,
+    "phantom_births": 2,
+    "launderer": 2,
+    "dirty_source": 3
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000007",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000008",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000009",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000011",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000018",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "over_capacity"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000020",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000021",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000033",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000034",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000043",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S07-split-lots": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 73,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 73
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000812",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.126,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000899",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 22.468,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000923",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 23.679,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001049",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 15.713,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001061",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.227,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001127",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 18.29,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001238",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 18.814,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001257",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.596,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001304",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.458,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001305",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 11.914,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 189,
+   "by_cause": {
+    "direct supplier has a blocking finding": 57,
+    "lineage attributed blocking origins to clean cattle": 132
+   },
+   "by_direct_supplier_label": {
+    "honest": 120,
+    "phantom_births": 40,
+    "over_capacity": 37,
+    "dirty_source": 3,
+    "launderer": 3
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000007",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000008",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000009",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000059",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000060",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000091",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000131",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000144",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000247",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000385",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    }
+   ]
+  }
+ },
+ "S08-mixed-cover": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 79,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 79
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000705",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 16.054,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000876",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 23.846,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000878",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.804,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000912",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 15.461,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000916",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.938,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000931",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.185,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001034",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 13.639,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001050",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 15.264,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001059",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 13.583,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001084",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.987,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 137,
+   "by_cause": {
+    "direct supplier has a blocking finding": 6,
+    "lineage attributed blocking origins to clean cattle": 131
+   },
+   "by_direct_supplier_label": {
+    "phantom_births": 6,
+    "honest": 94,
+    "over_capacity": 35,
+    "launderer": 2
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000057",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000486",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000672",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000712",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "over_capacity"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000716",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000761",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000768",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000794",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000796",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000797",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S09-concealed": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 83,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 83
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000654",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.568,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000686",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 2.5,
+     "blocking_origin_pro_rata": 13.587,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000812",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 11.866,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000873",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 12.55,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000980",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.159,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000988",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.09,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001014",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.286,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001027",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.694,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001079",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 8.577,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001552",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 23.356,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 129,
+   "by_cause": {
+    "lineage attributed blocking origins to clean cattle": 126,
+    "direct supplier has a blocking finding": 3
+   },
+   "by_direct_supplier_label": {
+    "honest": 99,
+    "over_capacity": 27,
+    "dirty_source": 3
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000632",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000688",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000764",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000768",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000773",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000779",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000788",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000789",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000802",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000816",
+     "cause": "lineage attributed blocking origins to clean cattle",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ },
+ "S10-rapid-legit": {
+  "false_negatives": {
+   "definition": "shipments with >= 25 % dirty-source head that PASS",
+   "count": 74,
+   "by_cause": {
+    "lineage attributed the tainted head below the threshold": 74
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000582",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 24.341,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000715",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 11.204,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000719",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.844,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000760",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 9.605,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000814",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 14.097,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000924",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.693,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000925",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 21.693,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-000946",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 19.754,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001475",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 16.443,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    },
+    {
+     "shipment": "SHP-D-001553",
+     "truth_tainted_pct": 100.0,
+     "blocking_origin_fifo": 0,
+     "blocking_origin_pro_rata": 17.82,
+     "coverage": 100.0,
+     "direct_supplier_labels": [
+      "honest"
+     ],
+     "cause": "lineage attributed the tainted head below the threshold"
+    }
+   ]
+  },
+  "false_positives": {
+   "definition": "shipments with < 1 % dirty-source head that are FLAGGED",
+   "count": 173,
+   "by_cause": {
+    "direct supplier has a blocking finding": 40,
+    "lineage attributed blocking origins to clean cattle": 133
+   },
+   "by_direct_supplier_label": {
+    "honest": 136,
+    "phantom_births": 5,
+    "over_capacity": 36,
+    "launderer": 2
+   },
+   "examples": [
+    {
+     "shipment": "SHP-D-000009",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000018",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000019",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000121",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000129",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "phantom_births"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000199",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000284",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000285",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000491",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    },
+    {
+     "shipment": "SHP-D-000517",
+     "cause": "direct supplier has a blocking finding",
+     "direct_supplier_labels": [
+      "honest"
+     ]
+    }
+   ]
+  }
+ }
+}

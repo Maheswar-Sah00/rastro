@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0c0f0d" />
+    <title>Rastro · Every head traced, back to its birth</title>
+    <meta
+      name="description"
+      content="Rastro checks every Amazon cattle ranch against the physics of a herd, traces each shipment upstream, and anchors the evidence on a ledger that enforces one-time certificates for every buyer."
+    />
+    <meta property="og:title" content="Rastro · Tracing laundered cattle in the Amazon" />
+    <meta property="og:description" content="A cow is born once, dies once, and can't be in two places. Neither can its paperwork." />
+    <script>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('rastro-theme') === 'light' ? 'light' : 'dark';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Rastro needs JavaScript to draw its maps and charts.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

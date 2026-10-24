@@ -1,0 +1,685 @@
+{
+  "version": 1,
+  "_note": "Small fixture derived from the pipeline chain_seed.json (synthetic ranches and GTAs). Regenerate with `npm run sample-seed`.",
+  "ranches": [
+    {
+      "id": "R0120",
+      "onchain_id": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "capacity_head": 554,
+      "initial_head": 10,
+      "breeding_cows": 40,
+      "geom_hash": "0x99ace579aadd4b3c629aca5880765e414b827465e9d58544baf1cbd13a16c31f"
+    },
+    {
+      "id": "R0203",
+      "onchain_id": "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac",
+      "capacity_head": 1283,
+      "initial_head": 201,
+      "breeding_cows": 0,
+      "geom_hash": "0x4ee41f44b055de09cfa2ce5c89090c8c6522cd453e776e44936b73db5230dc9d"
+    },
+    {
+      "id": "R0204",
+      "onchain_id": "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294",
+      "capacity_head": 173,
+      "initial_head": 38,
+      "breeding_cows": 0,
+      "geom_hash": "0x9ff2bd99efee859e6c08dbae36a052d9007a042ec842c93b0906e5ccdc1237f3"
+    },
+    {
+      "id": "R0255",
+      "onchain_id": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "capacity_head": 1112,
+      "initial_head": 10,
+      "breeding_cows": 40,
+      "geom_hash": "0x9d3a23cd1a2c17e90d1f04834c5f3dfa95b3c9b06ee3b565e71aa8a43ae4e6ec"
+    },
+    {
+      "id": "R0291",
+      "onchain_id": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "capacity_head": 2941,
+      "initial_head": 10,
+      "breeding_cows": 893,
+      "geom_hash": "0xec73e0d3a6d1bf7155b7a7330265c49012ce74b14deedf1379319eb2a5e1980f"
+    },
+    {
+      "id": "R0296",
+      "onchain_id": "0xcc648eecaa0c2f154fa3505b3e7cb5f68eefa631f90293aa1a071282f73eca95",
+      "capacity_head": 1840,
+      "initial_head": 89,
+      "breeding_cows": 0,
+      "geom_hash": "0x178ddde877b6e8d58fbf02961222b12b42260b10a6293623d360d0ab539f5114"
+    },
+    {
+      "id": "R0345",
+      "onchain_id": "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711",
+      "capacity_head": 892,
+      "initial_head": 125,
+      "breeding_cows": 0,
+      "geom_hash": "0x32fa20ac5e4832b4e94c3dca58dab46fd6b9c092fad32f5e80cc8f4d3c6de084"
+    },
+    {
+      "id": "R0361",
+      "onchain_id": "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a",
+      "capacity_head": 443,
+      "initial_head": 147,
+      "breeding_cows": 0,
+      "geom_hash": "0xae8eb7f62ff2a8e575f2f7d310a9d8de5b7981fac4cbabb9f8286348916fd540"
+    },
+    {
+      "id": "R0389",
+      "onchain_id": "0x21e97be2e408a54609afbd117a709ab1b264076748d3e3a657db1e3caf1b7701",
+      "capacity_head": 5381,
+      "initial_head": 266,
+      "breeding_cows": 0,
+      "geom_hash": "0x210e48ef955b8ea049b675cf3fb60733551c913463ddda3718497fa0f0b33760"
+    }
+  ],
+  "sinks": [
+    {
+      "id": "P:BARCARENA",
+      "onchain_id": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "kind": 2
+    },
+    {
+      "id": "S:SIF_05",
+      "onchain_id": "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b",
+      "kind": 1
+    }
+  ],
+  "events": [
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-000812",
+      "hash": "0x81824f0fae7900c6de8168a6151f773e5b95d93be70dc1623d72d64a215171e6",
+      "from": "0x21e97be2e408a54609afbd117a709ab1b264076748d3e3a657db1e3caf1b7701",
+      "to": "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b",
+      "head": 256,
+      "purpose": 3,
+      "date_unix": 1681516800
+    },
+    {
+      "type": "embargo",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "reason_hash": "0x4aecf4e27f173bd80e0df71e267cc7f71f77b4287a579e08c9457cb95a5c3ec5"
+    },
+    {
+      "type": "births",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 5,
+      "year": 2023
+    },
+    {
+      "type": "births",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 28,
+      "year": 2023
+    },
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-002995",
+      "hash": "0xa57344466ce811f9ccc2346b7e227a340368bdb3f33b3ec0e4c05512eb2b410f",
+      "from": "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac",
+      "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "head": 93,
+      "purpose": 4,
+      "date_unix": 1690848000
+    },
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-003143",
+      "hash": "0xe94a5101515a54637aac9e961fd41a0c3ccb5dd2ba9fbec6cb5446dc013e595c",
+      "from": "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a",
+      "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "head": 137,
+      "purpose": 4,
+      "date_unix": 1691539200
+    },
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-002997",
+      "hash": "0x1b317804bb0d8f8ebd1e8c18c9fb6036025d2e99a64bfa87bd9086655a18dfbf",
+      "from": "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294",
+      "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "head": 28,
+      "purpose": 4,
+      "date_unix": 1692144000
+    },
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-003129",
+      "hash": "0x92c02b6bdc2d140d1ca3302adb4c5bffa51eda29ed28409c676888d2c8fbc11c",
+      "from": "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711",
+      "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "head": 115,
+      "purpose": 4,
+      "date_unix": 1692576000
+    },
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-002994",
+      "hash": "0xb7c466344d275afa38b5fa7a1d9cd5213308f46a9dd19345b64417e4fae626b4",
+      "from": "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac",
+      "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "head": 98,
+      "purpose": 4,
+      "date_unix": 1692835200
+    },
+    {
+      "type": "movement",
+      "gta": "GTA-PA-2023-003081",
+      "hash": "0x5de0bff4207145ce049019c7be72ccb9e5f675e4cc7e4b448e66a5b615d54a70",
+      "from": "0xcc648eecaa0c2f154fa3505b3e7cb5f68eefa631f90293aa1a071282f73eca95",
+      "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "head": 79,
+      "purpose": 4,
+      "date_unix": 1693008000
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 167,
+      "year": 2023
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 157,
+      "year": 2023
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 141,
+      "year": 2023
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 140,
+      "year": 2023
+    },
+    {
+      "type": "births",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 28,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 12,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 15,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 3,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 1,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 154,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 154,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 140,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 143,
+      "year": 2024
+    },
+    {
+      "type": "births",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 31,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 10,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 11,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 1,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 4,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 4,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 163,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 161,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 149,
+      "year": 2025
+    },
+    {
+      "type": "births",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 151,
+      "year": 2025
+    },
+    {
+      "type": "deaths",
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "head": 2
+    },
+    {
+      "type": "deaths",
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 3
+    },
+    {
+      "type": "deaths",
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 4
+    }
+  ],
+  "risk_attestations": [
+    {
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "risk_class": 2,
+      "score_bps": 9900,
+      "evidence_hash": "0x8a6e55c6570b5bcc2aab0d4b3b90afee378808f221adc0eac19f546531cc5c41",
+      "as_of": 1767052800
+    },
+    {
+      "ranch": "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294",
+      "risk_class": 2,
+      "score_bps": 9450,
+      "evidence_hash": "0x9e0e9de2be11be26a80f83b6709e88c392484720db47b6eb288bb8af43bae087",
+      "as_of": 1767052800
+    },
+    {
+      "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "risk_class": 2,
+      "score_bps": 9900,
+      "evidence_hash": "0xf598f5af5c0e150dc201efb5f41b6ab67017dce04926e6e37233eb5274cf6963",
+      "as_of": 1767052800
+    },
+    {
+      "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "risk_class": 2,
+      "score_bps": 9690,
+      "evidence_hash": "0xdc9a4efa5cb956180b1378b3a6d1033706ad7b21b723993e87a9d509e431344c",
+      "as_of": 1767052800
+    },
+    {
+      "ranch": "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711",
+      "risk_class": 2,
+      "score_bps": 9900,
+      "evidence_hash": "0x8395f7a191d85461d3e74b47dec5074fe4e653e6eccac482b96bb6252efe201d",
+      "as_of": 1767052800
+    },
+    {
+      "ranch": "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a",
+      "risk_class": 2,
+      "score_bps": 9400,
+      "evidence_hash": "0x3aed72e5f23b2a6f988282a3b508d76c710b8ddad6d0e034b94742b6137cc674",
+      "as_of": 1767052800
+    }
+  ],
+  "certificates": [
+    {
+      "lot_id": "0x4ee03f4f8ec6cd1fe04d1198bb6b5e5deca838dda827d714c084ab18022faa2b",
+      "shipment": "SHP-0008",
+      "sink": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+      "gta_hashes": [
+        "0xa57344466ce811f9ccc2346b7e227a340368bdb3f33b3ec0e4c05512eb2b410f",
+        "0xe94a5101515a54637aac9e961fd41a0c3ccb5dd2ba9fbec6cb5446dc013e595c",
+        "0x1b317804bb0d8f8ebd1e8c18c9fb6036025d2e99a64bfa87bd9086655a18dfbf",
+        "0x92c02b6bdc2d140d1ca3302adb4c5bffa51eda29ed28409c676888d2c8fbc11c",
+        "0xb7c466344d275afa38b5fa7a1d9cd5213308f46a9dd19345b64417e4fae626b4",
+        "0x5de0bff4207145ce049019c7be72ccb9e5f675e4cc7e4b448e66a5b615d54a70"
+      ],
+      "head": 550,
+      "verdict": 1,
+      "evidence_hash": "0x3271d006e300efebd5ae7da2cdee77e396c4aa2c5bde1784a8bda3b2c2466131"
+    },
+    {
+      "lot_id": "0x75f77fecc3de0e88065220c88396bda411e8da5f0cafdaba8315f299488b7f82",
+      "shipment": "SHP-0327",
+      "sink": "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b",
+      "gta_hashes": [
+        "0x81824f0fae7900c6de8168a6151f773e5b95d93be70dc1623d72d64a215171e6"
+      ],
+      "head": 256,
+      "verdict": 0,
+      "evidence_hash": "0x34373551f327fdac08706aeb1aa1c4a9de999bfebd66c1dbea2bc3cbf2bce2a9"
+    }
+  ],
+  "demo": {
+    "shipments": [
+      "SHP-0008",
+      "SHP-0327"
+    ],
+    "consume_clean": "0x75f77fecc3de0e88065220c88396bda411e8da5f0cafdaba8315f299488b7f82",
+    "double_consume": "0x75f77fecc3de0e88065220c88396bda411e8da5f0cafdaba8315f299488b7f82",
+    "consume_flagged": "0x4ee03f4f8ec6cd1fe04d1198bb6b5e5deca838dda827d714c084ab18022faa2b",
+    "embargoed_attempt": {
+      "gta": "GTA-PA-ATTEMPT-0007",
+      "hash": "0x4adb6e9cb6ff51c22885f6e354a960c5d37e65e9024dba589d8158f29198a7ee",
+      "from": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+      "to": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+      "head": 5,
+      "purpose": 1,
+      "date_unix": 1685577600
+    },
+    "phantom_births_attempt": {
+      "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+      "head": 500,
+      "year": 2025
+    },
+    "labels": {
+      "tr": "SHP-0008",
+      "eu": "SHP-0327",
+      "embargoed_ranch": "R0291",
+      "phantom_ranch": "R0120"
+    }
+  },
+  "subset": {
+    "ranches": [
+      {
+        "id": "R0120",
+        "onchain_id": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+        "capacity_head": 554,
+        "initial_head": 10,
+        "breeding_cows": 40,
+        "geom_hash": "0x99ace579aadd4b3c629aca5880765e414b827465e9d58544baf1cbd13a16c31f"
+      },
+      {
+        "id": "R0203",
+        "onchain_id": "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac",
+        "capacity_head": 1283,
+        "initial_head": 201,
+        "breeding_cows": 0,
+        "geom_hash": "0x4ee41f44b055de09cfa2ce5c89090c8c6522cd453e776e44936b73db5230dc9d"
+      },
+      {
+        "id": "R0204",
+        "onchain_id": "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294",
+        "capacity_head": 173,
+        "initial_head": 38,
+        "breeding_cows": 0,
+        "geom_hash": "0x9ff2bd99efee859e6c08dbae36a052d9007a042ec842c93b0906e5ccdc1237f3"
+      },
+      {
+        "id": "R0255",
+        "onchain_id": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+        "capacity_head": 1112,
+        "initial_head": 10,
+        "breeding_cows": 40,
+        "geom_hash": "0x9d3a23cd1a2c17e90d1f04834c5f3dfa95b3c9b06ee3b565e71aa8a43ae4e6ec"
+      },
+      {
+        "id": "R0291",
+        "onchain_id": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+        "capacity_head": 2941,
+        "initial_head": 10,
+        "breeding_cows": 893,
+        "geom_hash": "0xec73e0d3a6d1bf7155b7a7330265c49012ce74b14deedf1379319eb2a5e1980f"
+      },
+      {
+        "id": "R0296",
+        "onchain_id": "0xcc648eecaa0c2f154fa3505b3e7cb5f68eefa631f90293aa1a071282f73eca95",
+        "capacity_head": 1840,
+        "initial_head": 89,
+        "breeding_cows": 0,
+        "geom_hash": "0x178ddde877b6e8d58fbf02961222b12b42260b10a6293623d360d0ab539f5114"
+      },
+      {
+        "id": "R0345",
+        "onchain_id": "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711",
+        "capacity_head": 892,
+        "initial_head": 125,
+        "breeding_cows": 0,
+        "geom_hash": "0x32fa20ac5e4832b4e94c3dca58dab46fd6b9c092fad32f5e80cc8f4d3c6de084"
+      },
+      {
+        "id": "R0361",
+        "onchain_id": "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a",
+        "capacity_head": 443,
+        "initial_head": 147,
+        "breeding_cows": 0,
+        "geom_hash": "0xae8eb7f62ff2a8e575f2f7d310a9d8de5b7981fac4cbabb9f8286348916fd540"
+      },
+      {
+        "id": "R0389",
+        "onchain_id": "0x21e97be2e408a54609afbd117a709ab1b264076748d3e3a657db1e3caf1b7701",
+        "capacity_head": 5381,
+        "initial_head": 266,
+        "breeding_cows": 0,
+        "geom_hash": "0x210e48ef955b8ea049b675cf3fb60733551c913463ddda3718497fa0f0b33760"
+      }
+    ],
+    "sinks": [
+      {
+        "id": "P:BARCARENA",
+        "onchain_id": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "kind": 2
+      },
+      {
+        "id": "S:SIF_05",
+        "onchain_id": "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b",
+        "kind": 1
+      }
+    ],
+    "events": [
+      {
+        "type": "embargo",
+        "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+        "reason_hash": "0x4aecf4e27f173bd80e0df71e267cc7f71f77b4287a579e08c9457cb95a5c3ec5"
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-000812",
+        "hash": "0x81824f0fae7900c6de8168a6151f773e5b95d93be70dc1623d72d64a215171e6",
+        "from": "0x21e97be2e408a54609afbd117a709ab1b264076748d3e3a657db1e3caf1b7701",
+        "to": "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b",
+        "head": 256,
+        "purpose": 3,
+        "date_unix": 1681516800
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-002995",
+        "hash": "0xa57344466ce811f9ccc2346b7e227a340368bdb3f33b3ec0e4c05512eb2b410f",
+        "from": "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac",
+        "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "head": 93,
+        "purpose": 4,
+        "date_unix": 1690848000
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-003143",
+        "hash": "0xe94a5101515a54637aac9e961fd41a0c3ccb5dd2ba9fbec6cb5446dc013e595c",
+        "from": "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a",
+        "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "head": 137,
+        "purpose": 4,
+        "date_unix": 1691539200
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-002997",
+        "hash": "0x1b317804bb0d8f8ebd1e8c18c9fb6036025d2e99a64bfa87bd9086655a18dfbf",
+        "from": "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294",
+        "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "head": 28,
+        "purpose": 4,
+        "date_unix": 1692144000
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-003129",
+        "hash": "0x92c02b6bdc2d140d1ca3302adb4c5bffa51eda29ed28409c676888d2c8fbc11c",
+        "from": "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711",
+        "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "head": 115,
+        "purpose": 4,
+        "date_unix": 1692576000
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-002994",
+        "hash": "0xb7c466344d275afa38b5fa7a1d9cd5213308f46a9dd19345b64417e4fae626b4",
+        "from": "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac",
+        "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "head": 98,
+        "purpose": 4,
+        "date_unix": 1692835200
+      },
+      {
+        "type": "movement",
+        "gta": "GTA-PA-2023-003081",
+        "hash": "0x5de0bff4207145ce049019c7be72ccb9e5f675e4cc7e4b448e66a5b615d54a70",
+        "from": "0xcc648eecaa0c2f154fa3505b3e7cb5f68eefa631f90293aa1a071282f73eca95",
+        "to": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "head": 79,
+        "purpose": 4,
+        "date_unix": 1693008000
+      }
+    ],
+    "risk_attestations": [
+      {
+        "ranch": "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779",
+        "risk_class": 2,
+        "score_bps": 9900,
+        "evidence_hash": "0x8a6e55c6570b5bcc2aab0d4b3b90afee378808f221adc0eac19f546531cc5c41",
+        "as_of": 1767052800
+      },
+      {
+        "ranch": "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294",
+        "risk_class": 2,
+        "score_bps": 9450,
+        "evidence_hash": "0x9e0e9de2be11be26a80f83b6709e88c392484720db47b6eb288bb8af43bae087",
+        "as_of": 1767052800
+      },
+      {
+        "ranch": "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274",
+        "risk_class": 2,
+        "score_bps": 9900,
+        "evidence_hash": "0xf598f5af5c0e150dc201efb5f41b6ab67017dce04926e6e37233eb5274cf6963",
+        "as_of": 1767052800
+      },
+      {
+        "ranch": "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380",
+        "risk_class": 2,
+        "score_bps": 9690,
+        "evidence_hash": "0xdc9a4efa5cb956180b1378b3a6d1033706ad7b21b723993e87a9d509e431344c",
+        "as_of": 1767052800
+      },
+      {
+        "ranch": "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711",
+        "risk_class": 2,
+        "score_bps": 9900,
+        "evidence_hash": "0x8395f7a191d85461d3e74b47dec5074fe4e653e6eccac482b96bb6252efe201d",
+        "as_of": 1767052800
+      },
+      {
+        "ranch": "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a",
+        "risk_class": 2,
+        "score_bps": 9400,
+        "evidence_hash": "0x3aed72e5f23b2a6f988282a3b508d76c710b8ddad6d0e034b94742b6137cc674",
+        "as_of": 1767052800
+      }
+    ],
+    "certificates": [
+      {
+        "lot_id": "0x4ee03f4f8ec6cd1fe04d1198bb6b5e5deca838dda827d714c084ab18022faa2b",
+        "shipment": "SHP-0008",
+        "sink": "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb",
+        "gta_hashes": [
+          "0xa57344466ce811f9ccc2346b7e227a340368bdb3f33b3ec0e4c05512eb2b410f",
+          "0xe94a5101515a54637aac9e961fd41a0c3ccb5dd2ba9fbec6cb5446dc013e595c",
+          "0x1b317804bb0d8f8ebd1e8c18c9fb6036025d2e99a64bfa87bd9086655a18dfbf",
+          "0x92c02b6bdc2d140d1ca3302adb4c5bffa51eda29ed28409c676888d2c8fbc11c",
+          "0xb7c466344d275afa38b5fa7a1d9cd5213308f46a9dd19345b64417e4fae626b4",
+          "0x5de0bff4207145ce049019c7be72ccb9e5f675e4cc7e4b448e66a5b615d54a70"
+        ],
+        "head": 550,
+        "verdict": 1,
+        "evidence_hash": "0x3271d006e300efebd5ae7da2cdee77e396c4aa2c5bde1784a8bda3b2c2466131"
+      },
+      {
+        "lot_id": "0x75f77fecc3de0e88065220c88396bda411e8da5f0cafdaba8315f299488b7f82",
+        "shipment": "SHP-0327",
+        "sink": "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b",
+        "gta_hashes": [
+          "0x81824f0fae7900c6de8168a6151f773e5b95d93be70dc1623d72d64a215171e6"
+        ],
+        "head": 256,
+        "verdict": 0,
+        "evidence_hash": "0x34373551f327fdac08706aeb1aa1c4a9de999bfebd66c1dbea2bc3cbf2bce2a9"
+      }
+    ]
+  },
+  "id_map": {
+    "0xade4d3880d1a5a01e6f49f64ffaacb9d9dbe7163af12b4dc6f481fb418419779": "R0120",
+    "0xeb26d9cf1a811716059e8b33b5abc8ef9a40e0de8fb12d75c9802f913a95c6ac": "R0203",
+    "0x56a2425f55df40d66e7ff4108559f2a0085f9706cfd58359511cd737fd2bd294": "R0204",
+    "0x98233d9f66096b809db073736edf5cc2dbbf6508bbfcadc5058ccf27fcdac274": "R0255",
+    "0x561b34240196ee4fe9ed5538128a00a86f6f164db2c05e091663bb5f851f8380": "R0291",
+    "0xcc648eecaa0c2f154fa3505b3e7cb5f68eefa631f90293aa1a071282f73eca95": "R0296",
+    "0x6c2b95b707eadd606a57a6814e3659a4975b7ee6a509bf3a5aec04511ba74711": "R0345",
+    "0xc889650f9ba57b8ed1336d99fdb99491a8fc19c120740a5305498b7a1975c57a": "R0361",
+    "0x21e97be2e408a54609afbd117a709ab1b264076748d3e3a657db1e3caf1b7701": "R0389",
+    "0x02053dfb74152f8dca73891a19e91e2c4e8e20c039288a8bbe10ddcba683cb2b": "S:SIF_05",
+    "0x77bdd9fd3a8bfede7a5ca06492a0501eafee04055b698ee1435580e7942ec4bb": "P:BARCARENA"
+  }
+}

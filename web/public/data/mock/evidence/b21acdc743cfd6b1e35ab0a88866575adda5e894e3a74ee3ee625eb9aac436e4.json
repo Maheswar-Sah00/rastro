@@ -1,0 +1,81 @@
+{
+  "kind": "lot_certificate",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "shipment": "SHP-0004",
+  "lot_id": "0xf858d70f7ff3e83efb87e9e42f1fb7ea85acacae2c864479985889f90331e8a3",
+  "destination": "P:BARCARENA",
+  "market": "TR",
+  "head": 915,
+  "date": "2024-05-26",
+  "gtas": [
+    "GTA-PA-2024-119674",
+    "GTA-PA-2024-119715",
+    "GTA-PA-2024-119726",
+    "GTA-PA-2024-119963"
+  ],
+  "trace": {
+    "clean_pct": 0,
+    "watch_pct": 7.8,
+    "flagged_pct": 86,
+    "unknown_pct": 6.2,
+    "max_hops": 3,
+    "by_ranch": [
+      {
+        "ranch": "R0027",
+        "head_equiv": 397.7,
+        "risk_class": "high",
+        "hops": 1
+      },
+      {
+        "ranch": "R0039",
+        "head_equiv": 210.2,
+        "risk_class": "high",
+        "hops": 1
+      },
+      {
+        "ranch": "R0014",
+        "head_equiv": 73.6,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R9001",
+        "head_equiv": 56.5,
+        "risk_class": "unknown",
+        "hops": 2
+      },
+      {
+        "ranch": "R0019",
+        "head_equiv": 51.3,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0022",
+        "head_equiv": 39.9,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0009",
+        "head_equiv": 36.8,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0020",
+        "head_equiv": 28.9,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0032",
+        "head_equiv": 20.2,
+        "risk_class": "watch",
+        "hops": 3
+      }
+    ]
+  },
+  "verdict": "flagged",
+  "rule": "fail if flagged >= 2%"
+}
