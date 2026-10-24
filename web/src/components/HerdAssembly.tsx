@@ -3,6 +3,7 @@ import { useData } from '../lib/data';
 import { fmt } from '../lib/format';
 import { useTheme, type Theme } from '../lib/theme';
 import { BULL_CELLS, BULL_H, BULL_W } from './pixel';
+import { Explain } from '../lib/explain';
 
 // Scroll-driven scene: scattered cubes (one per head of cattle) assemble into the Rastro mark,
 // and the laundered ones light up. Canvas 2D, no dependencies.
@@ -230,6 +231,9 @@ export function HerdAssembly() {
         <div className="wrap assembly-grid">
           <div className="assembly-copy">
             <p className="kicker">One herd, one rulebook</p>
+            <Explain>
+              Each cube is one animal. Rastro keeps a running balance for every ranch (births, deaths, purchases, sales) and follows each animal through every resale, so cattle from illegally cleared land stay marked red all the way to the ship.
+            </Explain>
             <ol className="assembly-steps">
               {steps.map((s, i) => (
                 <li key={s.k} className={i === stage ? 'on' : i < stage ? 'past' : undefined} aria-current={i === stage ? 'step' : undefined}>

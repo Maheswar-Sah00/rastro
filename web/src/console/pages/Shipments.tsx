@@ -29,7 +29,7 @@ function ShipmentList({ route }: { route: Route }) {
     <div className="page">
       <header className="page-head">
         <h1>Shipments</h1>
-        <p className="muted">Deliveries (one slaughterhouse permit) and voyages (all port permits in a month). Open one to investigate its lineage, risk and evidence.</p>
+        <p className="muted">Every delivery to a slaughterhouse and every export ship, with Rastro's decision. Click one to investigate.</p>
       </header>
       <FilterPanel onReset={() => navigate('shipments')}>
         <TextFilter

@@ -52,7 +52,7 @@ with sync_playwright() as p:
         page.wait_for_load_state("networkidle")
         page.wait_for_timeout(1000)
         if r.startswith("#/certificates/"):
-            btn = page.get_by_role("button", name="Verify evidence and status")
+            btn = page.get_by_role("button", name="Verify this certificate")
             if btn.count():
                 btn.click()
                 page.get_by_role("button", name="Verify", exact=True).click()

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { fmt } from '../lib/format';
-import { HELDOUT, HELDOUT_LABEL } from '../lib/heldout';
+import { HELDOUT } from '../lib/heldout';
 import { SourceTag } from './Tags';
+import { Explain } from '../lib/explain';
 
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -57,22 +58,15 @@ export function Hero({ onEnter, entered }: { onEnter: () => void; entered: boole
               Open the console <span aria-hidden>↗</span>
             </a>
           </div>
-          <p className="hero-note" data-enter="settle" style={{ ['--i' as string]: 2 }}>
-            <span className="sq" aria-hidden>
-              IEEE
-            </span>
-            ClimateChain 2026 · Sustainable supply chains
-          </p>
+          <Explain>
+            Rastro's pitch on one screen. The three cards are its headline results on a simulated supply chain, compared with today's one-hop supplier check. The background is a real Sentinel-2 satellite photo of São Félix do Xingu, a deforestation hotspot.
+          </Explain>
         </div>
 
         <div className="hero-cards" role="list" aria-label="Results on the simulated supply chain">
-          <Glass i={0} label="Tainted head flagged" icon={<IconTrace />} value={`${fmt(ref.flaggedPct, 1)}%`} sub={`vs ${fmt(ref.baselinePct, 1)}% today`} note={`${fmt(ref.flagOrReviewPct, 1)}% incl. human review`} />
-          <Glass i={1} label="Clean lots blocked" icon={<IconShield />} value={`${fmt(ref.cleanBlockedPct, 1)}%`} sub={`vs ${fmt(ref.baselineCleanBlockedPct, 1)}% today`} />
-          <Glass i={2} label="Red team: flagged" icon={<IconRanch />} value={`${fmt(red.flaggedPct, 1)}%`} sub={`vs ${fmt(red.baselinePct, 1)}% today`} note="patient, two-hop launderers" />
-          <p className="hero-cards-note" data-enter="settle" style={{ ['--i' as string]: 3 }}>
-            <SourceTag kind="synthetic" title={HELDOUT_LABEL} /> held-out world, never used for tuning ·{' '}
-            <button className="linkish" onClick={onEnter}>results</button>
-          </p>
+          <Glass i={0} label="Illegal cattle caught" icon={<IconTrace />} value={`${fmt(ref.flaggedPct, 1)}%`} sub={`vs ${fmt(ref.baselinePct, 1)}% today`} note={`${fmt(ref.flagOrReviewPct, 1)}% incl. human review`} />
+          <Glass i={1} label="Honest herds wrongly stopped" icon={<IconShield />} value={`${fmt(ref.cleanBlockedPct, 1)}%`} sub={`vs ${fmt(ref.baselineCleanBlockedPct, 1)}% today`} />
+          <Glass i={2} label="Caught: the hardest cheaters" icon={<IconRanch />} value={`${fmt(red.flaggedPct, 1)}%`} sub={`vs ${fmt(red.baselinePct, 1)}% today`} note="cattle hidden two ranches back" />
         </div>
       </div>
 

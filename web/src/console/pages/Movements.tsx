@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api/client';
 import type { BundleMovement } from '../api/types';
 import { useApi } from '../api/useApi';
-import { ProvenanceLabel, Tag } from '../components/Badges';
+import { Tag } from '../components/Badges';
 import { IdLink, KV, LineageView, Section } from '../components/Evidence';
 import { DateFilter, FilterPanel, SelectFilter, TextFilter } from '../components/Filters';
 import { Async } from '../components/States';
@@ -11,6 +11,8 @@ import { loadLayer } from '../map/geo';
 import { nf } from '../lib/format';
 import { href, navigate, setQuery, type Route } from '../lib/router';
 import { LedgerTag } from './Ranches';
+import { Explain } from '../../lib/explain';
+import { Term } from '../../lib/glossary';
 
 const PAGE = 30;
 
@@ -48,43 +50,43 @@ export function Movements({ route }: { route: Route }) {
       <header className="page-head">
         <h1>Movements</h1>
         <p className="muted">
-          GTA permit records (synthetic). The list reads the published v1 movement bundle via <code>/api/v1/datasets/movements</code>; each row opens the
-          canonical record and its lineage from <code>/api/v1/gtas/&#123;id&#125;</code>.
+          Cattle-transport permits (<Term k="GTA">GTAs</Term>), simulated. Click a row to see the full permit and where its animals came from.
         </p>
       </header>
       <FilterPanel onReset={() => navigate('movements')}>
         <DateFilter label="From" value={f.from} onChange={(v) => setQuery(route, { from: v, offset: null })} />
         <DateFilter label="To" value={f.to} onChange={(v) => setQuery(route, { to: v, offset: null })} />
-        <TextFilter label="Ranch (origin or destination)" value={f.ranch} onChange={(v) => setQuery(route, { ranch: v, offset: null })} placeholder="R0120" />
-        <SelectFilter label="Suspicious (detector)" value={f.susp} onChange={(v) => setQuery(route, { susp: v, offset: null })}
+        <TextFilter label="Ranch" value={f.ranch} onChange={(v) => setQuery(route, { ranch: v, offset: null })} placeholder="R0120" />
+        <SelectFilter label="Suspicious" value={f.susp} onChange={(v) => setQuery(route, { susp: v, offset: null })}
           options={[{ value: 'true', label: 'suspicious' }, { value: 'false', label: 'not suspicious' }]} />
-        <SelectFilter label="Ledger validation" value={f.ledger} onChange={(v) => setQuery(route, { ledger: v, offset: null })}
+        <SelectFilter label="Ledger result" value={f.ledger} onChange={(v) => setQuery(route, { ledger: v, offset: null })}
           options={[{ value: 'accepted', label: 'accepted' }, { value: 'InsufficientHerd', label: 'refused: insufficient herd' }, { value: 'OriginEmbargoed', label: 'refused: origin embargoed' }]} />
-        <SelectFilter label="Origin embargo" value={f.emb} onChange={(v) => setQuery(route, { emb: v, offset: null })}
+        <SelectFilter label="From an embargoed ranch" value={f.emb} onChange={(v) => setQuery(route, { emb: v, offset: null })}
           options={[{ value: 'yes', label: 'origin under active embargo' }, { value: 'no', label: 'no active embargo' }]} />
-        <SelectFilter label="Lineage completeness" value={f.prov} onChange={(v) => setQuery(route, { prov: v, offset: null })}
+        <SelectFilter label="Origin known" value={f.prov} onChange={(v) => setQuery(route, { prov: v, offset: null })}
           options={[{ value: 'registered', label: 'origin registered (traceable)' }, { value: 'outside', label: 'origin outside window (incomplete)' }]} />
       </FilterPanel>
       <Async state={state} what="Loading movements">
         {(env) => (
           <>
-            <div className="small muted">
-              <ProvenanceLabel status={env.source === 'mock' ? 'unavailable' : 'synthetic'}>bundle</ProvenanceLabel> {env.schema}
-              {env.source === 'mock' && ' · served from the MOCK bundle'}
-              {f.emb && !embargoed && ' · embargo filter unavailable (map layer missing)'}
-            </div>
+            {(env.source === 'mock' || (f.emb && !embargoed)) && (
+              <div className="small muted">
+                {env.source === 'mock' && 'Showing sample data.'}
+                {f.emb && !embargoed && ' The embargo filter is unavailable right now.'}
+              </div>
+            )}
             <DataTable
               rows={rows.slice(offset, offset + PAGE)}
               rowKey={(m) => m.gta}
               onRow={(m) => navigate('gtas', m.gta)}
               columns={[
-                { key: 'gta', header: 'GTA', render: (m) => <a className="mono" href={href('gtas', m.gta)}>{m.gta}</a> },
+                { key: 'gta', header: 'Permit', render: (m) => <a className="mono" href={href('gtas', m.gta)}>{m.gta}</a> },
                 { key: 'date', header: 'Date', render: (m) => m.date },
-                { key: 'from', header: 'Origin', render: (m) => <IdLink id={m.from} /> },
-                { key: 'to', header: 'Destination', render: (m) => <IdLink id={m.to} /> },
-                { key: 'head', header: 'Head', align: 'right', render: (m) => nf.format(m.head) },
+                { key: 'from', header: 'From', render: (m) => <IdLink id={m.from} /> },
+                { key: 'to', header: 'To', render: (m) => <IdLink id={m.to} /> },
+                { key: 'head', header: 'Cattle', align: 'right', render: (m) => nf.format(m.head) },
                 { key: 'purpose', header: 'Purpose', render: (m) => m.purpose },
-                { key: 'v', header: 'Validation', render: (m) => (m.rejected ? <Tag tone="red">refused · {m.rejected}</Tag> : <Tag tone="green">accepted</Tag>) },
+                { key: 'v', header: 'Ledger', render: (m) => (m.rejected ? <Tag tone="red">refused · {m.rejected}</Tag> : <Tag tone="green">accepted</Tag>) },
                 { key: 's', header: 'Suspicious', render: (m) => (m.suspicious ? <Tag tone="amber">yes</Tag> : <span className="muted">no</span>) },
               ]}
             />
@@ -105,6 +107,7 @@ export function GtaPage({ id }: { id: string }) {
           <a href={href('movements')}>Movements</a> / <span className="mono">{id}</span>
         </div>
         <h1 className="mono">{id}</h1>
+        <Explain>One permit: who sent how many cattle to whom and when, and where those animals originally came from.</Explain>
       </header>
       <Async state={state} what={`Loading ${id}`}>
         {({ data: d }) => {
@@ -121,13 +124,13 @@ export function GtaPage({ id }: { id: string }) {
                     ['Purpose', m.purpose],
                     ['Permit status', m.permit_status],
                     ['Declared lot', <IdLink id={m.lot_id} />],
-                    ['Source lot ids', m.source_lot_ids === null ? 'not carried by GTAs (null)' : m.source_lot_ids.join(', ')],
+                    ['Source lot ids', m.source_lot_ids === null ? 'not recorded on permits' : m.source_lot_ids.join(', ')],
                     ['Shipment', d.shipment_id ? <IdLink id={d.shipment_id} /> : '—'],
-                    ['Provenance', m.provenance],
+                    ['Data source', m.provenance],
                   ]}
                 />
               </Section>
-              <Section title="Lineage of this lot" aside={<a href={href('lots', m.lot_id)}>Lot page (FIFO / pro-rata)</a>}>
+              <Section title="Lineage of this lot" aside={<a href={href('lots', m.lot_id)}>Lot page</a>}>
                 <LotLineageBlock lotId={m.lot_id} refused={d.ledger_status !== 'accepted'} />
               </Section>
             </div>
@@ -155,12 +158,15 @@ export function LotPage({ id }: { id: string }) {
         <h1 className="mono">{id}</h1>
         <div className="seg" role="group" aria-label="Allocation policy">
           <button type="button" className={policy === 'fifo' ? 'on' : ''} onClick={() => setPolicy('fifo')} aria-pressed={policy === 'fifo'}>
-            FIFO (default)
+            Oldest animals leave first (default)
           </button>
           <button type="button" className={policy === 'pro_rata' ? 'on' : ''} onClick={() => setPolicy('pro_rata')} aria-pressed={policy === 'pro_rata'}>
-            Pro-rata (mixed herd)
+            Animals mix evenly
           </button>
         </div>
+        <Explain>
+          Where the cattle in this lot came from, hop by hop. FIFO assumes a ranch's oldest animals leave first; pro-rata assumes a mixed herd, which shows how much the answer depends on that assumption.
+        </Explain>
       </header>
       <Section title="Lineage">
         <LotLineageBlock lotId={id} policy={policy} />

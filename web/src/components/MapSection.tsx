@@ -8,6 +8,7 @@ import { useEvalMode } from '../lib/ui';
 import type { Ranch } from '../lib/types';
 import type { LayerToggles } from './MapView';
 import { DataTag, SourceTag } from './Tags';
+import { Explain } from '../lib/explain';
 
 const MapView = lazy(() => import('./MapView'));
 
@@ -156,6 +157,9 @@ export function MapSection({ selected, onSelect, forceLoad }: { selected: string
             Where the cattle come from
           </h2>
           <p className="deck">Four steps through the study area. Then explore it yourself.</p>
+          <Explain>
+            A map of the study area in Pará, Brazil. Forest loss and protected areas are real public data (INPE PRODES, FUNAI); ranches and cattle movements are simulated. Step through the four views, then pan, zoom and click a ranch for its details.
+          </Explain>
         </div>
 
         <div className="map-steps" role="tablist" aria-label="Map story">
@@ -272,7 +276,7 @@ export function MapSection({ selected, onSelect, forceLoad }: { selected: string
               </div>
               <div className="row small muted" style={{ justifyContent: 'space-between', width: 150, marginTop: -3 }}>
                 <span>2008</span>
-                <span style={{ color: 'var(--defor)', fontWeight: 600 }}>2021+ EUDR</span>
+                <span style={{ color: 'var(--defor)', fontWeight: 600 }}>2021+ (after EU deadline)</span>
               </div>
               <div className="row">
                 <span className="sw" style={{ background: pal.cleared }} /> Cleared before 2008
@@ -486,7 +490,7 @@ function StoryCard({ step, pal, theme, stats, featured, onSelect, onNext }: {
 
 function featureBlurb(r: Ranch) {
   const codes = r.risk.flags.map((f) => f.code);
-  if (codes.includes('PHANTOM_BIRTHS')) return `${r.role === 'intermediary' ? 'Intermediary' : 'Ranch'} that invents calves on paper`;
+  if (codes.includes('PHANTOM_BIRTHS')) return `${r.role === 'intermediary' ? 'Middleman' : 'Ranch'} that invents calves on paper`;
   if (codes.includes('EMBARGOED')) return 'Embargoed ranch with post-2020 clearing';
   if (codes.includes('PASS_THROUGH')) return 'Resells cattle within days';
   if (codes.includes('PROTECTED_AREA')) return 'Pasture inside a protected area';

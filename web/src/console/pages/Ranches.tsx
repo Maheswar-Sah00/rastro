@@ -9,6 +9,7 @@ import { Async } from '../components/States';
 import { DataTable, Pagination } from '../components/Table';
 import { ha, label, nf, num } from '../lib/format';
 import { href, navigate, setQuery, type Route } from '../lib/router';
+import { Explain } from '../../lib/explain';
 
 const PAGE = 25;
 
@@ -37,9 +38,7 @@ function RanchList({ route }: { route: Route }) {
     <div className="page">
       <header className="page-head">
         <h1>Ranches</h1>
-        <p className="muted">
-          Synthetic ranch registry. Environmental columns come from the geospatial engine on real layers; “—” means not measured, never “none”.
-        </p>
+        <p className="muted">Every ranch and its risk. Click a row to see why. A dash (—) means not measured, not zero.</p>
       </header>
       <FilterPanel onReset={() => navigate('ranches')}>
         <TextFilter label="Search" value={text} onChange={(v) => setQuery(route, { q: v, offset: null })} placeholder="R0120 or name" />
@@ -76,7 +75,7 @@ function RanchTable({ rows }: { rows: RanchSummary[] }) {
         { key: 'area', header: 'Area', align: 'right', render: (r) => ha(r.total_area_hectares, 0) },
         { key: 'pasture', header: 'Pasture', align: 'right', render: (r) => ha(r.pasture_area_hectares, 0) },
         { key: 'cap', header: 'Capacity (head)', align: 'right', render: (r) => num(r.estimated_cattle_capacity) },
-        { key: 'defo', header: 'Post-cut-off clearing', align: 'right', render: (r) => ha(r.post_cutoff_deforestation_ha) },
+        { key: 'defo', header: 'Forest cleared after 2020', align: 'right', render: (r) => ha(r.post_cutoff_deforestation_ha) },
         { key: 'env', header: 'Evidence', render: (r) => <EnvTag s={r.environmental_evidence} /> },
         { key: 'risk', header: 'Risk', render: (r) => <RiskBadge risk={r.risk_class} assessed={r.risk_status === 'assessed'} /> },
       ]}
@@ -96,6 +95,7 @@ function RanchPage({ id }: { id: string }) {
           <a href={href('ranches')}>Ranches</a> / <span className="mono">{id}</span>
         </div>
         <h1 className="mono">{id}</h1>
+        <Explain>One ranch: its location, environmental findings with evidence, herd balance over time, and the cattle moving in and out.</Explain>
       </header>
       <RanchDetailBody id={id} />
     </div>
@@ -111,43 +111,43 @@ export function RanchDetailBody({ id, compact }: { id: string; compact?: boolean
         const r = d.ranch;
         const inside = r.entity_type === 'ranch';
         return (
+          <div className="stack">
           <div className={compact ? 'stack' : 'grid-2 align-start'}>
             <div className="stack">
               <Section
-                title="Registry"
+                title="About this ranch"
                 aside={
                   <span>
-                    <ProvenanceLabel status={meta.data_status?.ranches || 'synthetic'}>record</ProvenanceLabel>{' '}
+                    <ProvenanceLabel status={meta.data_status?.ranches || 'synthetic'} />{' '}
                     <RiskBadge risk={d.risk.risk_class} assessed={d.risk.risk_status === 'assessed'} />
                   </span>
                 }
               >
                 <KV
                   rows={[
-                    ['Display name', r.display_name],
-                    ['Type / role', `${r.entity_type} · ${r.role}`],
+                    ['Name', r.display_name],
+                    ['Role', r.role],
                     ['Municipality', r.municipality],
                     ['Area / pasture', `${ha(r.total_area_hectares, 0)} / ${ha(r.pasture_area_hectares, 0)}`],
-                    ['Estimated capacity', r.estimated_cattle_capacity === null ? '—' : `${nf.format(r.estimated_cattle_capacity)} head (1.5 head/ha)`],
-                    ['Opening herd (declared)', `${nf.format(r.opening_head)} head`],
-                    ['Breeding cows (declared)', nf.format(r.breeding_cows_declared)],
-                    ['Owner group', <span className="mono">{r.owner_group_id}</span>],
-                    ['Data quality', `${r.data_quality.geometry} · ${r.data_quality.attributes}`],
-                    ['Movements', Object.entries(d.movements).map(([k, v]) => `${label(k)} ${nf.format(v)}`).join(' · ') || '—'],
-                    ['IsolationForest score', d.risk.anomaly_score === null ? '—' : `${num(d.risk.anomaly_score, 3)} (ranking, not a probability)`],
+                    ['Cattle the land can hold', r.estimated_cattle_capacity === null ? '—' : `about ${nf.format(r.estimated_cattle_capacity)}`],
+                    ['Starting herd', `${nf.format(r.opening_head)} cattle`],
+                    ['Breeding cows', nf.format(r.breeding_cows_declared)],
+                    ['Permits', Object.entries(d.movements).map(([k, v]) => `${nf.format(v)} ${k === 'out' ? 'sent' : k === 'in' ? 'received' : label(k)}`).join(' · ') || '—'],
                   ]}
                 />
                 {inside && (
                   <a className="btn btn-small" href={href('map', null, { ranch: id, focus: id })}>
-                    Open on Live Map
+                    Show on the map
                   </a>
                 )}
               </Section>
+            </div>
+            <div className="stack">
               <Section title="Environmental evidence">
                 <EvidenceCard ev={d.environmental.evidence} status={d.environmental.status} />
               </Section>
             </div>
-            <div className="stack">
+          </div>
               <Section title={`Findings (${d.risk.findings.length})`}>
                 {d.risk.risk_status === 'not_assessed' ? (
                   <div className="note warn">The risk engine has not assessed this ranch. Not assessed is not clean.</div>
@@ -155,8 +155,7 @@ export function RanchDetailBody({ id, compact }: { id: string; compact?: boolean
                   <FindingList findings={d.risk.findings} empty="Assessed: no finding on this ranch." />
                 )}
               </Section>
-              <RanchMovements id={id} />
-            </div>
+          <RanchMovements id={id} />
           </div>
         );
       }}
@@ -198,11 +197,11 @@ export function MovementTable({ rows }: { rows: MovementView[] }) {
       rowKey={(m) => m.movement.gta_id}
       onRow={(m) => navigate('gtas', m.movement.gta_id)}
       columns={[
-        { key: 'gta', header: 'GTA', render: (m) => <IdLink id={m.movement.gta_id} /> },
+        { key: 'gta', header: 'Permit', render: (m) => <IdLink id={m.movement.gta_id} /> },
         { key: 'date', header: 'Date', render: (m) => m.movement.movement_date },
         { key: 'from', header: 'From', render: (m) => <IdLink id={m.movement.origin_id} /> },
         { key: 'to', header: 'To', render: (m) => <IdLink id={m.movement.destination_id} /> },
-        { key: 'head', header: 'Head', align: 'right', render: (m) => nf.format(m.movement.head_count) },
+        { key: 'head', header: 'Cattle', align: 'right', render: (m) => nf.format(m.movement.head_count) },
         { key: 'status', header: 'Ledger', render: (m) => <LedgerTag m={m} /> },
       ]}
     />

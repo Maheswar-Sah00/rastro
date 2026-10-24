@@ -6,6 +6,7 @@ import type { ChainRecord, OnChain } from '../lib/types';
 import { useNear } from './MapSection';
 import { ChartCard, DataTable, HBars, STATUS } from './charts';
 import { SourceTag } from './Tags';
+import { Explain } from '../lib/explain';
 
 const REFUSAL: Record<string, string> = {
   InsufficientHerd: 'Shipped more than held',
@@ -55,6 +56,9 @@ export function LedgerSection({ onRanch, onShipment }: { onRanch: (id: string) =
             Try to cheat the ledger
           </h2>
           <p className="deck">Physics can't be argued with. Press a button and watch the contract refuse.</p>
+          <Explain>
+            A demo of the blockchain layer. Each button attempts a cheat (reusing a certificate, buying from a flagged or embargoed ranch, inventing births) and shows the smart contract refusing it on its own rules, without trusting Rastro's servers.
+          </Explain>
         </div>
 
         {refused.length > 0 && (
@@ -88,7 +92,7 @@ export function LedgerSection({ onRanch, onShipment }: { onRanch: (id: string) =
             </label>
           )}
           <p className="small muted" style={{ margin: 0 }}>
-            {live ? 'Live eth_call from the role account; falls back to the recorded result.' : 'Replays the recorded eth_call results.'}
+            {live ? 'Asks the live blockchain directly; if it is unreachable, shows the answer recorded earlier.' : 'Shows answers recorded from the blockchain earlier.'}
           </p>
         </div>
 
@@ -204,7 +208,7 @@ function CheatCard({ d, oc, rec, origin, live, onRanch, onShipment }: { d: DemoD
         <ol className="steps" aria-live="polite">
           {step >= 1 && <StepLi done={step > 1}>build call</StepLi>}
           {step >= 2 && <StepLi done={step > 2}>sign as {ROLE[d.key]}</StepLi>}
-          {step >= 3 && <StepLi done={step > 3}>eth_call → HerdLedger</StepLi>}
+          {step >= 3 && <StepLi done={step > 3}>Ask the HerdLedger contract</StepLi>}
         </ol>
       )}
       {phase === 'done' && res && (
@@ -219,7 +223,7 @@ function CheatCard({ d, oc, rec, origin, live, onRanch, onShipment }: { d: DemoD
                 {res.args.length > 0 && <>({res.args.map((a) => (a.startsWith('0x') && a.length > 20 ? shortHash(a, 6, 4) : a)).join(', ')})</>}
               </div>
               <div className="src">
-                {res.mode === 'live' ? `Live eth_call on ${oc?.network}` : `Recorded during the contract replay${res.block != null ? `, block ${res.block}` : ''}`}
+                {res.mode === 'live' ? `Live answer from ${oc?.network}` : `Recorded earlier from the blockchain${res.block != null ? `, block ${res.block}` : ''}`}
                 {res.detail ? ` · ${res.detail}` : ''}
               </div>
             </div>

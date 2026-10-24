@@ -4,6 +4,7 @@ import type { CertificateView, Health, Ready } from '../api/types';
 import { useApi } from '../api/useApi';
 import { resolveSearch } from '../lib/ids';
 import { href, navigate } from '../lib/router';
+import { ThemeButton } from '../../components/ThemeButton';
 import { Icon } from './Icon';
 
 export const NAV: { page: string; label: string; icon: string; group: string }[] = [
@@ -27,11 +28,11 @@ export interface EnvInfo { kind: 'simulation' | 'local_chain' | 'public_testnet'
 export function envFrom(health: Health | null, ready: Ready | null, chain: CertificateView['chain'] | null): EnvInfo {
   if (!health) return { kind: 'unknown', label: 'API offline', detail: 'No connection to the Rastro API; nothing on screen is live.' };
   if (chain?.verified_public && chain.available)
-    return { kind: 'public_testnet', label: `Public testnet · ${chain.network || chain.chain_id}`, detail: 'Chain reads are eth_calls to a public testnet. Ranch data is still synthetic.' };
+    return { kind: 'public_testnet', label: `Public test blockchain · ${chain.network || chain.chain_id}`, detail: 'Blockchain checks are read from a public test network. Ranch data is still simulated.' };
   if (chain && chain.mode === 'rpc' && chain.available)
-    return { kind: 'local_chain', label: 'Local chain (anvil)', detail: 'Chain reads go to a local anvil node. Not a public network. Ranch data is synthetic.' };
+    return { kind: 'local_chain', label: 'Test blockchain (this computer)', detail: 'Blockchain checks run on a private test network on this computer, not a public one. Ranch data is simulated.' };
   if (chain && chain.mode === 'local_records')
-    return { kind: 'local_chain', label: 'Local chain (anvil replay)', detail: `${chain.label}. Ranch data is synthetic.` };
+    return { kind: 'local_chain', label: 'Test blockchain (replayed)', detail: `${chain.label}. Ranch data is simulated.` };
   return {
     kind: 'simulation',
     label: 'Local simulation',
@@ -73,6 +74,7 @@ export function Layout({ page, routeKey, env, children, demo }: { page: string; 
         <a className="small topbar-link" href="./index.html">
           Public site
         </a>
+        <ThemeButton />
       </header>
       <div className="shell">
         <nav className={`sidenav ${navOpen ? 'open' : ''}`} aria-label="Main">
@@ -86,7 +88,6 @@ export function Layout({ page, routeKey, env, children, demo }: { page: string; 
               ))}
             </div>
           ))}
-          <div className="sidenav-foot small muted">All ranch, herd and permit data is synthetic.</div>
         </nav>
         {navOpen && <div className="nav-scrim" onClick={() => setNavOpen(false)} aria-hidden />}
         <main className="main" id="main" ref={mainRef}>
@@ -104,7 +105,7 @@ function GlobalSearch() {
     e.preventDefault();
     const t = resolveSearch(q);
     if (!t) {
-      setMsg('Use a ranch (R0120), GTA (GTA-PA-2024-004211), lot (LOT-…), shipment (SHP-V-202308) or certificate (0x…) id.');
+      setMsg('Try an id like R0120 (ranch), GTA-PA-2024-004211 (transport permit), LOT-… (lot), SHP-V-202308 (shipment) or 0x… (certificate).');
       return;
     }
     setMsg(null);
@@ -124,7 +125,7 @@ function GlobalSearch() {
           setQ(e.target.value);
           setMsg(null);
         }}
-        placeholder="Ranch, GTA, lot, shipment or certificate id"
+        placeholder="Search a ranch, permit, lot, shipment or certificate id"
         autoComplete="off"
       />
       {msg && (

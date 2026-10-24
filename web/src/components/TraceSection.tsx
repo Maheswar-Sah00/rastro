@@ -10,6 +10,7 @@ import { Sankey } from './Sankey';
 import { EvidenceVerify } from './EvidenceVerify';
 import { useNear } from './MapSection';
 import { DataTag, RiskChip, SourceTag, Stamp } from './Tags';
+import { Explain } from '../lib/explain';
 
 const DEFAULT_FEATURED = 'SHP-0008'; // Türkiye-bound voyage
 const DEFAULT_BIG = 'SHP-0018'; // the biggest flagged voyage
@@ -65,6 +66,9 @@ export function TraceSection({ shipmentId, onShipment, onRanch, forceLoad }: { s
             Can this buyer know?
           </h2>
           <p className="deck">Pick a ship. See where its cattle were born.</p>
+          <Explain>
+            Pick any shipment to see where its cattle came from. The flow diagram runs from birth ranches on the left to the ship or slaughterhouse on the right; red bands are cattle from flagged ranches. "Today" is the current one-hop check's verdict, "Rastro" is ours (✓ pass, ✕ fail, ! review).
+          </Explain>
         </div>
 
         {ships.status === 'loading' && near && <div className="card empty">Loading shipments…</div>}
@@ -178,7 +182,7 @@ function VoyageStrip({ voyages: all, current, onPick, origin }: { voyages: Shipm
   );
 }
 
-type VerdictFilter = 'disagree' | 'all' | 'fail' | 'review' | 'pass' | 'sqfail';
+type VerdictFilter = 'disagree' | 'all' | 'fail' | 'review' | 'sqfail';
 function Picker({ list, current, defaults, onPick, destById }: { list: Shipment[]; current: Shipment | null; defaults: ReturnType<typeof pickDefaults>; onPick: (id: string) => void; destById: Map<string, Destination> }) {
   const [market, setMarket] = useState<string>('EU');
   const [verdict, setVerdict] = useState<VerdictFilter>('all');
@@ -189,12 +193,12 @@ function Picker({ list, current, defaults, onPick, destById }: { list: Shipment[
   const filtered = useMemo(() => {
     const qq = q.trim().toUpperCase();
     return list.filter((s) => {
-      if (isVoyage(s)) return false;
+      // The list shows only what Rastro catches: lots it fails or sends to review.
+      if (isVoyage(s) || s.rastro_verdict === 'pass') return false;
       if (market !== 'all' && s.market !== market) return false;
       if (verdict === 'disagree' && !disagree(s)) return false;
       if (verdict === 'fail' && s.rastro_verdict !== 'fail') return false;
       if (verdict === 'review' && s.rastro_verdict !== 'review') return false;
-      if (verdict === 'pass' && s.rastro_verdict !== 'pass') return false;
       if (verdict === 'sqfail' && s.status_quo_verdict !== 'fail') return false;
       if (qq && !s.id.includes(qq) && !(s.direct_suppliers ?? []).some((d) => d.includes(qq)) && !s.destination.toUpperCase().includes(qq)) return false;
       return true;
@@ -238,17 +242,16 @@ function Picker({ list, current, defaults, onPick, destById }: { list: Shipment[
             ))}
           </select>
           <select aria-label="Verdict" value={verdict} onChange={(e) => setVerdict(e.target.value as VerdictFilter)}>
-            <option value="all">Any verdict</option>
+            <option value="all">Fail or review</option>
             <option value="disagree">Passes today, Rastro fails</option>
             <option value="fail">Rastro: fail</option>
             <option value="review">Rastro: review</option>
-            <option value="pass">Rastro: pass</option>
             <option value="sqfail">Fails today's check</option>
           </select>
           <input type="search" placeholder="SHP-… or R0…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search shipments" style={{ flex: 1, minWidth: 110 }} />
         </div>
         <div className="small muted" style={{ marginBottom: 6 }}>
-          {fmt(filtered.length)} deliveries
+          {fmt(filtered.length)} deliveries Rastro fails or sends to review
         </div>
         <div className="ship-list" role="listbox" aria-label="Deliveries">
           {filtered.slice(0, limit).map((s) => (

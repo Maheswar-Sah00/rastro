@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useData } from '../lib/data';
+import { Explain } from '../lib/explain';
 
 export function FinalCta({ onTrace }: { onTrace: () => void }) {
   const headline = useData('metrics').data?.headline as { voyages?: number } | undefined;
@@ -41,6 +42,9 @@ export function FinalCta({ onTrace }: { onTrace: () => void }) {
       <p className="deck">
         Pick any of the {voyages ?? 36} live-export voyages from Barcarena and see where its cattle were born, ranch by ranch, permit by permit.
       </p>
+      <Explain>
+        End of the walkthrough. Trace a voyage on this page, or open the analyst console: the working tool an investigator would use day to day.
+      </Explain>
       <div className="hero-cta center">
         <button className="btn btn-primary btn-lg" onClick={onTrace}>
           Trace a ship to Türkiye <span aria-hidden>↗</span>

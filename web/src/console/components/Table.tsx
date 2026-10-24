@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { nf } from '../lib/format';
 
 export interface Column<T> {
@@ -20,7 +20,7 @@ export function DataTable<T>({ rows, columns, rowKey, onRow, caption, selected }
   selected?: string | null;
 }) {
   return (
-    <div className="table-wrap">
+    <TableWrap>
       <table className="data">
         {caption && <caption className="sr-only">{caption}</caption>}
         <thead>
@@ -53,6 +53,50 @@ export function DataTable<T>({ rows, columns, rowKey, onRow, caption, selected }
           })}
         </tbody>
       </table>
+    </TableWrap>
+  );
+}
+
+/**
+ * Table container that never scrolls sideways. Columns compress first (headers wrap); if the table still
+ * doesn't fit, each row becomes a small card with every value labelled by its column header.
+ */
+export function TableWrap({ children }: { children: ReactNode }) {
+  const wrap = useRef<HTMLDivElement>(null);
+  const natural = useRef(0); // table width in normal layout, remembered while stacked
+  const [stacked, setStacked] = useState(false);
+
+  // Label every cell with its column header, for the stacked layout.
+  useLayoutEffect(() => {
+    const t = wrap.current?.querySelector('table');
+    if (!t) return;
+    const heads = [...t.querySelectorAll('thead th')].map((th) => th.textContent?.trim() ?? '');
+    t.querySelectorAll('tbody tr').forEach((tr) =>
+      [...tr.children].forEach((td, i) => {
+        (td as HTMLElement).dataset.label = heads[i] ?? '';
+        td.classList.toggle('wide', (td.textContent?.length ?? 0) > 28);
+      }),
+    );
+  });
+
+  useLayoutEffect(() => {
+    const el = wrap.current;
+    const t = el?.querySelector('table');
+    if (!el || !t) return;
+    const check = () => {
+      if (!el.classList.contains('stacked')) natural.current = t.scrollWidth;
+      setStacked(natural.current > el.clientWidth + 1);
+    };
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    ro.observe(t);
+    check();
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={wrap} className={`table-wrap${stacked ? ' stacked' : ''}`}>
+      {children}
     </div>
   );
 }

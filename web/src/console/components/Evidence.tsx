@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from 'react';
 import type { Finding, GeoEvidence, LineageTrace } from '../api/types';
-import { ha, label, num, pct, short } from '../lib/format';
+import { ha, label, num, pct } from '../lib/format';
 import { href } from '../lib/router';
 import { resolveSearch } from '../lib/ids';
-import { ProvenanceLabel, SeverityBadge, Tag } from './Badges';
+import { SeverityBadge, Tag } from './Badges';
+import { TableWrap } from './Table';
 
 export function KV({ rows }: { rows: [ReactNode, ReactNode][] }) {
   return (
@@ -51,28 +52,18 @@ export function EvidenceCard({ ev, status }: { ev: GeoEvidence | null; status: '
   return (
     <div className="evidence">
       <div className="evidence-head">
-        <Tag tone={legalTone}>EUDR indicator: {label(ev.legal.eudr_cutoff_indicator)}</Tag>
+        <Tag tone={legalTone}>{ev.legal.eudr_cutoff_indicator === 'post_cutoff_clearing_detected' ? 'Forest cleared after the EU 2020 deadline' : ev.legal.eudr_cutoff_indicator === 'undetermined' ? 'EU 2020 deadline: not determined' : 'No clearing after the EU 2020 deadline'}</Tag>
         <Tag tone={ev.scientific_risk.class === 'high' ? 'red' : ev.scientific_risk.class === 'watch' ? 'amber' : 'neutral'}>
-          Environmental risk: {ev.scientific_risk.class}
+          Risk: {ev.scientific_risk.class}
         </Tag>
-        {Object.entries(ev.data_status).map(([k, v]) => (
-          <ProvenanceLabel key={k} status={v}>
-            {k}
-          </ProvenanceLabel>
-        ))}
       </div>
       <KV
         rows={[
-          ['Post-cut-off clearing', ha(d.post_cutoff_ha)],
-          ['Straddling PRODES 2021', ha(d.straddles_cutoff_ha)],
-          ['Pre-cut-off clearing', ha(d.pre_cutoff_ha)],
-          ['Unknown date', ha(d.unknown_date_ha)],
-          ['Nearest post-cut-off clearing', d.nearest_post_cutoff_km === null ? '—' : `${num(d.nearest_post_cutoff_km, 2)} km (proximity is not a violation)`],
-          ['Layer coverage', d.coverage],
-          ['Indigenous land overlap', ev.indigenous_territory ? `${ha(ev.indigenous_territory.overlap_ha)} (${pct(100 * ev.indigenous_territory.overlap_share)})` : '— not measured'],
-          ['Protected-area overlap', ev.protected_area ? `${ha(ev.protected_area.overlap_ha)} (${pct(100 * ev.protected_area.overlap_share)})` : '— not measured'],
+          ['Forest cleared after 2020', ha(d.post_cutoff_ha)],
+          ['Forest cleared up to 2020', ha(d.pre_cutoff_ha)],
+          ['Overlaps Indigenous land', ev.indigenous_territory ? `${ha(ev.indigenous_territory.overlap_ha)} (${pct(100 * ev.indigenous_territory.overlap_share)})` : '— not measured'],
+          ['Overlaps a protected area', ev.protected_area ? `${ha(ev.protected_area.overlap_ha)} (${pct(100 * ev.protected_area.overlap_share)})` : '— not measured'],
           ['Embargo', `${ev.embargo.status}${ev.embargo.since ? ` since ${ev.embargo.since}` : ''}${ev.embargo.simulated ? ' (simulated)' : ''}`],
-          ['Cut-off / as of', `${ev.cutoff_date} / ${ev.as_of}`],
         ]}
       />
       {[...(ev.indigenous_territory?.areas || []), ...(ev.protected_area?.areas || [])].map((a) => (
@@ -88,10 +79,6 @@ export function EvidenceCard({ ev, status }: { ev: GeoEvidence | null; status: '
           ))}
         </ul>
       )}
-      <details className="small">
-        <summary>Dataset versions</summary>
-        <KV rows={Object.entries(ev.dataset_versions).map(([k, v]) => [k, <span className="mono">{v}</span>])} />
-      </details>
     </div>
   );
 }
@@ -103,36 +90,20 @@ export function FindingCard({ f }: { f: Finding }) {
       <header>
         <SeverityBadge severity={f.severity} blocking={f.blocking} />
         <strong>{label(f.code)}</strong>
-        <span className="muted small">
-          {f.detector} · confidence {num(f.confidence, 2)}
-        </span>
       </header>
       <p>{f.explanation}</p>
       <button type="button" className="btn btn-link small" onClick={() => setOpen(!open)} aria-expanded={open}>
-        {open ? 'Hide evidence' : 'Show values, thresholds and evidence'}
+        {open ? 'Hide the numbers' : 'Show the numbers'}
       </button>
       {open && (
         <div className="finding-detail">
           <KV
             rows={[
               ...Object.entries(f.observed).map(([k, v]) => [label(k), fmtVal(v)] as [ReactNode, ReactNode]),
-              ...f.thresholds.map((t) => [`Threshold: ${t.name}`, `${t.comparison} ${fmtVal(t.value)}`] as [ReactNode, ReactNode]),
-              ['Detector version', f.detector_version],
-              ['Observed at', f.observed_at],
-              ['Evidence hash', <span className="mono">{short(f.evidence_hash, 16)}</span>],
+              ...f.thresholds.map((t) => [`Limit: ${label(t.name)}`, `${t.comparison} ${fmtVal(t.value)}`] as [ReactNode, ReactNode]),
+              ['Seen on', f.observed_at.slice(0, 10)],
             ]}
           />
-          {f.evidence_ids.length > 0 && (
-            <div className="small">
-              Evidence records:{' '}
-              {f.evidence_ids.slice(0, 12).map((e) => (
-                <code key={e} className="chip">
-                  {e}
-                </code>
-              ))}
-              {f.evidence_ids.length > 12 && <span className="muted"> +{f.evidence_ids.length - 12} more</span>}
-            </div>
-          )}
           {f.limitations.length > 0 && (
             <ul className="warnings">
               {f.limitations.map((l, i) => (
@@ -184,23 +155,23 @@ export function LineageView({ t, maxSources = 15 }: { t: LineageTrace; maxSource
   return (
     <div className="lineage">
       <div className="kpis small-kpis">
-        <Kpi label="Lineage coverage" value={pct(t.coverage_pct)} hint="Share traced to a declared birth or opening stock" />
-        <Kpi label="Any risk (each head once)" value={pct(t.exposure_pct.any_risk)} />
+        <Kpi label="Traced back to birth" value={pct(t.coverage_pct)} hint="Share of cattle traced to a recorded birth or starting herd" />
+        <Kpi label="Cattle with any risk" value={pct(t.exposure_pct.any_risk)} />
         <Kpi label="Unknown origin" value={pct(t.exposure_pct.unknown_or_incomplete)} />
-        <Kpi label="Max hops" value={String(t.max_hops)} />
+        <Kpi label="Most ranches in one chain" value={String(t.max_hops)} />
       </div>
       <KV
         rows={[
-          ['1. Record-level inconsistency', pct(a.record_inconsistency_pct)],
-          ['2. Environmental overlap', pct(a.environmental_overlap_pct)],
-          ['3. Suspected laundering', `${pct(a.suspected_laundering_pct)} (risky origin behind a supplier a direct-only check clears)`],
-          ['4. Unknown provenance', pct(a.unknown_provenance_pct)],
-          ['5. Human review of attribution', a.review_required ? 'required' : 'not required'],
-          ['Policy sensitivity', `${pct(t.policy_sensitivity.fifo_any_risk_pct)} FIFO vs ${pct(t.policy_sensitivity.pro_rata_any_risk_pct)} pro-rata`],
+          ['1. Paperwork that does not add up', pct(a.record_inconsistency_pct)],
+          ['2. Linked to cleared or protected land', pct(a.environmental_overlap_pct)],
+          ['3. Suspected laundering', `${pct(a.suspected_laundering_pct)} (risky ranch hidden behind a supplier that today's check passes)`],
+          ['4. Origin unknown', pct(a.unknown_provenance_pct)],
+          ['5. Needs a human check', a.review_required ? 'required' : 'not required'],
+          ['Risk under each counting method', `${pct(t.policy_sensitivity.fifo_any_risk_pct)} if oldest animals leave first, ${pct(t.policy_sensitivity.pro_rata_any_risk_pct)} if herds mix evenly`],
         ]}
       />
       <h4>Source contributions ({t.policy})</h4>
-      <div className="table-wrap">
+      <TableWrap>
         <table className="data">
           <thead>
             <tr>
@@ -227,7 +198,7 @@ export function LineageView({ t, maxSources = 15 }: { t: LineageTrace; maxSource
             ))}
           </tbody>
         </table>
-      </div>
+      </TableWrap>
       {t.sources.length > maxSources && (
         <div className="small muted">
           +{t.sources.length - maxSources} more origins ({pct(t.sources.slice(maxSources).reduce((s, x) => s + x.share_pct, 0))} of head)

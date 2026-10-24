@@ -1,10 +1,10 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { api, ApiError, unwrap } from '../api/client';
 import { useAllRanches, useSummary } from '../api/hooks';
 import type { CertificateEvent, EvaluationReport, RedTeamSummary, VerifyResult } from '../api/types';
 import { useApi } from '../api/useApi';
-import { ProvenanceLabel, RiskBadge, Tag } from '../components/Badges';
-import { IdLink, KV, Section } from '../components/Evidence';
+import { RiskBadge, Tag } from '../components/Badges';
+import { IdLink, Kpi, KV, Section } from '../components/Evidence';
 import { ConfirmDialog } from '../components/Overlays';
 import { Async, Empty, ErrorState } from '../components/States';
 import { DataTable } from '../components/Table';
@@ -12,6 +12,7 @@ import { ID_PATTERNS } from '../lib/ids';
 import { label, nf, num, pct, short } from '../lib/format';
 import { href, navigate, type Route } from '../lib/router';
 import { ShipTable } from './Overview';
+import { Term } from '../../lib/glossary';
 
 // ---- Investigations: the work queue -------------------------------------------------------------
 export function Investigations() {
@@ -22,7 +23,7 @@ export function Investigations() {
     <div className="page">
       <header className="page-head">
         <h1>Investigations</h1>
-        <p className="muted">Work queue from the risk engine. Open a shipment for its lineage graph, risk breakdown, evidence and investigator reviews.</p>
+        <p className="muted">Shipments Rastro flagged or wants a person to check. Open one to see where its cattle came from and why.</p>
       </header>
       <div className="grid-2 align-start">
         <Section title="Flagged shipments" aside={<a href={href('shipments', null, { outcome: 'FLAGGED' })}>All</a>}>
@@ -42,7 +43,7 @@ export function Investigations() {
               columns={[
                 { key: 'id', header: 'Ranch', render: (r) => <IdLink id={r.ranch_id} /> },
                 { key: 'role', header: 'Role', render: (r) => r.role },
-                { key: 'defo', header: 'Post-cut-off clearing', align: 'right', render: (r) => (r.post_cutoff_deforestation_ha === null ? '—' : `${num(r.post_cutoff_deforestation_ha, 1)} ha`) },
+                { key: 'defo', header: 'Forest cleared after 2020', align: 'right', render: (r) => (r.post_cutoff_deforestation_ha === null ? '—' : `${num(r.post_cutoff_deforestation_ha, 1)} ha`) },
                 { key: 'eudr', header: 'EUDR indicator', render: (r) => (r.eudr_indicator ? label(r.eudr_indicator) : '—') },
                 { key: 'risk', header: 'Risk', render: (r) => <RiskBadge risk={r.risk_class} /> },
               ]}
@@ -71,7 +72,7 @@ export function Certificates({ route }: { route: Route }) {
   const [allErr, setAllErr] = useState<ApiError | null>(null);
   const demo = Object.entries(onchain.data?.data.demo || {})
     .filter(([, v]) => v && typeof v === 'object' && 'lot_id' in v && v.lot_id)
-    .map(([k, v]) => ({ lot_id: v.lot_id!, ref: v.ref || '—', verdict: k === 'consume_clean' ? 'clean (demo consumption)' : k === 'consume_flagged' ? 'flagged (demo)' : k }));
+    .map(([k, v]) => ({ lot_id: v.lot_id!, ref: v.ref || '—', verdict: k === 'consume_clean' ? 'clean' : k === 'consume_flagged' ? 'flagged' : label(k) }));
   const loadAll = async () => {
     setLoadingAll(true);
     setAllErr(null);
@@ -90,17 +91,17 @@ export function Certificates({ route }: { route: Route }) {
     <div className="page">
       <header className="page-head">
         <h1>Certificates</h1>
-        <p className="muted">Oracle-signed lot certificates. Each can be used once; flagged and review lots never get one.</p>
+        <p className="muted">Proof that a batch of cattle is clean. Each certificate can be used only once, and risky batches never get one.</p>
       </header>
       <form className="filters" onSubmit={go}>
         <label className="field grow">
-          <span>Certificate (lot id, 0x + 64 hex)</span>
-          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="0x…" />
+          <span>Certificate id</span>
+          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="0x… (paste a certificate id)" />
         </label>
         <button type="submit" className="btn">
           Look up
         </button>
-        {bad && <span className="warn-text small">Not a 32-byte hex id.</span>}
+        {bad && <span className="warn-text small">That is not a certificate id: it starts with 0x followed by 64 characters.</span>}
       </form>
       {route.id ? (
         <CertificateDetail id={route.id} />
@@ -108,11 +109,11 @@ export function Certificates({ route }: { route: Route }) {
         <>
         <IssuanceRegistry />
         <Section
-          title={all ? `All issued certificates (${nf.format(all.length)})` : 'Demo certificates (recorded replay)'}
+          title={all ? `All issued certificates (${nf.format(all.length)})` : 'Example certificates'}
           aside={
             !all && (
               <button type="button" className="btn btn-small" onClick={loadAll} disabled={loadingAll || !onchain.data}>
-                {loadingAll ? 'Loading…' : 'Load all issued certificates (2.8 MB bundle)'}
+                {loadingAll ? 'Loading…' : 'Show all issued'}
               </button>
             )
           }
@@ -126,9 +127,9 @@ export function Certificates({ route }: { route: Route }) {
                   rowKey={(r) => r.lot_id!}
                   onRow={(r) => navigate('certificates', r.lot_id!)}
                   columns={[
-                    { key: 'lot', header: 'Certificate (lot id)', render: (r) => <a className="mono" href={href('certificates', r.lot_id)}>{short(r.lot_id, 14)}</a> },
-                    { key: 'ref', header: 'Shipment (published demo id)', render: (r) => <span className="mono">{r.ref}</span> },
-                    { key: 'v', header: 'Verdict', render: (r) => r.verdict },
+                    { key: 'lot', header: 'Certificate', render: (r) => <a className="mono" href={href('certificates', r.lot_id)}>{short(r.lot_id, 14)}</a> },
+                    { key: 'ref', header: 'Shipment', render: (r) => <span className="mono">{r.ref}</span> },
+                    { key: 'v', header: 'Verdict', render: (r) => <Tag tone={/clean/.test(r.verdict) ? 'green' : /flag/.test(r.verdict) ? 'red' : 'neutral'}>{r.verdict}</Tag> },
                   ]}
                 />
               ) : (
@@ -144,17 +145,54 @@ export function Certificates({ route }: { route: Route }) {
 }
 
 const EVENT_LABEL: Record<string, string> = {
-  issue: 'issued', issue_rejected: 'rejected by ledger', issue_failed: 'signer failed', refused: 'refused before signing',
-  consume: 'consumption', consume_refused: 'consumption refused', replay_attempt: 'replay attempt',
+  issue: 'Issued', issue_rejected: 'Refused by ledger', issue_failed: 'Signing failed', refused: 'Not issued',
+  consume: 'Used', consume_refused: 'Use refused', replay_attempt: 'Reuse attempt',
+};
+/** ok = certificate issued, used = spent once, held = not issued (needs review or flagged), blocked = refused by the ledger. */
+type EventKind = 'ok' | 'used' | 'held' | 'blocked';
+const EVENT_KIND: Record<string, EventKind> = {
+  issue: 'ok', consume: 'used', refused: 'held', issue_rejected: 'blocked', issue_failed: 'blocked', consume_refused: 'blocked', replay_attempt: 'blocked',
+};
+const EVENT_ICON: Record<EventKind, string> = { ok: 'M3.5 8.5l3 3 6-7', used: 'M3 8h7M7.5 4.5L11 8l-3.5 3.5', held: 'M5.5 4v8M10.5 4v8', blocked: 'M4.5 4.5l7 7M11.5 4.5l-7 7' };
+function EventChip({ kind, children }: { kind: EventKind; children: ReactNode }) {
+  return (
+    <span className={`event-chip event-${kind}`}>
+      <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden>
+        <path d={EVENT_ICON[kind]} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      {children}
+    </span>
+  );
+}
+const ERROR_TEXT: Record<string, string> = {
+  GtaAlreadyCertified: 'Refused: these permits already have a certificate',
+  CertificateAlreadyUsed: 'Refused: this certificate was already used',
 };
 
-/** Canonical certificates from the trusted issuer (rastro.certificates.issue), newest first. */
+/** One plain sentence for what happened to a certificate request. */
+function eventResult(e: CertificateEvent): string {
+  const err = typeof e.error === 'object' && e.error?.name ? e.error.name : null;
+  if (err) return ERROR_TEXT[err] || `Refused: ${err.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()}`;
+  const why = e.reason || '';
+  if (/decision is REVIEW/.test(why)) return 'Not issued: waiting for a human check';
+  if (/commitment mismatch/.test(why)) return 'Refused: this certificate belongs to a different shipment';
+  if (/duplicate issuance|already certified/.test(why)) return 'Not issued: this lot already has a certificate';
+  if (/decision is FLAGGED/.test(why)) return 'Not issued: shipment was flagged';
+  if (e.status_after === 'consumed') return 'Certificate used';
+  if (e.status_after === 'valid') return 'Certificate issued';
+  return why || e.status_after || '—';
+}
+const when = (iso: string) => {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+};
+
+/** Certificate activity from the trusted issuer, newest first. Rows open the certificate. */
 function IssuanceRegistry() {
   const st = useApi((s) => api.certificateEvents(s), []);
   return (
-    <Section title="Issuance registry (canonical certificates)">
-
-      <Async state={st} what="Loading the issuance registry">
+    <Section title="Certificate activity">
+      <Async state={st} what="Loading certificate activity">
         {(r) =>
           r.data.length ? (
             <DataTable
@@ -162,17 +200,23 @@ function IssuanceRegistry() {
               rowKey={(e: CertificateEvent) => `${e.logged_at}-${e.event}-${e.lot_id || e.shipment_id}`}
               onRow={(e: CertificateEvent) => e.lot_id && navigate('certificates', e.lot_id)}
               columns={[
-                { key: 'when', header: 'Logged', render: (e: CertificateEvent) => <span className="small">{e.logged_at}</span> },
-                { key: 'ev', header: 'Event', render: (e: CertificateEvent) => <Tag tone={e.event === 'issue' || (e.event === 'consume' && e.receipt_status === 1) ? 'green' : e.event.includes('refused') || e.event === 'refused' ? 'amber' : e.receipt_status === 1 ? 'green' : 'red'}>{EVENT_LABEL[e.event] || e.event}</Tag> },
+                { key: 'when', header: 'When', render: (e: CertificateEvent) => when(e.logged_at) },
+                {
+                  key: 'ev',
+                  header: 'What happened',
+                  render: (e: CertificateEvent) => {
+                    const failed = e.event === 'consume' && e.receipt_status !== 1;
+                    const ev = failed ? 'consume_refused' : e.event;
+                    return <EventChip kind={EVENT_KIND[ev] || 'blocked'}>{EVENT_LABEL[ev] || label(ev)}</EventChip>;
+                  },
+                },
                 { key: 'ship', header: 'Shipment', render: (e: CertificateEvent) => (e.shipment_id ? <IdLink id={e.shipment_id} /> : '—') },
-                { key: 'lot', header: 'Certificate', render: (e: CertificateEvent) => (e.lot_id ? <a className="mono" href={href('certificates', e.lot_id)}>{short(e.lot_id, 12)}</a> : '—') },
-                { key: 'tx', header: 'Transaction', render: (e: CertificateEvent) => (e.tx_hash ? <span className="mono small">{short(e.tx_hash, 12)} · block {e.block_number}</span> : '—') },
-                { key: 'why', header: 'Result', render: (e: CertificateEvent) => <span className="small">{typeof e.error === 'object' && e.error?.name ? `reverted: ${e.error.name}` : e.reason || e.status_after || '—'}</span> },
+                { key: 'why', header: 'Result', wrap: true, render: (e: CertificateEvent) => eventResult(e) },
               ]}
             />
           ) : (
             <Empty title="No certificate has been issued or refused yet">
-              <span className="mono small">cd pipeline &amp;&amp; python -m rastro.certificates.issue demo ../data/synthetic/evaluation</span>
+              <span className="small">Certificates appear here once the demo has issued them.</span>
             </Empty>
           )
         }
@@ -182,6 +226,7 @@ function IssuanceRegistry() {
 }
 
 const OUTCOME_TONE: Record<string, 'green' | 'amber' | 'red'> = { valid: 'green', consumed: 'amber', unverifiable: 'amber', not_on_ledger: 'amber' };
+const CERT_STATUS: Record<string, string> = { valid: 'Valid', consumed: 'Already used', revoked: 'Cancelled', not_on_ledger: 'Not on the ledger', unknown: 'Unknown' };
 
 function CertificateDetail({ id }: { id: string }) {
   const state = useApi((s) => api.certificate(id, s).then(unwrap), [id]);
@@ -204,28 +249,28 @@ function CertificateDetail({ id }: { id: string }) {
   return (
     <Async state={state} what="Loading certificate">
       {(c) => (
-        <Section title={`Certificate ${short(c.certificate_id, 14)}`} aside={<Tag tone={c.chain.verified_public ? 'green' : 'amber'}>{c.chain.label}</Tag>}>
+        <Section
+          title={`Certificate ${short(c.certificate_id, 14)}`}
+          aside={<Tag tone={c.status === 'valid' ? 'green' : c.status === 'consumed' ? 'amber' : 'red'}>{CERT_STATUS[c.status] || label(c.status)}</Tag>}
+        >
           <KV
             rows={[
-              ['Certificate id', <span className="mono">{c.certificate_id}</span>],
-              ['Shipment reference', c.shipment_ref ? <span className="mono">{c.shipment_ref}</span> : '—'],
-              ['Verdict', c.verdict || '—'],
-              ['Status', `${c.status} (${c.status_source})`],
-              ['Evidence hash', <span className="mono">{c.evidence_hash || '—'}</span>],
-              ['Chain', `${c.chain.mode} · ${c.chain.network || '—'} · ${c.chain.address ? short(c.chain.address, 10) : '—'}`],
+              ['Shipment', c.shipment_ref ? <IdLink id={c.shipment_ref} /> : '—'],
+              ['Verdict', c.verdict ? <Tag tone={c.verdict === 'clean' ? 'green' : 'red'}>{c.verdict}</Tag> : '—'],
+              ['Recorded on', c.chain.verified_public ? `Public test network (${c.chain.network})` : c.chain.mode === 'rpc' ? 'Private test blockchain on this computer' : 'Recorded copy of the blockchain'],
             ]}
           />
-          <div className="actions">
-            <button type="button" className="btn" onClick={() => setConfirm(true)}>
-              Verify evidence and status
+          <div className="cert-actions">
+            <button type="button" className="btn btn-primary" onClick={() => setConfirm(true)}>
+              Verify this certificate
             </button>
             {c.records.some((r) => r.kind === 'issue' && r.status === 'success') && (
               <>
-                <a className="btn btn-ghost" href={api.certificateReportUrl(c.certificate_id, 'html')} target="_blank" rel="noreferrer">
-                  Open certificate report
+                <a className="btn" href={api.certificateReportUrl(c.certificate_id, 'html')} target="_blank" rel="noreferrer">
+                  View report
                 </a>
-                <a className="btn btn-ghost" href={api.certificateReportUrl(c.certificate_id, 'json')} download>
-                  Download evidence bundle (JSON)
+                <a className="btn" href={api.certificateReportUrl(c.certificate_id, 'json')} download>
+                  Download evidence
                 </a>
               </>
             )}
@@ -234,20 +279,20 @@ function CertificateDetail({ id }: { id: string }) {
           {res && res.outcome && (
             <div className="note">
               <p>
-                <Tag tone={OUTCOME_TONE[res.outcome] || 'red'}>outcome: {res.outcome}</Tag> {res.reason}
+                <Tag tone={OUTCOME_TONE[res.outcome] || 'red'}>{CERT_STATUS[res.outcome] || label(res.outcome)}</Tag> {res.reason}
               </p>
               {res.checks && res.checks.length > 0 && (
                 <DataTable
                   rows={res.checks}
                   rowKey={(c) => c.check}
                   columns={[
-                    { key: 'c', header: 'Check', render: (c) => <span className="mono small">{c.check}</span> },
+                    { key: 'c', header: 'Check', render: (c) => label(c.check) },
                     { key: 'r', header: 'Result', render: (c) => <Tag tone={c.ok === true ? 'green' : c.ok === false ? 'red' : 'amber'}>{c.ok === true ? 'pass' : c.ok === false ? 'FAIL' : 'not checkable'}</Tag> },
-                    { key: 'd', header: 'Detail', render: (c) => <span className="small">{c.detail}</span> },
+                    { key: 'd', header: 'Detail', wrap: true, render: (c) => <span className="small">{c.detail}</span> },
                   ]}
                 />
               )}
-              <div className="small muted">Verified {res.verified_at} · signer {res.signer || '—'}</div>
+              <div className="small muted">Checked {when(res.verified_at ?? '')}</div>
             </div>
           )}
           {res && !res.outcome && (
@@ -264,7 +309,7 @@ function CertificateDetail({ id }: { id: string }) {
           )}
           {confirm && (
             <ConfirmDialog title="Verify certificate" confirmLabel="Verify" busy={busy} onCancel={() => setConfirm(false)} onConfirm={verify}
-              body={<p>Re-hashes the stored evidence, recovers the EIP-712 signer, checks it is an authorised oracle and reads the ledger state. Read-only: nothing is written to the ledger.</p>} />
+              body={<p>Checks the certificate's evidence has not been altered, that it was signed by Rastro's approved checker, and what the blockchain says about it. Read-only: nothing is changed.</p>} />
           )}
         </Section>
       )}
@@ -276,14 +321,15 @@ function CertificateDetail({ id }: { id: string }) {
 export function Ledger() {
   const st = useApi((s) => api.chainStatus(s).then(unwrap), []);
   const [ranch, setRanch] = useState('');
-  const [bal, setBal] = useState<Record<string, unknown> | null>(null);
+  const [bal, setBal] = useState<{ id: string; balance: unknown; embargoed: unknown } | null>(null);
   const [err, setErr] = useState<ApiError | null>(null);
   const read = async (e: FormEvent) => {
     e.preventDefault();
     const id = ranch.trim().toUpperCase();
     if (!ID_PATTERNS.ranch.test(id)) return setErr(new ApiError(-1, 'invalid_id', 'Enter a ranch id such as R0120.'));
     try {
-      setBal(unwrap(await api.ranchBalance(id)));
+      const b = unwrap(await api.ranchBalance(id));
+      setBal({ id, balance: b.balance, embargoed: b.embargoed });
       setErr(null);
     } catch (x) {
       setBal(null);
@@ -294,47 +340,82 @@ export function Ledger() {
     <div className="page">
       <header className="page-head">
         <h1>HerdLedger</h1>
-        <p className="muted">Shared ledger state. The console only reads; it never holds a key or signs a transaction.</p>
+        <p className="muted">What the shared blockchain ledger has recorded. This page only reads it; it can never change anything.</p>
       </header>
-      <Async state={st} what="Reading chain status">
-        {(s) => (
-          <div className="grid-2 align-start">
-            <Section title="Connection" aside={<Tag tone={s.chain.verified_public ? 'green' : 'amber'}>{s.chain.verified_public ? 'public testnet' : 'not a public network'}</Tag>}>
-              <KV
-                rows={[
-                  ['Label', s.chain.label],
-                  ['Mode', s.chain.mode === 'rpc' ? 'live eth_call' : 'recorded replay (onchain.json)'],
-                  ['Network / chain id', `${s.chain.network || '—'} / ${s.chain.chain_id ?? '—'}`],
-                  ['Contract', <span className="mono">{s.chain.address || '—'}</span>],
-                  ['Available', s.chain.available ? 'yes' : 'no'],
-                  ['Detail', s.chain.detail || '—'],
-                  ['Oracle role check', s.oracle_check ? (s.oracle_check.is_oracle === null ? 'unknown' : s.oracle_check.is_oracle ? 'oracle holds ORACLE_ROLE' : 'oracle NOT authorised') : '—'],
-                  ['Herd conserved (replay)', s.conserved === null ? '—' : s.conserved ? 'yes' : 'NO'],
-                ]}
-              />
-            </Section>
-            <Section title="Totals">
-              {s.totals ? <KV rows={Object.entries(s.totals).map(([k, v]) => [label(k), nf.format(v)])} /> : <Empty title="No totals recorded" />}
-              <h4>Roles</h4>
-              {s.roles ? <KV rows={Object.entries(s.roles).map(([k, v]) => [k, <span className="mono">{v}</span>])} /> : <Empty title="No roles recorded" />}
-            </Section>
-            <Section title="Read a ranch balance">
-              <form className="filters" onSubmit={read}>
-                <label className="field">
-                  <span>Ranch</span>
-                  <input value={ranch} onChange={(e) => setRanch(e.target.value)} placeholder="R0120" />
-                </label>
-                <button type="submit" className="btn">
-                  Read balanceOf
-                </button>
-              </form>
-              {err && <ErrorState error={err} />}
-              {bal && <KV rows={Object.entries(bal).filter(([k]) => k !== 'chain').map(([k, v]) => [label(k), typeof v === 'object' ? JSON.stringify(v) : String(v ?? '—')])} />}
-            </Section>
-          </div>
-        )}
+      <Async state={st} what="Reading the ledger">
+        {(s) => {
+          const t = s.totals || {};
+          const n = (k: string) => (typeof t[k] === 'number' ? (t[k] as number) : null);
+          const network = s.chain.verified_public ? `Public test network (${s.chain.network || s.chain.chain_id})` : s.chain.mode === 'rpc' ? 'Private test blockchain on this computer' : 'Recorded copy of the blockchain';
+          return (
+            <div className="stack">
+              <div className="ledger-status">
+                <span className={`dot ${s.chain.available ? 'ok' : 'warn'}`} aria-hidden />
+                <strong>{s.chain.available ? 'Connected' : 'Not connected'}</strong>
+                <span className="muted">{network}</span>
+                {s.chain.address && <span className="mono muted">{short(s.chain.address, 14)}</span>}
+                {s.oracle_check?.is_oracle && <span className="muted">· Rastro&apos;s checker approved ✓</span>}
+              </div>
+
+              <div className="kpis kpis-4">
+                <Kpi label="Permits recorded" value={n('movements') === null ? '—' : nf.format(n('movements')!)} />
+                <Kpi label="Ranches" value={n('ranches') === null ? '—' : nf.format(n('ranches')!)} />
+                <Kpi label="Certificates issued" value={n('certificates') === null ? '—' : nf.format(n('certificates')!)} />
+                <Kpi label="Certificates used" value={n('consumed') === null ? '—' : nf.format(n('consumed')!)} />
+              </div>
+
+              {n('initialHead') !== null && (
+                <Section
+                  title="Herd balance"
+                  aside={s.conserved === null ? undefined : <Tag tone={s.conserved ? 'green' : 'red'}>{s.conserved ? 'adds up ✓' : 'does NOT add up'}</Tag>}
+                >
+                  <p className="small muted section-sub">Every animal is accounted for: what came in must equal what went out plus what is still on ranches.</p>
+                  <div className="balance">
+                    <BalanceTerm v={n('initialHead')} l="starting herds" />
+                    <span className="op">+</span>
+                    <BalanceTerm v={n('births')} l="births" />
+                    <span className="op">−</span>
+                    <BalanceTerm v={n('deaths')} l="deaths" />
+                    <span className="op eq">=</span>
+                    <BalanceTerm v={n('headToSinks')} l="delivered" />
+                    <span className="op">+</span>
+                    <BalanceTerm v={n('ranchHead')} l="still on ranches" />
+                  </div>
+                </Section>
+              )}
+
+              <Section title="Look up a ranch">
+                <form className="lookup" onSubmit={read}>
+                  <label className="sr-only" htmlFor="ledger-ranch">
+                    Ranch id
+                  </label>
+                  <input id="ledger-ranch" value={ranch} onChange={(e) => setRanch(e.target.value)} placeholder="Ranch id, e.g. R0120" />
+                  <button type="submit" className="btn btn-primary">
+                    Look up
+                  </button>
+                </form>
+                {err && <ErrorState error={err} />}
+                {bal && (
+                  <p className="lookup-result">
+                    <strong>{bal.id}</strong> has <strong>{typeof bal.balance === 'number' ? nf.format(bal.balance) : String(bal.balance ?? '—')}</strong> cattle on the ledger
+                    {bal.embargoed === true ? <> · <Tag tone="red">embargoed</Tag></> : bal.embargoed === false ? ' · not embargoed' : ''}
+                  </p>
+                )}
+              </Section>
+            </div>
+          );
+        }}
       </Async>
     </div>
+  );
+}
+
+function BalanceTerm({ v, l }: { v: number | null; l: string }) {
+  return (
+    <span className="balance-term">
+      <span className="balance-v">{v === null ? '—' : nf.format(v)}</span>
+      <span className="balance-l">{l}</span>
+    </span>
   );
 }
 
@@ -345,7 +426,7 @@ export function Evaluation() {
     <div className="page">
       <header className="page-head">
         <h1>Evaluation</h1>
-        <p className="muted">How often Rastro catches laundered cattle, and how often it wrongly blocks clean lots, measured on synthetic worlds with known ground truth.</p>
+        <p className="muted">How often Rastro catches illegal cattle, and how often it wrongly stops honest herds, tested where the right answer is known.</p>
       </header>
       <Async state={st} what="Loading evaluation">
         {(e) =>
@@ -353,8 +434,8 @@ export function Evaluation() {
             <Empty title="No evaluation report for this dataset">{e.note}</Empty>
           ) : (
             <div className="stack">
-              {e.redteam && <RedTeam s={e.redteam} />}
               {e.report && <Report r={e.report} />}
+              {e.redteam && <Scenarios s={e.redteam} />}
             </div>
           )
         }
@@ -365,125 +446,72 @@ export function Evaluation() {
 
 const SCENARIO_NAMES: Record<string, string> = {
   'S00-clean': 'Honest world',
-  'S01-reference': 'Reference laundering',
-  'S02-hold-60': 'Launderers hold ~60 days',
-  'S03-hold-120': 'Launderers hold ~120 days',
-  'S04-two-hop': 'Two laundering hops',
-  'S05-redteam': 'Red team: 60-120 days, two hops',
+  'S01-reference': 'Typical laundering',
+  'S02-hold-60': 'Cheaters hold cattle ~60 days',
+  'S03-hold-120': 'Cheaters hold cattle ~120 days',
+  'S04-two-hop': 'Hidden two ranches back',
+  'S05-redteam': 'Hardest cheaters',
   'S06-incomplete': '10% of permits missing',
-  'S07-split-lots': 'Split lots',
-  'S08-mixed-cover': 'Mixed with clean cover',
-  'S09-concealed': 'Concealed inventory',
-  'S10-rapid-legit': 'Legitimate rapid trading',
+  'S07-split-lots': 'Herds split into small lots',
+  'S08-mixed-cover': 'Mixed with clean cattle',
+  'S09-concealed': 'Hidden herd counts',
+  'S10-rapid-legit': 'Honest fast trading',
 };
 
-function RedTeam({ s }: { s: RedTeamSummary }) {
-  const [view, setView] = useState<'chart' | 'table'>('chart');
-  const p = (x: number | null) => (x === null ? '—' : pct(x));
+type Metric = 'caught' | 'stopped';
+
+function Scenarios({ s }: { s: RedTeamSummary }) {
+  const [metric, setMetric] = useState<Metric>('caught');
   const rows = s.headline.filter((h) => h.role === 'heldout');
-  const toggle = (
-    <div className="seg seg-tight" role="group" aria-label="View">
-      {(['chart', 'table'] as const).map((v) => (
-        <button key={v} type="button" className={view === v ? 'on' : ''} aria-pressed={view === v} onClick={() => setView(v)}>
-          {v === 'chart' ? 'Chart' : 'Table'}
+  const pick = (h: (typeof rows)[number]) =>
+    metric === 'caught' ? { a: h.rastro_cattle_caught_flagged_pct, b: h.baseline_cattle_caught_pct } : { a: h.rastro_clean_lots_flagged_pct, b: h.baseline_clean_lots_flagged_pct };
+  const switcher = (
+    <div className="seg seg-tight" role="group" aria-label="Measure">
+      {([
+        ['caught', 'Illegal cattle caught'],
+        ['stopped', 'Honest herds wrongly stopped'],
+      ] as const).map(([k, l]) => (
+        <button key={k} type="button" className={metric === k ? 'on' : ''} aria-pressed={metric === k} onClick={() => setMetric(k)}>
+          {l}
         </button>
       ))}
     </div>
   );
   return (
-    <Section title="Rastro vs today's direct-supplier check" aside={toggle}>
-      <p className="small muted section-sub">
-        {rows.length} held-out synthetic worlds (seed {s.held_out_seed}, never used for tuning). Method and limits: docs/evaluation.md.
-      </p>
-      {view === 'chart' ? (
-        <div className="grid-2 eval-charts">
-          <div>
-            <div className="chart-title">
-              Tainted cattle caught <span className="muted">higher is better</span>
-            </div>
-            <div className="legend-inline small">
-              <span><i style={{ background: 'var(--series)' }} /> Rastro flagged</span>
-              <span><i style={{ background: 'var(--series)', opacity: 0.4 }} /> + sent to review</span>
-              <span><i style={{ background: 'var(--grey)' }} /> Today's check</span>
-            </div>
-            {rows.map((h) => (
-              <PairBars key={h.scenario} scenario={h.scenario} a={h.rastro_cattle_caught_flagged_pct} aExtra={h.rastro_cattle_caught_flag_or_review_pct} b={h.baseline_cattle_caught_pct} />
-            ))}
-          </div>
-          <div>
-            <div className="chart-title">
-              Clean lots blocked <span className="muted">lower is better</span>
-            </div>
-            <div className="legend-inline small">
-              <span><i style={{ background: 'var(--series)' }} /> Rastro</span>
-              <span><i style={{ background: 'var(--grey)' }} /> Today's check</span>
-            </div>
-            {rows.map((h) => (
-              <PairBars key={h.scenario} scenario={h.scenario} a={h.rastro_clean_lots_flagged_pct} b={h.baseline_clean_lots_flagged_pct} warn={(h.rastro_clean_lots_flagged_pct ?? 0) > (h.baseline_clean_lots_flagged_pct ?? 100)} />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="table-wrap">
-          <table className="data">
-            <thead>
-              <tr>
-                <th>Scenario</th>
-                <th>Tainted cattle caught</th>
-                <th>…incl. review</th>
-                <th>Today's check</th>
-                <th>Clean lots blocked</th>
-                <th>Today's check</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((h) => (
-                <tr key={h.scenario}>
-                  <th scope="row">
-                    {SCENARIO_NAMES[h.scenario] || h.scenario} <span className="mono small muted">{h.scenario}</span>
-                  </th>
-                  <td>{p(h.rastro_cattle_caught_flagged_pct)}</td>
-                  <td>{p(h.rastro_cattle_caught_flag_or_review_pct)}</td>
-                  <td>{p(h.baseline_cattle_caught_pct)}</td>
-                  <td>{p(h.rastro_clean_lots_flagged_pct)}</td>
-                  <td>{p(h.baseline_clean_lots_flagged_pct)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+    <Section title={`Across ${rows.length} test scenarios`} aside={switcher}>
+      <div className="eval-legend small muted">
+        <span><i className="sw-a" /> Rastro</span>
+        <span><i className="sw-b" /> Today&apos;s check</span>
+        <span>{metric === 'caught' ? 'Higher is better.' : 'Lower is better.'} None of these scenarios were used to tune Rastro.</span>
+      </div>
+      <div className="eval-rows">
+        {rows.map((h) => {
+          const { a, b } = pick(h);
+          const worse = a !== null && b !== null && (metric === 'caught' ? a < b : a > b);
+          return <EvalRow key={h.scenario} name={SCENARIO_NAMES[h.scenario] || h.scenario} a={a} b={b} worse={worse} />;
+        })}
+      </div>
     </Section>
   );
 }
 
-/** One scenario: Rastro (optionally extended by the review share) above today's check, both on a 0-100% scale. */
-function PairBars({ scenario, a, aExtra, b, warn }: { scenario: string; a: number | null; aExtra?: number | null; b: number | null; warn?: boolean }) {
-  const w = (x: number | null | undefined) => `${Math.max(0, Math.min(100, x ?? 0))}%`;
+function EvalRow({ name, a, b, worse }: { name: string; a: number | null; b: number | null; worse: boolean }) {
+  const w = (x: number | null) => `${Math.max(0, Math.min(100, x ?? 0))}%`;
+  const r = (x: number | null) => (x === null ? '—' : `${Math.round(x)}%`);
   return (
-    <div className="pair">
-      <div className="pair-label">
-        {SCENARIO_NAMES[scenario] || scenario}
-        <span className="mono muted">{scenario}</span>
-      </div>
-      <div className="pair-bars">
-        <div className="pair-row">
-          <div className="pair-track">
-            {aExtra != null && <div className="pair-fill pair-extra" style={{ width: w(aExtra) }} />}
-            <div className={`pair-fill pair-a ${warn ? 'pair-warn' : ''}`} style={{ width: w(a) }} />
-          </div>
-          <span className="pair-val">
-            {a === null ? '—' : pct(a)}
-            {aExtra != null && <span className="muted"> / {pct(aExtra)}</span>}
-          </span>
-        </div>
-        <div className="pair-row">
-          <div className="pair-track">
-            <div className="pair-fill pair-b" style={{ width: w(b) }} />
-          </div>
-          <span className="pair-val muted">{b === null ? '—' : pct(b)}</span>
-        </div>
-      </div>
+    <div className="eval-row">
+      <span className="eval-name">{name}</span>
+      <span className="eval-bars" aria-hidden>
+        <span className="eval-track">
+          <span className={`eval-fill a ${worse ? 'worse' : ''}`} style={{ width: w(a) }} />
+        </span>
+        <span className="eval-track">
+          <span className="eval-fill b" style={{ width: w(b) }} />
+        </span>
+      </span>
+      <span className="eval-val">
+        <strong className={worse ? 'worse-text' : undefined}>{r(a)}</strong> <span className="muted">vs {r(b)} today</span>
+      </span>
     </div>
   );
 }
@@ -493,40 +521,27 @@ function Report({ r }: { r: EvaluationReport }) {
   const base = r.lot_level.baseline_direct_supplier_only;
   if (!lot || !base) return null;
   return (
-    <Section title={`This dataset (seed ${r.seed}, ${r.role})`}>
-      <div className="compare-grid">
-        <Compare
-          label="Tainted head caught"
-          better="higher"
-          rastro={lot.tainted_head_caught_pct_flagged_only}
-          extra={`${pct(lot.tainted_head_caught_pct_flag_or_review)} including review`}
-          today={base.tainted_head_caught_pct_flagged_only}
-        />
-        <Compare label="Clean lots blocked" better="lower" rastro={lot.clean_lots_flagged_pct} today={base.clean_lots_flagged_pct} />
-      </div>
-    </Section>
+    <div className="headline-grid">
+      <Headline label="Illegal cattle caught" better="higher" rastro={lot.tainted_head_caught_pct_flagged_only} today={base.tainted_head_caught_pct_flagged_only}
+        extra={`${pct(lot.tainted_head_caught_pct_flag_or_review)} if you include cases sent for a human check`} />
+      <Headline label="Honest herds wrongly stopped" better="lower" rastro={lot.clean_lots_flagged_pct} today={base.clean_lots_flagged_pct} />
+    </div>
   );
 }
 
-function Compare({ label: l, rastro, today, extra, better }: { label: string; rastro: number | null; today: number | null; extra?: string; better: 'higher' | 'lower' }) {
+function Headline({ label: l, rastro, today, extra, better }: { label: string; rastro: number | null; today: number | null; extra?: string; better: 'higher' | 'lower' }) {
   const wins = rastro !== null && today !== null && (better === 'higher' ? rastro > today : rastro < today);
-  const w = (x: number | null) => `${Math.max(0, Math.min(100, x ?? 0))}%`;
   return (
-    <div className="compare">
-      <div className="compare-label">
-        {l} <span className="muted">{better} is better</span>
+    <div className="headline">
+      <div className="headline-label">{l}</div>
+      <div className="headline-nums">
+        <span className={`headline-big ${wins ? 'win' : ''}`}>{rastro === null ? '—' : pct(rastro)}</span>
+        <span className="muted">with Rastro</span>
       </div>
-      <div className="compare-nums">
-        <span className={`compare-big ${wins ? 'tone-text-green' : ''}`}>{rastro === null ? '—' : pct(rastro)}</span>
-        <span className="muted">vs {today === null ? '—' : pct(today)} today</span>
+      <div className="headline-today">
+        {today === null ? '—' : pct(today)} with today&apos;s check · {better} is better
       </div>
       {extra && <div className="small muted">{extra}</div>}
-      <div className="pair-track compare-track">
-        <div className="pair-fill pair-a" style={{ width: w(rastro) }} />
-      </div>
-      <div className="pair-track compare-track">
-        <div className="pair-fill pair-b" style={{ width: w(today) }} />
-      </div>
     </div>
   );
 }
@@ -537,81 +552,58 @@ export function Sources() {
   const ready = useApi((s) => api.ready(s), []);
   const summary = useSummary();
   const meta = useApi((s) => api.ranches({ limit: 1 }, s).then((r) => r.meta), []);
+  const allReady = !!ready.data?.ready && health.data?.status === 'ok';
   return (
     <div className="page">
       <header className="page-head">
         <h1>Data Sources</h1>
-        <p className="muted">What is real, what is synthetic, and how fresh it is. Everything here is read from the API.</p>
+        <p className="muted">What is real, what is simulated, and what Rastro works out from them.</p>
       </header>
-      <div className="grid-2 align-start">
-        <Section title="Canonical dataset">
-          <Async state={meta}>
-            {(m) => (
-              <>
-                <KV
-                  rows={[
-                    ['Dataset', m.dataset_id || '—'],
-                    ['Version / schema', `${m.dataset_version || '—'} / ${m.schema_version || '—'}`],
-                    ['Logical digest', <span className="mono">{short(m.logical_digest, 20)}</span>],
-                    ['Generated at', m.generated_at || '—'],
-                  ]}
-                />
-                <h4>Component status</h4>
-                <div className="prov-list">
-                  {Object.entries(m.data_status).map(([k, v]) => (
-                    <ProvenanceLabel key={k} status={v}>
-                      {k}
-                    </ProvenanceLabel>
-                  ))}
-                </div>
-                {Object.keys(m.freshness || {}).length > 0 && (
-                  <>
-                    <h4>Freshness</h4>
-                    <KV rows={Object.entries(m.freshness).map(([k, v]) => [k, v === null ? 'unavailable' : typeof v === 'number' && v > 1e9 ? new Date(v * 1000).toISOString() : String(v)])} />
-                  </>
-                )}
-              </>
-            )}
-          </Async>
-        </Section>
-        <Section title="API health and readiness">
-          <Async state={health}>
-            {(h) => (
-              <KV
-                rows={[
-                  ['Status', <Tag tone={h.status === 'ok' ? 'green' : 'amber'}>{h.status}</Tag>],
-                  ['API / schema', `${h.api_version} / ${h.schema_version} (app ${h.version})`],
-                  ...Object.entries(h.datasets).map(([k, v]) => [`published ${k}`, v === null ? 'missing' : v === 'mock' ? 'MOCK bundle' : 'real file'] as [string, string]),
-                ]}
-              />
-            )}
-          </Async>
-          {ready.data && (
-            <>
-              <h4>Readiness: {ready.data.ready ? 'ready' : 'not ready'}</h4>
-              <KV rows={Object.entries(ready.data.checks).map(([k, v]) => [k, v ? 'ok' : 'missing'])} />
-            </>
-          )}
-          {ready.error && <ErrorState error={ready.error} />}
-        </Section>
-        <Section title="Sources">
+      <p className="status-line">
+        <span className={`dot ${allReady ? 'ok' : 'warn'}`} aria-hidden />
+        {ready.loading || health.loading ? 'Checking data…' : allReady ? 'All data loaded' : 'Some data is missing (see technical details)'}
+        {meta.data?.generated_at && <span className="muted"> · dataset built {meta.data.generated_at.slice(0, 10)}</span>}
+      </p>
+      <div className="source-groups">
+        <Section title="Real public data">
           <ul className="sources">
-            <li><ProvenanceLabel status="real" /> INPE PRODES yearly deforestation 2008–2025 and accumulated mask to 2007 (TerraBrasilis, CC BY-SA 4.0)</li>
-            <li><ProvenanceLabel status="real" /> FUNAI Indigenous lands and conservation units (TerraBrasilis)</li>
-            <li><ProvenanceLabel status="real" /> IBGE PPM municipal herd; Trase slaughterhouse locations (CC BY 4.0); Vila do Conde port</li>
-            <li><ProvenanceLabel status="synthetic" /> Ranch boundaries, herds, births, deaths, GTAs, embargoes and shipments (rastro.synth)</li>
-            <li><ProvenanceLabel status="derived" /> Geospatial evidence, lineage traces, risk findings and decisions</li>
+            <li>Forest clearing from satellites, 2008–2025 (<Term k="PRODES" />)</li>
+            <li>Indigenous lands and protected areas (<Term k="FUNAI" />)</li>
+            <li>Cattle counts per municipality (<Term k="IBGE PPM" />)</li>
+            <li>Slaughterhouse locations (<Term k="Trase" />) and the Vila do Conde export port</li>
           </ul>
         </Section>
-        <Section title="Dataset contents">
-          <Async state={summary}>
-            {(s) => {
-              const c = (s as { counts?: Record<string, number> }).counts || {};
-              return <KV rows={Object.entries(c).map(([k, v]) => [label(k), nf.format(v)])} />;
-            }}
-          </Async>
+        <Section title="Simulated for this demo">
+          <ul className="sources">
+            <li>Ranches, their herds, births and deaths</li>
+            <li>Cattle-transport permits (<Term k="GTA">GTAs</Term>) and embargoes</li>
+            <li>Shipments to slaughterhouses and export ships</li>
+          </ul>
+          <p className="small muted">No real ranch, person or company is described.</p>
+        </Section>
+        <Section title="Worked out by Rastro">
+          <ul className="sources">
+            <li>Which ranches overlap cleared or protected land</li>
+            <li>Where each shipment&apos;s cattle came from</li>
+            <li>Risk scores and pass / review / flag decisions</li>
+          </ul>
         </Section>
       </div>
+      <Section title="What is in the dataset">
+        <Async state={summary}>
+          {(s) => {
+            const c = (s as { counts?: Record<string, number> }).counts || {};
+            const keys = ['ranches', 'gta_movements', 'shipments', 'birth_declarations', 'prodes_deforestation', 'embargoes'].filter((k) => k in c);
+            return (
+              <div className="kpis">
+                {keys.map((k) => [k, c[k]] as const).map(([k, v]) => (
+                  <Kpi key={k} label={label(k)} value={nf.format(v)} />
+                ))}
+              </div>
+            );
+          }}
+        </Async>
+      </Section>
     </div>
   );
 }

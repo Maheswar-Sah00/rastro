@@ -7,6 +7,13 @@
     <title>Rastro Console</title>
     <meta name="description" content="Rastro analyst console: cattle provenance, environmental evidence, lineage and risk decisions." />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('rastro-theme') === 'light' ? 'light' : 'dark';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

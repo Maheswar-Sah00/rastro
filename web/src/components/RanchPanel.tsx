@@ -178,7 +178,7 @@ export function RanchPanel({ id, onClose, onSelect, onShowMap }: { id: string; o
           <dl className="kv">
             <dt>Cleared since 2008</dt>
             <dd>{fmt(r.defor_post2008_ha, 1)} ha</dd>
-            <dt>Cleared after 2020 (EUDR cut-off)</dt>
+            <dt>Forest cleared after 2020 (EU deadline)</dt>
             <dd style={{ color: r.defor_post2020_ha > 0 ? 'var(--defor)' : undefined }}>{fmt(r.defor_post2020_ha, 1)} ha</dd>
             <dt>Indigenous-land overlap</dt>
             <dd style={{ color: r.in_protected || ti > 0 ? 'var(--high)' : undefined }}>
@@ -264,7 +264,7 @@ export function RanchPanel({ id, onClose, onSelect, onShowMap }: { id: string; o
             onchain.data && <p className="small muted" style={{ margin: 0 }}>No ledger record for this ranch in the replayed subset.</p>
           )}
           <dl className="kv" style={{ marginTop: 10, fontSize: 12.5 }}>
-            <dt>Ranch id on-chain</dt>
+            <dt>Ranch id on the blockchain</dt>
             <dd className="mono" title={r.onchain_id}>{shortHash(r.onchain_id, 8, 6)}</dd>
             <dt>Evidence hash</dt>
             <dd className="mono" title={r.risk.evidence_hash ?? ''}>{shortHash(r.risk.evidence_hash, 8, 6)}</dd>
@@ -371,7 +371,7 @@ function YearBars({ data }: { data: Record<string, number> }) {
       </div>
       <div className="year-axis">
         <span>2008</span>
-        <span style={{ color: 'var(--defor)' }}>2021 ▸ EUDR</span>
+        <span style={{ color: 'var(--defor)' }}>2021 ▸ after EU deadline</span>
         <span>2025</span>
       </div>
     </div>

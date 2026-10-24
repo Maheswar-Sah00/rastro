@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Explain } from '../lib/explain';
 
 // "Our system": three stacked layers, permits → lineage (AI) → HerdLedger (chain).
 
@@ -12,8 +13,8 @@ type Cell = [number, number];
 const LAYERS: { title: string; tag: string; text: string; cells: Cell[]; red?: Cell[]; links?: [Cell, Cell][] }[] = [
   {
     title: 'Permits in',
-    tag: 'GTA feed',
-    text: 'Every animal transit permit becomes a lot: date, origin, destination, head count. Only salted hashes leave the agency.',
+    tag: 'Permits',
+    text: 'Every animal transit permit becomes a lot: date, origin, destination, head count. Names and ids are scrambled before they leave the agency, so no private data is shared.',
     cells: [[1, 1], [5, 1], [3, 3], [6, 4], [2, 5], [5, 6], [1, 6]],
   },
   {
@@ -85,7 +86,10 @@ export function SystemSection() {
           <h2 className="title" id="system-title">
             One rulebook for every buyer.
           </h2>
-          <p className="deck">AI judges off-chain. The ledger enforces the rules on-chain, for every buyer at once.</p>
+          <p className="deck">The AI decides which cattle are risky. A shared blockchain ledger then applies the same rules for every buyer.</p>
+          <Explain>
+            How Rastro works, in three layers. Government cattle-transit permits (GTAs) come in as lots, with identities hashed. The AI risk engine traces each lot back across farms and flags impossible herds. A smart contract on a shared ledger enforces the rules and issues one-time clean-lot certificates. Click a layer to see it.
+          </Explain>
         </div>
 
         <div className="system-stage">
@@ -138,11 +142,6 @@ export function SystemSection() {
             </div>
           ))}
         </div>
-        <p className="center-link">
-          <a href="#results" className="link-arrow">
-            See the results <span aria-hidden>↗</span>
-          </a>
-        </p>
       </div>
     </section>
   );

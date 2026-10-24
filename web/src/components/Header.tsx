@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { switchTheme, useTheme } from '../lib/theme';
 import { Mark } from './Tags';
+import { ThemeButton } from './ThemeButton';
+import { TraceLauncher } from './TraceLauncher';
 
 const NAV: [string, string][] = [
   ['problem', 'Problem'],
@@ -11,7 +12,7 @@ const NAV: [string, string][] = [
   ['ledger', 'Ledger'],
 ];
 
-export function Header({ active, onTrace, entered }: { active: string | null; onTrace: () => void; entered: boolean }) {
+export function Header({ active, entered, onTrace }: { active: string | null; entered: boolean; onTrace: (id: string) => void }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -60,16 +61,13 @@ export function Header({ active, onTrace, entered }: { active: string | null; on
           ))}
         </nav>
         <div className="header-right" data-enter="drop" style={{ ['--i' as string]: NAV.length + 2 }}>
-          <ThemeButton />
-          {entered && <button
-            className="btn btn-primary header-cta"
-            onClick={() => {
+          <TraceLauncher
+            onPick={(id) => {
               setOpen(false);
-              onTrace();
+              onTrace(id);
             }}
-          >
-            Trace a shipment <span aria-hidden>↗</span>
-          </button>}
+          />
+          <ThemeButton />
           <button className="burger" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="site-nav" onClick={() => setOpen((v) => !v)}>
             <span />
             <span />
@@ -80,32 +78,5 @@ export function Header({ active, onTrace, entered }: { active: string | null; on
         <div ref={bar} />
       </div>
     </header>
-  );
-}
-
-function ThemeButton() {
-  const [theme] = useTheme();
-  const next = theme === 'dark' ? 'light' : 'dark';
-  return (
-    <button
-      className="theme-btn"
-      onClick={(e) => {
-        const b = e.currentTarget.getBoundingClientRect();
-        switchTheme(next, b.left + b.width / 2, b.top + b.height / 2);
-      }}
-      aria-label={`Switch to ${next} mode`}
-      title={`Switch to ${next} mode`}
-    >
-      {theme === 'dark' ? (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
-          <circle cx="12" cy="12" r="4.2" />
-          <path d="M12 2.8v2.2M12 19v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.8 12h2.2M19 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
-        </svg>
-      ) : (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" />
-        </svg>
-      )}
-    </button>
   );
 }

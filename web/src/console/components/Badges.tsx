@@ -51,6 +51,7 @@ const STATUS_HELP: Record<DataStatus, string> = {
   derived: 'Computed by Rastro from the inputs.',
   unavailable: 'Not present in this dataset.',
 };
+const STATUS_WORD: Record<DataStatus, string> = { real: 'real data', synthetic: 'simulated', derived: 'worked out by Rastro', unavailable: 'not available' };
 
 export function ProvenanceLabel({ status, children }: { status: DataStatus | string | null | undefined; children?: ReactNode }) {
   const s = (status || 'unavailable') as DataStatus;
@@ -59,7 +60,7 @@ export function ProvenanceLabel({ status, children }: { status: DataStatus | str
     <Tooltip text={known ? STATUS_HELP[s] : `Status: ${s}`}>
       <span className={`prov prov-${known ? s : 'unavailable'}`}>
         {children ? <>{children}: </> : null}
-        {s}
+        {known ? STATUS_WORD[s] : s}
       </span>
     </Tooltip>
   );

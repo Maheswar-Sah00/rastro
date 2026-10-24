@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { api, ApiError, unwrap } from '../api/client';
-import type { Assessment, Breakdown, Finding, FindingView, Provenance, ReviewStatus, ShipmentDetail, ShipmentRiskDetail } from '../api/types';
+import type { Assessment, Breakdown, Finding, FindingView, ReviewStatus, ShipmentDetail, ShipmentRiskDetail } from '../api/types';
 import { useApi } from '../api/useApi';
 import { OutcomeBadge, ProvenanceLabel, Tag } from '../components/Badges';
 import { FindingCard, IdLink, Kpi, KV, LineageView, Section } from '../components/Evidence';
@@ -8,8 +8,9 @@ import { LineageGraphView, type GraphSelection } from '../components/LineageGrap
 import { ConfirmDialog } from '../components/Overlays';
 import { Async, ErrorState, Loading } from '../components/States';
 import { fromApi, graphChecks } from '../lib/graph';
-import { label, nf, num, pct, short } from '../lib/format';
+import { label, nf, num, pct } from '../lib/format';
 import { href } from '../lib/router';
+import { Explain } from '../../lib/explain';
 
 const CATEGORY_ORDER = ['post_cutoff_deforestation', 'embargo', 'indigenous_territory', 'protected_area', 'inventory_birth_anomalies', 'suspicious_movement_behaviour', 'unknown_origin'];
 
@@ -23,17 +24,16 @@ export function Investigation({ id }: { id: string }) {
         </div>
       </header>
       <Async state={detail} what={`Loading ${id}`}>
-        {({ data, meta }) => <Workspace id={id} d={data} meta={meta} />}
+        {({ data }) => <Workspace id={id} d={data} />}
       </Async>
     </div>
   );
 }
 
-function Workspace({ id, d, meta }: { id: string; d: ShipmentDetail; meta: Provenance }) {
+function Workspace({ id, d }: { id: string; d: ShipmentDetail }) {
   const t = d.lineage;
   const risk = useApi((s) => api.shipmentRisk(id, s).then(unwrap), [id]);
   const [category, setCategory] = useState<string | null>(null);
-  const decidedAt = meta.freshness?.decisions ? new Date(meta.freshness.decisions * 1000).toISOString().slice(0, 16).replace('T', ' ') : null;
 
   return (
     <div className="stack">
@@ -41,18 +41,17 @@ function Workspace({ id, d, meta }: { id: string; d: ShipmentDetail; meta: Prove
         <div className="inv-title">
           <h1 className="mono">{id}</h1>
           <OutcomeBadge outcome={d.assessment_status === 'assessed' ? d.decision?.outcome : null} />
-          <ProvenanceLabel status="synthetic">shipment</ProvenanceLabel>
-          <span className="muted small">Synthetic shipment in a simulated supply chain. Not a verified record.</span>
+          <ProvenanceLabel status="synthetic" />
         </div>
+        <Explain>
+          One shipment under investigation: the lineage graph back to its birth ranches, why the engine scored it as it did, the evidence behind each finding, and where a reviewer records a decision.
+        </Explain>
         <div className="kpis small-kpis">
           <Kpi label="Destination" value={<IdLink id={d.shipment.destination_id} />} />
           <Kpi label="Date" value={d.shipment.shipment_date} />
-          <Kpi label="Declared head" value={nf.format(d.shipment.declared_head_count)} />
-          <Kpi label="Upstream ranches" value={t ? nf.format(t.sources.filter((s) => s.ranch_id).length) : '—'} hint="Origins in the lineage trace" />
-          <Kpi label="Movement records" value={t ? nf.format(t.trace_path.length) : '—'} hint="Upstream GTAs in the lineage trace" />
-          <Kpi label="Lineage coverage" value={t ? pct(t.coverage_pct) : '—'} />
-          <Kpi label="Evidence freshness" value={meta.generated_at ? meta.generated_at.slice(0, 10) : '—'} hint={`Dataset generated_at${decidedAt ? `; decisions written ${decidedAt} UTC` : ''}`} />
-          <Kpi label="Certificate" value={label(d.shipment.certification_status)} hint="No ledger certificate is issued for canonical shipments in this dataset" />
+          <Kpi label="Cattle declared" value={nf.format(d.shipment.declared_head_count)} />
+          <Kpi label="Ranches behind it" value={t ? nf.format(t.sources.filter((s) => s.ranch_id).length) : '—'} />
+          <Kpi label="Traced back to birth" value={t ? pct(t.coverage_pct) : '—'} />
         </div>
       </section>
 
@@ -82,15 +81,15 @@ function Workspace({ id, d, meta }: { id: string; d: ShipmentDetail; meta: Prove
               </li>
             ))}
           </ul>
-          <div className="small muted">
-            Decision evidence hash <span className="mono">{d.decision.evidence_hash}</span> · decided {d.decision.decided_at}
-          </div>
         </Section>
       )}
       {t && (
-        <Section title="Lineage detail: sources, attribution, upstream path">
-          <LineageView t={t} />
-        </Section>
+        <details className="tech">
+          <summary>Full origin table (for investigators)</summary>
+          <Section title="Where the cattle came from, in detail">
+            <LineageView t={t} />
+          </Section>
+        </details>
       )}
     </div>
   );
@@ -102,7 +101,7 @@ function CategoryPicker({ value, onChange, r }: { value: string | null; onChange
     <label className="field inline">
       <span>Highlight paths</span>
       <select value={value || ''} onChange={(e) => onChange(e.target.value || null)}>
-        <option value="">no category</option>
+        <option value="">none</option>
         {cats.map((c) => (
           <option key={c} value={c}>
             {label(c)}
@@ -123,18 +122,15 @@ function GraphPanel({ id, category }: { id: string; category: string | null }) {
   if (graph.error) return <ErrorState error={graph.error} onRetry={graph.reload} />;
   if (!drawn || !graph.data) return <Loading what="Building lineage graph" />;
   const g = graph.data;
-  const ps = g.uncertainty.policy_sensitivity;
   return (
     <div>
-      <div className="note small">
-        Estimated origins (first-in-first-out), not individual animals.
-        {ps && ` Fully-mixed-herd alternative: ${pct(ps.pro_rata_any_risk_pct)} risky vs ${pct(ps.fifo_any_risk_pct)}.`}
-      </div>
+      <p className="small muted">
+        Left: the ranches the cattle came from. Right: where they were delivered. Origins are estimated from permits, not tracked animal by animal.
+      </p>
       <div className="graph-tools small">
         <span>
-          View: <strong>{g.view.mode}</strong>
-          {g.view.mode === 'overview' && ` (at most ${g.view.max_nodes} nodes; ${g.view.folded.length} grouped node(s))`}
-          {g.view.mode === 'branch' && ` rooted at ${g.view.root}`}
+          {g.view.mode === 'overview' && `Showing the main ${g.view.max_nodes} ranches; smaller ones are grouped.`}
+          {g.view.mode === 'branch' && `Showing one branch, from ${g.view.root}.`}
         </span>
         <span className="btn-group">
           {g.view.mode === 'branch' || expand ? (
@@ -145,9 +141,7 @@ function GraphPanel({ id, category }: { id: string; category: string | null }) {
             <button type="button" className="btn btn-small" onClick={() => setFull(!full)} aria-pressed={full}>
               {full ? 'Summarised view' : 'Full graph'}
             </button>
-          ) : (
-            <span className="muted">all nodes shown</span>
-          )}
+          ) : null}
         </span>
       </div>
       <LineageGraphView graph={drawn} category={category} onSelect={setSel} />
@@ -179,12 +173,11 @@ function Selection({ sel, onClose, onExpand }: { sel: GraphSelection; onClose: (
         <>
           <KV
             rows={[
-              ['Kind / roles', `${label(n.kind)}${n.roles.length ? ` · ${n.roles.join(', ')}` : ''}`],
-              ['Estimated contribution (FIFO)', n.head > 0 ? `${num(n.head, 1)} head · ${pct(n.share_pct)}` : 'not an origin (passes cattle through)'],
-              ['Pro-rata alternative', `${num(n.headProRata, 1)} head`],
+              ['Type', `${label(n.kind)}${n.roles.length ? ` · ${n.roles.join(', ')}` : ''}`],
+              ['Cattle from this ranch (estimate)', n.head > 0 ? `${num(n.head, 1)} head · ${pct(n.share_pct)}` : 'not an origin (passes cattle through)'],
+              ['Estimate if herds mix evenly', `${num(n.headProRata, 1)} head`],
               ['Categories', n.categories.length ? n.categories.map(label).join(', ') : 'none'],
-              ['Provenance', <ProvenanceLabel status={n.data_status} />],
-              ['Findings', n.finding_ids.length ? n.finding_ids.join(', ') : 'none on this node'],
+              ['Data', <ProvenanceLabel status={n.data_status} />],
             ]}
           />
           {ranch && (
@@ -207,7 +200,7 @@ function Selection({ sel, onClose, onExpand }: { sel: GraphSelection; onClose: (
           )}
           {n.kind === 'folded' && (
             <div>
-              <div className="small muted">The API grouped these origins. Expand one to see its branch:</div>
+              <div className="small muted">Smaller ranches grouped together. Pick one to see its branch:</div>
               <div className="chips">
                 {n.members.slice(0, 60).map((m) =>
                   /^R\d{4}$|^X\d{2}$/.test(m) ? (
@@ -278,7 +271,7 @@ function BreakdownPanel({ r, d }: { r: ShipmentRiskDetail; d: ShipmentDetail }) 
                     {v.via_intermediaries.map((x, i) => (
                       <span key={x.ranch_id}>
                         {i > 0 && '; '}
-                        <IdLink id={x.ranch_id} /> ({x.codes.join(', ')}, {num(x.attributed_head, 0)} head)
+                        <IdLink id={x.ranch_id} /> ({x.codes.map(label).join(', ')}, {num(x.attributed_head, 0)} head)
                       </span>
                     ))}
                   </>
@@ -288,7 +281,7 @@ function BreakdownPanel({ r, d }: { r: ShipmentRiskDetail; d: ShipmentDetail }) 
           </div>
         ))}
         <div className="bar-row total">
-          <span className="bar-label">Unique affected (each head once)</span>
+          <span className="bar-label">Total cattle at risk</span>
           <span className="bar" aria-hidden>
             <span className="bar-fill tone-dark" style={{ width: `${Math.min(100, b.unique_affected_pct)}%` }} />
           </span>
@@ -297,19 +290,10 @@ function BreakdownPanel({ r, d }: { r: ShipmentRiskDetail; d: ShipmentDetail }) 
           </span>
         </div>
       </div>
-      <p className="small muted">Categories overlap; the total counts each head once.</p>
-      {d.decision && (
-        <KV
-          rows={[
-            ['Decision', <OutcomeBadge outcome={d.decision.outcome} />],
-            ['Blocking / review findings', `${d.decision.blocking_finding_ids.length} / ${d.decision.review_finding_ids.length}`],
-            ['Thresholds', Object.entries(d.decision.thresholds).map(([k, v]) => `${label(k)} ${v}`).join(' · ')],
-          ]}
-        />
-      )}
+      <p className="small muted">An animal can fall into more than one category, so the total counts each animal once.</p>
       {r.clearing_steps.length > 0 && (
-        <>
-          <h4>{d.decision?.outcome === 'REVIEW' ? 'What would clear the review' : 'What could change this outcome'}</h4>
+        <details className="tech">
+          <summary>{d.decision?.outcome === 'REVIEW' ? 'What would clear the review' : 'What could change this outcome'}</summary>
           <ul className="reasons">
             {r.clearing_steps.map((c, i) => (
               <li key={i}>
@@ -317,7 +301,7 @@ function BreakdownPanel({ r, d }: { r: ShipmentRiskDetail; d: ShipmentDetail }) 
               </li>
             ))}
           </ul>
-        </>
+        </details>
       )}
       {!r.decision && <div className="note warn">Not assessed by the risk engine yet. This is not a pass.</div>}
     </div>
@@ -407,8 +391,7 @@ function ReviewableFinding({ f, initial }: { f: Finding; initial?: string }) {
       <div className="review-bar small">
         <span>
           <Tag tone={status === 'confirmed' ? 'red' : status === 'under_review' ? 'amber' : 'neutral'}>review: {REVIEW_LABEL[status] || status}</Tag>
-          {status === 'dismissed' && f.blocking && <span className="warn-text"> Blocking rule still applies.</span>} Entity <IdLink id={f.entity_id} /> · dataset{' '}
-          <span className="mono">{f.dataset_refs[0]}</span> · observed {f.observed_at.slice(0, 10)}
+          {status === 'dismissed' && f.blocking && <span className="warn-text"> Blocking rule still applies.</span>} About <IdLink id={f.entity_id} /> · seen {f.observed_at.slice(0, 10)}
           {related.length > 0 && (
             <>
               {' '}· related{' '}
@@ -438,9 +421,6 @@ function ReviewableFinding({ f, initial }: { f: Finding; initial?: string }) {
           {view.error && !saved && <ErrorState error={view.error} onRetry={view.reload} />}
           {data && (
             <>
-              <div className="small">
-                Original finding unchanged · code {data.finding.code} · evidence hash <span className="mono">{data.finding.evidence_hash}</span>
-              </div>
               {data.decision_impact.map((x, i) => (
                 <div key={i} className="small">
                   Decision on <IdLink id={x.shipment_id} />: <OutcomeBadge outcome={x.outcome} /> ({x.role}) · {x.note}
@@ -455,9 +435,6 @@ function ReviewableFinding({ f, initial }: { f: Finding; initial?: string }) {
                     <li key={rv.review_id}>
                       <strong>{REVIEW_LABEL[rv.status] || rv.status}</strong> · {rv.at} · {rv.reviewer}
                       <div>{rv.reason || <span className="muted">no reason recorded</span>}</div>
-                      <div className="muted">
-                        review {rv.review_id} · request {rv.request_id} · finding hash at review <span className="mono">{short(rv.finding_evidence_hash, 12)}</span>
-                      </div>
                     </li>
                   ))}
                 </ol>
@@ -477,7 +454,7 @@ function ReviewableFinding({ f, initial }: { f: Finding; initial?: string }) {
           onConfirm={submit}
           body={
             <>
-              <p>The review is appended to the finding's history. It never changes the risk decision, the finding or its evidence hash.</p>
+              <p>Your note is added to this finding's history. It never changes the risk decision or the evidence.</p>
               <label className="field">
                 <span>Reviewer (required)</span>
                 <input value={form.reviewer} onChange={(e) => setForm({ ...form, reviewer: e.target.value })} maxLength={120} />
@@ -515,41 +492,39 @@ function Actions({ id, d }: { id: string; d: ShipmentDetail }) {
   const firstRanch = d.lineage?.sources.find((s) => s.ranch_id && /^R\d{4}$/.test(s.ranch_id))?.ranch_id;
   return (
     <div className="actions panel">
-      <a className="btn btn-small" href={api.evidenceDownloadUrl(id)} download>
-        Download evidence (zip)
-      </a>
-      <span className="btn-group">
-        Lineage report:
-        {(['json', 'md', 'csv'] as const).map((f) => (
-          <a key={f} className="btn btn-small" href={api.lineageReportUrl(id, f)} download>
-            {f.toUpperCase()}
-          </a>
-        ))}
-      </span>
       <a className="btn btn-small" href={href('map', null, { shipment: id, ranch: firstRanch, focus: firstRanch })}>
-        Open on Live Map
+        Show on the map
       </a>
-      <a className="btn btn-small" href={href('certificates')}>
-        Certificates
+      <a className="btn btn-small" href={api.evidenceDownloadUrl(id)} download>
+        Download evidence
       </a>
-      <button type="button" className="btn btn-small" onClick={() => setConfirm(true)}>
-        Retrieve canonical assessment
-      </button>
+      <details className="more">
+        <summary className="btn btn-small">More</summary>
+        <div className="more-menu">
+          {(['json', 'md', 'csv'] as const).map((f) => (
+            <a key={f} href={api.lineageReportUrl(id, f)} download>
+              Origin report ({f.toUpperCase()})
+            </a>
+          ))}
+          <button type="button" className="btn-link" onClick={() => setConfirm(true)}>
+            Re-check with the risk engine
+          </button>
+        </div>
+      </details>
       {err && <ErrorState error={err} />}
       {assessment && (
         <div className="note">
-          Canonical assessment ({assessment.source}, engine {assessment.engine_version}): <OutcomeBadge outcome={assessment.outcome} /> · coverage {pct(assessment.coverage_pct)} ·
-          detectors {assessment.detector_versions.join(', ')} · same as the decision above: {assessment.outcome === d.decision?.outcome ? 'yes' : 'NO'}
+          Risk engine says: <OutcomeBadge outcome={assessment.outcome} /> · same as the decision above: {assessment.outcome === d.decision?.outcome ? 'yes' : 'NO'}
         </div>
       )}
       {confirm && (
         <ConfirmDialog
-          title="Retrieve the canonical assessment"
+          title="Re-check with the risk engine"
           busy={busy}
-          confirmLabel="Retrieve"
+          confirmLabel="Re-check"
           onCancel={() => setConfirm(false)}
           onConfirm={run}
-          body={<p>Calls POST /shipments/{id}/assess. The API returns the risk engine's decision; nothing sent from this browser can set or change the outcome.</p>}
+          body={<p>Asks the risk engine for its decision on this shipment again. Nothing you do here can change the outcome.</p>}
         />
       )}
     </div>

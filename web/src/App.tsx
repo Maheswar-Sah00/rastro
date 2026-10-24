@@ -4,7 +4,6 @@ import { parseHash, routeTarget, scrollToSection, SECTIONS, settleScroll } from 
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Problem } from './components/Problem';
-import { HerdAssembly } from './components/HerdAssembly';
 import { SystemSection } from './components/SystemSection';
 import { ResultsSection } from './components/ResultsSection';
 import { FinalCta } from './components/FinalCta';
@@ -96,10 +95,12 @@ export default function App() {
     window.history.pushState(null, '', '#explore');
     window.setTimeout(() => scrollToSection('problem'), 30);
   }, []);
-  const trace = useCallback(() => {
+  const trace = useCallback((id?: string) => {
+    const target = id ?? shipment;
+    if (id) setShipment(id);
     setEntered(true);
     setForceTrace(true);
-    window.history.replaceState(null, '', shipment ? `#trace/${shipment}` : '#trace');
+    window.history.replaceState(null, '', target ? `#trace/${encodeURIComponent(target)}` : '#trace');
     // The shipment detail renders once the shipments file loads, while lazy sections above it grow,
     // so hold the scroll on it rather than jumping once.
     window.setTimeout(() => settleScroll(() => document.getElementById('trace-detail') ?? document.getElementById('trace'), { smooth: true, duration: 6000 }), 30);
@@ -107,19 +108,18 @@ export default function App() {
 
   return (
     <>
-      <Header active={active} onTrace={trace} entered={entered} />
+      <Header active={active} entered={entered} onTrace={trace} />
       <main>
         <Hero onEnter={enter} entered={entered} />
         {entered && (
           <>
             <Problem />
-            <HerdAssembly />
             <SystemSection />
             <ResultsSection />
             <MapSection selected={ranch} onSelect={openRanch} forceLoad={forceMap} />
             <TraceSection shipmentId={shipment} onShipment={(id) => pickShipment(id)} onRanch={openRanch} forceLoad={forceTrace} />
             <LedgerSection onRanch={openRanch} onShipment={(id) => pickShipment(id, true)} />
-            <FinalCta onTrace={trace} />
+            <FinalCta onTrace={() => trace()} />
           </>
         )}
       </main>

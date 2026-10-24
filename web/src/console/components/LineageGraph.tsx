@@ -56,8 +56,7 @@ export function LineageGraphView({ graph, category, onSelect }: { graph: DrawGra
     <div className="graph">
       <div className="graph-tools small">
         <span>
-          {g.nodes.length} nodes · {g.edges.filter((e) => !e.back).length} links · {g.layers} columns
-          {g.removedBackEdges > 0 && ` · ${g.removedBackEdges} back-and-forth link(s) not drawn (cattle moved both ways between two places)`}
+          {g.removedBackEdges > 0 && `${g.removedBackEdges} back-and-forth link(s) not drawn (cattle moved both ways between two places)`}
         </span>
         <span className="legend-inline">
           {LEGEND.map(([c, t]) => (
@@ -74,7 +73,7 @@ export function LineageGraphView({ graph, category, onSelect }: { graph: DrawGra
               key={i}
               d={d}
               fill="none"
-              stroke={category && lit.has(e) ? '#e5484d' : e.kind === 'folded' ? 'rgba(255,255,255,.16)' : 'rgba(255,255,255,.30)'}
+              style={{ stroke: category && lit.has(e) ? '#e5484d' : e.kind === 'folded' ? 'var(--edge-folded)' : 'var(--edge)' }}
               strokeOpacity={category ? (lit.has(e) ? 0.8 : 0.12) : 0.5}
               strokeWidth={w}
               tabIndex={0}
@@ -128,7 +127,7 @@ const LEGEND: [string, string][] = [
   ['#e5484d', 'environmental risk'],
   ['#fab219', 'births / inventory'],
   ['#898781', 'unknown origin'],
-  ['#0ca30c', 'no category'],
+  ['#0ca30c', 'no risk found'],
   ['#6f7a72', 'grouped'],
   ['#3987e5', 'destination'],
 ];

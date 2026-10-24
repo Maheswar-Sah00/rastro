@@ -4,6 +4,7 @@ import { ChartCard, DataTable, PairBars, SERIES, STATUS, StackBars } from './cha
 import { HELDOUT, HELDOUT_LABEL } from '../lib/heldout';
 import { useNear } from './MapSection';
 import { SourceTag } from './Tags';
+import { Explain } from '../lib/explain';
 
 const MARKET: Record<string, string> = { EG: 'Egypt', IQ: 'Iraq', JO: 'Jordan', LB: 'Lebanon', MA: 'Morocco', SA: 'Saudi Arabia', TR: 'Türkiye', EU: 'EU' };
 const VERDICT = [
@@ -21,9 +22,9 @@ export function ResultsSection() {
 
   const h = run === 'stress' ? HELDOUT.redteam : HELDOUT.reference;
   const rows = [
-    { label: 'Tainted head flagged', note: 'higher is better', a: h.baselinePct, b: h.flaggedPct },
-    { label: 'Flagged or sent to review', note: 'today has no review step', a: h.baselinePct, b: h.flagOrReviewPct },
-    { label: 'Clean lots blocked', note: 'lower is better', a: h.baselineCleanBlockedPct, b: h.cleanBlockedPct },
+    { label: 'Illegal cattle caught', note: 'higher is better', a: h.baselinePct, b: h.flaggedPct },
+    { label: 'Caught or sent for a human check', note: 'today has no human check', a: h.baselinePct, b: h.flagOrReviewPct },
+    { label: 'Honest herds wrongly stopped', note: 'lower is better', a: h.baselineCleanBlockedPct, b: h.cleanBlockedPct },
   ];
 
   const markets = useMemo(() => {
@@ -53,14 +54,17 @@ export function ResultsSection() {
           <h2 className="title" id="results-title">
             Same permits. Far more caught.
           </h2>
+          <Explain>
+            Rastro compared with today's check on a simulated supply chain where we know which cattle are truly laundered. "Normal" and "Red team" are two laundering strategies; the red team hides cattle two ranches up and waits. More tainted cattle caught and fewer clean lots blocked is better.
+          </Explain>
         </div>
 
         <div className="viz-filters" role="group" aria-label="Evaluation run">
           <button aria-pressed={run === 'base'} onClick={() => setRun('base')}>
-            Normal launderers
+            Typical cheaters
           </button>
           <button aria-pressed={run === 'stress'} onClick={() => setRun('stress')}>
-            Red team: patient, two hops
+            Hardest cheaters: wait months, hide two ranches back
           </button>
           <span className="viz-filters-note">
             {HELDOUT_LABEL}

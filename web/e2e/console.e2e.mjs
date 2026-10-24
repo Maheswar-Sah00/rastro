@@ -100,7 +100,7 @@ async function main() {
     await check('console loads and shows the environment banner', async () => {
       assert(await waitFor(c, `document.body.innerText.includes('Overview')`), 'overview did not render');
       const chain = (await api('/api/v1/chain/status')).body.data.chain;
-      const expected = chain.verified_public ? 'Public testnet' : chain.mode === 'rpc' ? 'Local chain (anvil)' : 'Local chain (anvil replay)';
+      const expected = chain.verified_public ? 'Public test blockchain' : chain.mode === 'rpc' ? 'Test blockchain (this computer)' : 'Test blockchain (replayed)';
       assert(await waitFor(c, `document.body.innerText.includes(${JSON.stringify(expected)})`), `banner should read "${expected}"`);
       const t = await text(c);
       assert(chain.verified_public || !t.includes('Public testnet'), 'claims a public testnet for local data');
@@ -152,11 +152,13 @@ async function main() {
       assert(lot, 'no issued certificate (run: python -m rastro.certificates.issue demo ../data/synthetic/evaluation)');
       const v = (await api(`/api/v1/certificates/${lot}/verify`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })).body.data;
       await go(c, `#/certificates/${lot}`);
-      assert(await waitFor(c, `[...document.querySelectorAll('button')].some((b) => b.textContent.includes('Verify evidence'))`), 'verify button missing');
-      await clickText(c, 'Verify evidence and status');
+      assert(await waitFor(c, `[...document.querySelectorAll('button')].some((b) => b.textContent.includes('Verify this certificate'))`), 'verify button missing');
+      await clickText(c, 'Verify this certificate');
       await sleep(300);
       await clickText(c, 'Verify');
-      assert(await waitFor(c, `document.body.innerText.includes('outcome: ${v.outcome}')`, 30000), `UI does not show outcome ${v.outcome}`);
+      // The UI shows the outcome as a plain word (CERT_STATUS in pages/Other.tsx).
+      const shown = { valid: 'Valid', consumed: 'Already used', revoked: 'Cancelled', not_on_ledger: 'Not on the ledger', unknown: 'Unknown' }[v.outcome] || v.outcome.replace(/_/g, ' ').replace(/\b[a-z]/g, (m) => m.toUpperCase());
+      assert(await waitFor(c, `document.body.innerText.includes(${JSON.stringify(shown)})`, 30000), `UI does not show outcome ${shown}`);
       return `outcome ${v.outcome}`;
     });
 
@@ -165,17 +167,18 @@ async function main() {
       const r = await fetch(`${API}/api/v1/certificates/${lot}/report?format=html`);
       const h = await r.text();
       assert(r.status === 200 && h.includes('Rastro certificate report'), 'report not served');
-      assert(await waitFor(c, `[...document.querySelectorAll('a')].some((a) => a.textContent.includes('Open certificate report'))`), 'report link missing');
+      assert(await waitFor(c, `[...document.querySelectorAll('a')].some((a) => a.textContent.includes('View report'))`), 'report link missing');
       return 'report ok';
     });
 
     await check('evaluation page shows the red-team artifacts', async () => {
       const e = (await api('/api/v1/evaluation/summary')).body.data;
       await go(c, '#/evaluation');
-      const first = e.redteam?.headline?.find((h) => h.role === 'heldout')?.scenario;  // the page lists held-out scenarios only
-      assert(first, 'no red-team summary from the API');
-      if (!(await waitFor(c, `document.body.innerText.toLowerCase().includes(${JSON.stringify(first.toLowerCase())})`))) {  // th cells are text-transform: uppercase
-        throw new Error(`${first} not shown; page reads: ${(await text(c)).slice(-500).replace(/\s+/g, ' ')}`);
+      const n = e.redteam?.headline?.filter((h) => h.role === 'heldout').length;  // the page lists held-out scenarios only
+      assert(n, 'no red-team summary from the API');
+      const heading = `Across ${n} test scenarios`;
+      if (!(await waitFor(c, `document.body.innerText.includes(${JSON.stringify(heading)})`))) {
+        throw new Error(`"${heading}" not shown; page reads: ${(await text(c)).slice(-500).replace(/\s+/g, ' ')}`);
       }
       return `${e.redteam.headline.length} scenarios`;
     });

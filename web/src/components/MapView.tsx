@@ -537,7 +537,7 @@ function deforTip(f: MapGeoJSONFeature, prot?: MapGeoJSONFeature) {
     <>
       <b>Cleared in {y}</b> <span className="t-sub">(PRODES year)</span>
       <div>{fmt(Number(f.properties.area_ha), 1)} ha</div>
-      <div style={{ color: y > 2020 ? '#ff9ec4' : '#d9cdb2' }}>{y > 2020 ? 'After the EUDR cut-off' : 'Before the EUDR cut-off'}</div>
+      <div style={{ color: y > 2020 ? '#ff9ec4' : '#d9cdb2' }}>{y > 2020 ? 'After the EU deadline (2020)' : 'Before the EU deadline (2020)'}</div>
       {prot && <div className="t-sub">Inside {fixName(String(prot.properties.name))}</div>}
     </>
   );

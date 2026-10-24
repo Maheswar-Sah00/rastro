@@ -5,6 +5,7 @@ import { fmt } from '../lib/format';
 import { ChartCard, Columns, DataTable } from './charts';
 import { useNear } from './MapSection';
 import { SourceTag } from './Tags';
+import { Explain } from '../lib/explain';
 
 const PRE = '#6d746e';
 const POST = '#e5484d';
@@ -29,8 +30,11 @@ export function Problem() {
         <div className="section-head center">
           <p className="kicker">01 · The problem</p>
           <h2 className="title" id="problem-title">
-            Buyers check one hop. <em>Laundering happens two hops up.</em>
+            Buyers check the seller. <em>Laundering hides one ranch further back.</em>
           </h2>
+          <Explain>
+            Meatpackers only check the ranch that sold them the cattle. Calves born on illegally cleared land are first sold to a clean fattening ranch, so they pass that check. The chart shows real forest clearing in the study area; bars after 2020 are past the EU deforestation law's cut-off.
+          </Explain>
         </div>
 
         <div className="problem-viz">
@@ -39,7 +43,7 @@ export function Problem() {
           </div>
           <ChartCard
             title="Forest cleared in the study area"
-            sub={post ? `${fmt(post)} ha after the EUDR cut-off` : 'PRODES, hectares per year'}
+            sub={post ? `${fmt(post)} ha cleared after the EU's 2020 deadline` : 'PRODES, hectares per year'}
             tag={<SourceTag kind={defor.origin === 'mock' ? 'mock' : 'real'} title="INPE PRODES deforestation polygons" />}
             legend={[
               { label: 'After 2020', color: POST },
@@ -135,7 +139,7 @@ function BlindSpot() {
         RASTRO CHECKS THE WHOLE PATH
       </text>
       {node(18, 'Origin ranch', ['post-2020 clearing,', 'Indigenous land'], 'var(--high)', 'var(--high-tint)', 'var(--high-ink)', 'var(--high)')}
-      {node(166, 'Intermediary', ['resells in 9 days', '"looks clean"'], 'var(--watch)', 'var(--watch-tint)', 'var(--watch-ink)', 'var(--high)')}
+      {node(166, 'Middleman ranch', ['resells in 9 days', '"looks clean"'], 'var(--watch)', 'var(--watch-tint)', 'var(--watch-ink)', 'var(--high)')}
       {node(314, 'Buyer', ['slaughterhouse or', 'ship to Türkiye'], 'var(--rule-2)', 'var(--surface-2)', 'var(--ink)')}
       <line x1="149" y1="116" x2="162" y2="116" style={{ stroke: 'var(--muted)' }} strokeWidth="1.8" strokeLinecap="round" markerEnd="url(#arr)" />
       <line x1="297" y1="116" x2="310" y2="116" style={{ stroke: 'var(--muted)' }} strokeWidth="1.8" strokeLinecap="round" markerEnd="url(#arr)" />

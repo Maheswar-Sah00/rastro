@@ -249,7 +249,7 @@ export function MapCanvas({ riskByRanch, layers, selected, onSelectRanch, routes
       <div ref={el} className="map-canvas" role="region" aria-label="Map of ranches and environmental layers" />
       {!compact && ready && (
         <button type="button" className="map-fit" onClick={() => fitStudyArea()}>
-          Study area
+          Fit whole area
         </button>
       )}
       {err && <div className="map-msg">{err}</div>}
