@@ -6,11 +6,20 @@ import { useApi } from '../api/useApi';
 import { ProvenanceLabel } from '../components/Badges';
 import { ErrorState } from '../components/States';
 import { Drawer } from '../components/Overlays';
-import { LAYER_LABELS, MapCanvas, RISK_COLOR, ranchCentroids, type LayerKey, type Route as MapRoute } from '../map/MapCanvas';
+import { DEFOR_COLOR, LAYER_LABELS, MapCanvas, RISK_COLOR, ranchCentroids, type LayerKey, type Route as MapRoute } from '../map/MapCanvas';
 import { type Route, setQuery } from '../lib/router';
 import { RanchDetailBody } from './Ranches';
 
 const DEFAULT_LAYERS: Record<LayerKey, boolean> = { ranches: true, deforestation: true, cleared2008: false, indigenous: true, conservation: true, embargo: true, routes: true };
+const SWATCH: Record<LayerKey, { color: string; kind?: 'line' | 'line dashed' }> = {
+  ranches: { color: 'linear-gradient(90deg,#e5484d 0 33%,#fab219 33% 66%,#0ca30c 66%)' },
+  deforestation: { color: `linear-gradient(90deg,${DEFOR_COLOR.pre} 0 50%,${DEFOR_COLOR.post} 50%)` },
+  cleared2008: { color: DEFOR_COLOR.before2008 },
+  indigenous: { color: '#b49ae0', kind: 'line' },
+  conservation: { color: '#4fbf86', kind: 'line dashed' },
+  embargo: { color: '#e5484d', kind: 'line dashed' },
+  routes: { color: '#5aa2f0', kind: 'line' },
+};
 
 export function LiveMap({ route }: { route: Route }) {
   const selected = route.query.get('ranch');
@@ -55,33 +64,33 @@ export function LiveMap({ route }: { route: Route }) {
       <div className="map-layout">
         <aside className="map-side">
           <h1>Live Map</h1>
+          <div className="legend-title">Ranch risk</div>
+          <div className="risk-key">
+            {(['high', 'watch', 'clean'] as const).map((k) => (
+              <span key={k}>
+                <i style={{ background: RISK_COLOR[k] }} />
+                {k}
+              </span>
+            ))}
+          </div>
           <fieldset className="layer-control">
             <legend>Layers</legend>
             {(Object.keys(LAYER_LABELS) as LayerKey[]).map((k) => (
-              <label key={k}>
-                <input type="checkbox" checked={layers[k]} onChange={(e) => setLayers({ ...layers, [k]: e.target.checked })} /> {LAYER_LABELS[k]}
+              <label key={k} className={layers[k] ? 'on' : undefined}>
+                <input type="checkbox" checked={layers[k]} onChange={(e) => setLayers({ ...layers, [k]: e.target.checked })} />
+                <span className={`swatch ${SWATCH[k].kind ?? ''}`} style={SWATCH[k].kind ? { borderColor: SWATCH[k].color } : { background: SWATCH[k].color }} />
+                {LAYER_LABELS[k]}
               </label>
             ))}
-            <label>
-              <input type="checkbox" checked={satellite} onChange={(e) => setSatellite(e.target.checked)} /> Satellite imagery (Esri, online)
+            <label className={satellite ? 'on' : undefined}>
+              <input type="checkbox" checked={satellite} onChange={(e) => setSatellite(e.target.checked)} />
+              <span className="swatch" style={{ background: 'linear-gradient(135deg,#3d5a3a,#8a6a43)' }} />
+              Satellite imagery (Esri)
             </label>
           </fieldset>
-          <div className="legend">
-            <div className="legend-title">Ranch risk (risk engine)</div>
-            {Object.entries(RISK_COLOR).map(([k, c]) => (
-              <div key={k}>
-                <span className="swatch" style={{ background: c }} /> {k === 'unassessed' ? 'not assessed' : k.replace('_', ' ')}
-              </div>
-            ))}
-            <div className="legend-title">Layers</div>
-            <div><span className="swatch" style={{ background: '#e5484d' }} /> clearing after 2020 (PRODES)</div>
-            <div><span className="swatch" style={{ background: '#a7773f' }} /> clearing 2008–2020</div>
-            <div><span className="swatch" style={{ background: '#3b3527' }} /> cleared before 2008</div>
-            <div><span className="swatch line" style={{ borderColor: '#a58bc0' }} /> Indigenous territory</div>
-            <div><span className="swatch line dashed" style={{ borderColor: '#5ccf5c' }} /> protected area (APA)</div>
-            <div><span className="swatch line dashed" style={{ borderColor: '#e5484d' }} /> active embargo (simulated)</div>
-            <div><span className="swatch line" style={{ borderColor: '#3987e5' }} /> movement route · <span style={{ color: '#e5484d' }}>dashed red = refused</span></div>
-          </div>
+          <p className="small muted" style={{ margin: 0 }}>
+            Pink = forest cleared after the EUDR cut-off (2020). Blue routes are movements; dashed red ones were refused by the ledger.
+          </p>
           <div className="small">
             <ProvenanceLabel status="synthetic">Ranch cells</ProvenanceLabel> <ProvenanceLabel status="real">PRODES / FUNAI</ProvenanceLabel>
           </div>
