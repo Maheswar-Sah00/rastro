@@ -17,7 +17,7 @@
 
 IEEE ClimateChain Global Hackathon 2026 · Track: **Sustainable Supply Chains** · Team **Rastro**
 
-**[Live demo](https://maheswar-sah00.github.io/rastro/)** · [Investigator console](https://maheswar-sah00.github.io/rastro/console.html) · [Demo video](#)
+**[Live demo](https://maheswar-sah00.github.io/rastro/)** · **[Investigator console](https://maheswar-sah00.github.io/rastro/console.html)** · [Evaluation](docs/evaluation.md) · [Architecture](docs/architecture.md)
 
 <img src="docs/screenshots/landing-hero.png" alt="Rastro landing page over a Sentinel-2 image of São Félix do Xingu" width="900">
 
@@ -27,6 +27,16 @@ IEEE ClimateChain Global Hackathon 2026 · Track: **Sustainable Supply Chains** 
 > **Synthetic ranches, real landscape.** Deforestation, Indigenous lands, protected areas, the municipal herd and the
 > slaughterhouse and port locations are real public data. Every ranch boundary, herd, birth, permit (GTA), embargo and
 > laundering behaviour is simulated. Slaughterhouse names are anonymised. Nothing here describes a real ranch or company.
+
+## At a glance
+
+| | |
+| --- | --- |
+| **Problem** | Meatpackers check only their direct supplier. Cattle born on illegally cleared land are sold through a clean ranch first and arrive looking legal. |
+| **Solution** | Rastro follows every animal-transit permit (GTA) back to the birth ranch, scores each lot with explainable AI, and anchors the rules on a shared ledger that refuses physically impossible paperwork. |
+| **Result** | On 11 held-out worlds, Rastro flags about **7 in 10** tainted head outright (about **9 in 10** including human review) against **2 to 4 in 10** for today's check, and wrongly stops roughly **half as many** honest herds. |
+| **Proof** | Clean lots receive a one-time, oracle-signed EIP-712 certificate anchored to the SHA-256 of their evidence. Reuse reverts on-chain. |
+| **Built with** | Python · GeoPandas · scikit-learn · Solidity · Foundry · FastAPI · React · MapLibre |
 
 ---
 
@@ -42,7 +52,7 @@ IEEE ClimateChain Global Hackathon 2026 · Track: **Sustainable Supply Chains** 
    [Lineage](#53-lot-lineage) ·
    [Risk engine](#54-risk-engine-and-verdicts) ·
    [Certificates](#55-one-time-certificates)
-6. [Screenshots](#6-screenshots)
+6. [The product](#6-the-product)
 7. [Getting started](#7-getting-started)
 8. [Demo in five minutes](#8-demo-in-five-minutes)
 9. [Project structure and tech stack](#9-project-structure-and-tech-stack)
@@ -53,7 +63,7 @@ IEEE ClimateChain Global Hackathon 2026 · Track: **Sustainable Supply Chains** 
 14. [Real and synthetic data](#14-real-and-synthetic-data)
 15. [Editing the diagrams](#15-editing-the-diagrams)
 16. [Sources](#16-sources)
-17. [Team](#17-team)
+17. [Team and licence](#17-team-and-licence)
 
 ---
 
@@ -64,7 +74,7 @@ the animals get laundered:
 
 <p align="center"><img src="docs/diagrams/02-laundering.svg" alt="Cattle born on illegally cleared land pass through a clean intermediary and reach the slaughterhouse looking legal" width="900"></p>
 
-Every one of those movements already has an animal transit permit (GTA). Nobody connects them across buyers:
+Every one of those movements already has an animal-transit permit (GTA). Nobody connects them across buyers:
 
 | Fact | Why it matters |
 | --- | --- |
@@ -109,7 +119,7 @@ buys and resells within days, a lot that is half tainted) needs pattern detectio
 
 ## 3. Results
 
-Evaluated on **11 held-out synthetic worlds** (seed 101, never used for tuning), each 409 ranches and about 10,800
+Evaluated on **11 held-out synthetic worlds** (seed 101, never used for tuning), each with 409 ranches and about 10,800
 permits over three years on the real landscape around São Félix do Xingu, Pará. "Today's check" blocks a lot only when
 its direct supplier is risky.
 
@@ -138,7 +148,8 @@ has tainted head because embargoes and real post-2020 clearing exist without any
 - **Where it struggles:** with 10% of permits missing, unknown origins push 43.6% of clean lots to FLAGGED. Split lots
   and fast legitimate traders also raise false alarms. See [Limitations](#13-limitations-and-roadmap).
 
-> The site and this README quote the held-out numbers. Method, leakage controls and per-detector tables:
+> [!NOTE]
+> The site and this README quote the held-out numbers. Method, leakage controls and per-detector tables are in
 > [docs/evaluation.md](docs/evaluation.md) and [reports/evaluation/](reports/evaluation/).
 
 ## 4. System overview
@@ -167,15 +178,16 @@ has tainted head because embargoes and real post-2020 clearing exist without any
 4. **Geospatial engine.** Each ranch is measured against PRODES (before, straddling or after the 2020 cut-off),
    Indigenous lands, protected areas and embargoes. A missing layer gives "unknown", never zero.
 5. **Ledger replay** applies the HerdLedger rules to every permit and birth, exactly as the contract does.
-6. **Lineage, risk, decision, evidence, certificate**: below.
+6. **Lineage, risk, decision, evidence and certificate**, described below.
 
 ### 5.2 HerdLedger: conservation of cattle
 
 <p align="center"><img src="docs/diagrams/04-ledger-rules.svg" alt="HerdLedger rejects duplicate GTAs, embargoed origins, shipments larger than the herd and births beyond biology" width="900"></p>
 
 The contract tracks herd balances per ranch (as salted hashes) and refuses events that break physics. The off-chain
-replay and the on-chain totals agree exactly: opening herd 385,912, births 236,221, sent to slaughter or export
-315,096, on hand 307,037.
+replay and the on-chain totals agree exactly:
+
+> **385,912** opening herd **+ 236,221** births **− 0** deaths **= 315,096** sent to slaughter or export **+ 307,037** still on ranches
 
 ### 5.3 Lot lineage
 
@@ -200,6 +212,9 @@ and an uncertain lot always goes to a person.
 | E, IsolationForest | Unusual movement behaviour, with reason codes | `ANOMALY` |
 | Lineage | Share of a lot from risky or unknown origins | `TAINTED_SUPPLY`, `UNKNOWN_ORIGIN` |
 
+The console shows each code in plain English (for example `PHANTOM_BIRTHS` reads *More calves than the herd could
+have*), with the measured values and thresholds one click away.
+
 ### 5.5 One-time certificates
 
 <p align="center"><img src="docs/diagrams/06-certificate-lifecycle.svg" alt="PASS lot, oracle signs, certificate issued, consumed once, revoked or expired; replays and reused permits revert" width="900"></p>
@@ -212,9 +227,16 @@ and an uncertain lot always goes to a person.
   consumed (tx `0x0246…50be`). The replay reverted with `CertificateAlreadyIssued` and the second consumption with
   `CertificateAlreadyUsed`. Details: [docs/certificates.md](docs/certificates.md).
 
-## 6. Screenshots
+## 6. The product
 
-**Public site.** A lean, chart-first landing page. The full story opens after *Explore Rastro*.
+Rastro has two front ends that share one API: a **public site** that tells the story in a few screens, and an
+**investigator console** where every figure is read from the API and nothing is hard-coded.
+
+### Public site
+
+The opening screen fits in one view: the problem, the three headline results and two entry points (*Explore Rastro*
+and *Open the console*). The header's **Trace** launcher (press <kbd>T</kbd>) jumps straight to any shipment: search by
+id, market or port, or pick a featured voyage. Each one shows today's verdict next to Rastro's.
 
 | Results | Map story |
 | --- | --- |
@@ -222,25 +244,38 @@ and an uncertain lot always goes to a person.
 | **Trace a shipment** | **The ledger** |
 | <img src="docs/screenshots/landing-trace.png" alt="36 live-export voyages from Barcarena with today's and Rastro's verdicts"> | <img src="docs/screenshots/landing-ledger.png" alt="HerdLedger refusals as a bar chart"> |
 
-**Investigator console.** Every figure comes from the API; nothing is hard-coded in the UI.
+### Investigator console
 
 | Overview | Shipment investigation |
 | --- | --- |
 | <img src="docs/screenshots/console-overview.png" alt="Console overview with KPIs, flagged shipments, review queue and risk map"> | <img src="docs/screenshots/console-investigation.png" alt="Lineage graph and risk breakdown for a flagged shipment"> |
 | **Certificate verification (11 checks)** | **Live map** |
-| <img src="docs/screenshots/console-certificate.png" alt="Certificate verified against the local chain: all 11 checks pass"> | <img src="docs/screenshots/console-map.png" alt="Ranch risk map over real PRODES clearing and protected areas"> |
+| <img src="docs/screenshots/console-certificate.png" alt="Certificate verified against the local chain: all 11 checks pass"> | <img src="docs/screenshots/console-map.png" alt="Ranch risk map over real PRODES clearing and protected areas, with grouped layer switches"> |
 
-More: [ranch page](docs/screenshots/console-ranch.png), [HerdLedger page](docs/screenshots/console-ledger.png),
-[evaluation page](docs/screenshots/console-evaluation.png), [problem section](docs/screenshots/landing-problem.png),
-[system section](docs/screenshots/landing-system.png).
+More: [ranch page](docs/screenshots/console-ranch.png) · [HerdLedger page](docs/screenshots/console-ledger.png) ·
+[evaluation page](docs/screenshots/console-evaluation.png) · [problem section](docs/screenshots/landing-problem.png) ·
+[system section](docs/screenshots/landing-system.png)
+
+**Designed for a non-specialist reader.**
+
+- **Plain language throughout.** Detector codes, ledger totals and certificate events are shown as sentences. Official
+  names that must stay (GTA, PRODES, FUNAI, IBGE PPM, Trase) carry a dotted underline that explains them on hover,
+  focus or tap.
+- **Detail on demand.** Each page leads with the decision and the few numbers that support it. Origin tables, report
+  downloads and re-checks sit one click away under *More* or a collapsed section.
+- **Light and dark themes**, shared between the site and the console and remembered per browser.
+- **No sideways scrolling.** Tables compress their columns first and, on narrow screens, turn each row into a labelled
+  card.
+- **Honest by default.** Simulated data is tagged *simulated*; real layers are tagged *real*. A failed request shows an
+  error and is never replaced by sample data.
 
 ## 7. Getting started
 
-**Prerequisites:** Python 3.12, Node 20+ (tested on 22), Foundry 1.8. On Windows the Foundry binaries can live in
+**Prerequisites:** Python 3.12, Node 20+ (tested on 22) and Foundry 1.8. On Windows the Foundry binaries can live in
 `contracts/.tools/bin`. Copy [`.env.example`](.env.example) to `.env` only if you need non-default settings.
 
 ```bash
-# 1. Data and AI (first run downloads the real layers, then they are cached)
+# 1. Data and AI (the first run downloads the real layers, then they are cached)
 cd pipeline
 pip install -r requirements.txt -r requirements-dev.txt
 python run_all.py                 # real layers -> synthetic world -> geospatial -> lineage -> risk -> evaluation
@@ -256,15 +291,25 @@ npm run demo:local -- --keep      # starts anvil, deploys HerdLedger, replays th
 cd ../backend
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
-uvicorn app.main:app --port 8000  # http://127.0.0.1:8000/docs
+uvicorn app.main:app --port 8000  # interactive docs at http://127.0.0.1:8000/docs
 
 # 4. Web
 cd ../web
 npm install
-npm run dev                       # landing: http://localhost:5173  console: http://localhost:5173/console.html
+npm run dev                       # site: http://localhost:5173   console: http://localhost:5173/console.html
 ```
 
-If port 8000 is taken, run the API on another port and build the console with `VITE_API_URL=http://127.0.0.1:<port>`.
+> [!TIP]
+> **Port 8000 already in use?** Start the API on a free port and point the console at it. The address is read at
+> build time, so put it in `web/.env.local` (git-ignored) and restart `npm run dev` or rebuild:
+>
+> ```bash
+> uvicorn app.main:app --port 8020
+> echo "VITE_API_URL=http://127.0.0.1:8020" > ../web/.env.local
+> ```
+>
+> If the console shows *API unreachable*, check that `http://127.0.0.1:<port>/api/v1/health` answers with Rastro's
+> own health payload and not another app on the same port.
 
 **Static demo (GitHub Pages).** The hosted console runs in a labelled **DEMO MODE**: it serves API responses recorded
 from a live run (`web/scripts/capture-fixtures.py` → `web/src/console/fixtures/`), so judges can click through without
@@ -283,13 +328,13 @@ cd .. && python scripts/reset_demo.py --chain                            # clear
 
 | Step | Where | What to show |
 | --- | --- | --- |
-| 1 | Landing page | The problem in one screen. *Explore Rastro* opens the story. |
-| 2 | Results | Today's check vs Rastro; toggle the red team. 36 of 36 voyages pass today's check. |
+| 1 | Site, opening screen | The problem and the three headline results in one view. *Explore Rastro* opens the story. |
+| 2 | Results | Today's check vs Rastro; switch to the red team. All 36 voyages pass today's check. |
 | 3 | Map story | Real PRODES clearing after the EUDR cut-off, ranches rated, where cattle go, what the ledger refused. |
-| 4 | Trace | *Trace a ship to Türkiye*: the voyage today's check passes and Rastro fails, with its source ranches. |
-| 5 | Console, Investigations | `SHP-D-001677`: lineage graph, risk breakdown, findings and "what could change this outcome". |
-| 6 | Console, Certificates | Verify a live certificate: 11 checks, read from the chain with `eth_call`. |
-| 7 | Terminal | Replay the certificate: `CertificateAlreadyIssued`. Consume twice: `CertificateAlreadyUsed`. |
+| 4 | **Trace** launcher (<kbd>T</kbd>) | Pick *Passes today, Rastro fails*: the Türkiye-bound voyage and the ranches its cattle came from. |
+| 5 | Console, Investigations | `SHP-D-001677`: lineage graph, risk breakdown in plain English, findings and evidence. |
+| 6 | Console, Certificates | *Verify this certificate*: 11 checks, read live from the chain. |
+| 7 | Terminal | Replay the certificate: `CertificateAlreadyIssued`. Consume it twice: `CertificateAlreadyUsed`. |
 
 Full runbook: [docs/demo-script.md](docs/demo-script.md).
 
@@ -301,7 +346,7 @@ rastro/
 │   └── rastro/          synth · geospatial · lineage · risk · certificates · evaluation · schemas
 ├── contracts/           HerdLedger.sol, Foundry tests and invariants, replay and signer (ethers v6)
 ├── backend/             FastAPI read API, EIP-712 verification, chain adapter
-├── web/                 React + Vite: landing page (index.html) and console (console.html), e2e checks
+├── web/                 React + Vite: site (index.html) and console (console.html), browser end-to-end checks
 ├── data/synthetic/      canonical datasets (manifests committed, tables regenerated)
 ├── reports/evaluation/  held-out metrics, confusion tables, error analysis
 ├── scripts/             reset_demo.py
@@ -326,9 +371,11 @@ rastro/
 | Web unit | `cd web && npm test` | **18 passed** |
 | Browser end-to-end | `cd web && API_URL=http://127.0.0.1:8000 npm run e2e` | **9 / 9** (needs the API, a built console and anvil) |
 
-The tests cover duplicate permits, missing upstream records, negative inventory, impossible births, out-of-order
-movements, missing geospatial layers, changed evidence files, duplicate and replayed certificates, expiry and invalid
-oracle signatures. Full matrix: [docs/integration-report.md](docs/integration-report.md).
+The browser suite checks the console against the API itself: KPIs, decisions, lineage totals, search, certificate
+verification, reports and the evaluation page must match what the API returns. The other suites cover duplicate
+permits, missing upstream records, negative inventory, impossible births, out-of-order movements, missing geospatial
+layers, changed evidence files, duplicate and replayed certificates, expiry and invalid oracle signatures. Full matrix:
+[docs/integration-report.md](docs/integration-report.md).
 
 ## 11. Security and trust model
 
@@ -337,9 +384,10 @@ oracle signatures. Full matrix: [docs/integration-report.md](docs/integration-re
 - **Signature safety:** EIP-712 domain bound to chain id and contract, single-use nonces, one certificate per lot and
   per permit, high-s signatures rejected, digest cross-checked with the contract.
 - **API hardening:** strict input validation (unknown fields rejected), a path-traversal fix in certificate
-  verification, CSV formula-injection guard, escaped HTML reports, per-client rate limiting, restricted CORS.
-- **Honest labels:** the UI says *Local chain (anvil)* and never claims a public testnet. A failed request shows an
-  error with its request id and is never replaced by sample data.
+  verification, a CSV formula-injection guard, escaped HTML reports, per-client rate limiting and restricted CORS.
+- **Honest labels:** the console names the network it reads, such as *Test blockchain (this computer)*, and never
+  claims a public network it isn't using. A failed request shows an error with its request id.
+- **Read-only console:** investigator reviews are appended to a finding's history and never change a machine decision.
 - **Accepted risk:** `maplibre-gl` 5.x has an advisory in its HTML sanitiser. Rastro never passes HTML to MapLibre, so
   the path is unreachable; the upgrade to 6.x is planned.
 
@@ -378,6 +426,7 @@ real GTA feed replaces the simulator with no change to the detectors or the cont
 | Kayapó Indigenous land, Triunfo do Xingu protected area | Embargoes and laundering behaviour (the evaluation ground truth) |
 | IBGE herd of São Félix do Xingu: 2,730,818 head (2025) | Which slaughterhouse buys what; voyage destinations follow Pará's real 2025 export mix |
 | Slaughterhouse locations (Trase, CC BY 4.0), Vila do Conde port | |
+| Sentinel-2 L2A true-colour image of São Félix do Xingu, 11 Sep 2025 (landing page background) | |
 
 ## 15. Editing the diagrams
 
@@ -399,23 +448,20 @@ image* → SVG with *Embed scene* and *Background* on, and replace the matching 
 ## 16. Sources
 
 INPE PRODES / TerraBrasilis · FUNAI Indigenous lands · IBGE PPM table 3939 · Trase Brazil beef logistics map v6 ·
-Human Rights Watch, *Tainted* (Oct 2025) and follow-up (Nov 2025) · Mighty Earth on the Pará traceability delay
-(Dec 2025) · MPF/PA on the GTA publication ruling (Oct 2025) · European Commission EUDR review COM(2026) 191 ·
-Sedap/Agência Pará and Agrifatto on Pará's live-cattle exports (2025) · Secex/Scot Consultoria via Compre Rural (2026).
+Copernicus Sentinel-2 via Microsoft Planetary Computer · Human Rights Watch, *Tainted* (Oct 2025) and follow-up
+(Nov 2025) · Mighty Earth on the Pará traceability delay (Dec 2025) · MPF/PA on the GTA publication ruling (Oct 2025) ·
+European Commission EUDR review COM(2026) 191 · Sedap/Agência Pará and Agrifatto on Pará's live-cattle exports (2025) ·
+Secex/Scot Consultoria via Compre Rural (2026).
 
 More documentation: [architecture](docs/architecture.md) · [API](docs/api.md) ·
 [data dictionary](docs/data-dictionary.md) · [evaluation](docs/evaluation.md) · [certificates](docs/certificates.md) ·
 [threat model](docs/threat-model.md) · [integration report](docs/integration-report.md).
 
-## 17. Team
+## 17. Team and licence
 
 **Team Rastro**, IEEE ClimateChain Global Hackathon 2026
 
 - **Meghana Pabba**
 - **Naga Bhargav Reddy**
 
-<div align="center">
-
-Code: MIT. Data keeps the licence of its source.
-
-</div>
+Code is released under the [MIT licence](LICENSE). Data keeps the licence of its source.
