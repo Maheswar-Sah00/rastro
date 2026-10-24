@@ -61,8 +61,8 @@ export default function ConsoleApp() {
   }
   // Remount the page on navigation so each view starts from a clean state.
   return (
-    <Layout page={route.page} env={env} demo={DEMO_MODE}>
-      <div key={`${route.page}/${route.id || ''}`}>{page}</div>
+    <Layout page={route.page} routeKey={`${route.page}/${route.id || ''}`} env={env} demo={DEMO_MODE}>
+      <div key={`${route.page}/${route.id || ''}`} className="route">{page}</div>
     </Layout>
   );
 }

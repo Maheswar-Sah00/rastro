@@ -4,7 +4,7 @@ import { useAllRanches, useSummary } from '../api/hooks';
 import type { CertificateEvent, EvaluationReport, RedTeamSummary, VerifyResult } from '../api/types';
 import { useApi } from '../api/useApi';
 import { ProvenanceLabel, RiskBadge, Tag } from '../components/Badges';
-import { IdLink, Kpi, KV, Section } from '../components/Evidence';
+import { IdLink, KV, Section } from '../components/Evidence';
 import { ConfirmDialog } from '../components/Overlays';
 import { Async, Empty, ErrorState } from '../components/States';
 import { DataTable } from '../components/Table';
@@ -345,7 +345,7 @@ export function Evaluation() {
     <div className="page">
       <header className="page-head">
         <h1>Evaluation</h1>
-        <p className="muted">Measured on synthetic worlds with known ground truth.</p>
+        <p className="muted">How often Rastro catches laundered cattle, and how often it wrongly blocks clean lots, measured on synthetic worlds with known ground truth.</p>
       </header>
       <Async state={st} what="Loading evaluation">
         {(e) =>
@@ -363,39 +363,128 @@ export function Evaluation() {
   );
 }
 
+const SCENARIO_NAMES: Record<string, string> = {
+  'S00-clean': 'Honest world',
+  'S01-reference': 'Reference laundering',
+  'S02-hold-60': 'Launderers hold ~60 days',
+  'S03-hold-120': 'Launderers hold ~120 days',
+  'S04-two-hop': 'Two laundering hops',
+  'S05-redteam': 'Red team: 60-120 days, two hops',
+  'S06-incomplete': '10% of permits missing',
+  'S07-split-lots': 'Split lots',
+  'S08-mixed-cover': 'Mixed with clean cover',
+  'S09-concealed': 'Concealed inventory',
+  'S10-rapid-legit': 'Legitimate rapid trading',
+};
+
 function RedTeam({ s }: { s: RedTeamSummary }) {
+  const [view, setView] = useState<'chart' | 'table'>('chart');
   const p = (x: number | null) => (x === null ? '—' : pct(x));
   const rows = s.headline.filter((h) => h.role === 'heldout');
+  const toggle = (
+    <div className="seg seg-tight" role="group" aria-label="View">
+      {(['chart', 'table'] as const).map((v) => (
+        <button key={v} type="button" className={view === v ? 'on' : ''} aria-pressed={view === v} onClick={() => setView(v)}>
+          {v === 'chart' ? 'Chart' : 'Table'}
+        </button>
+      ))}
+    </div>
+  );
   return (
-    <Section title="Rastro vs today's direct-supplier check">
-      <div className="table-wrap">
-        <table className="data">
-          <thead>
-            <tr>
-              <th>Scenario</th>
-              <th>Tainted cattle caught</th>
-              <th>…incl. review</th>
-              <th>Today's check</th>
-              <th>Clean lots blocked</th>
-              <th>Today's check</th>
-            </tr>
-          </thead>
-          <tbody>
+    <Section title="Rastro vs today's direct-supplier check" aside={toggle}>
+      <p className="small muted section-sub">
+        {rows.length} held-out synthetic worlds (seed {s.held_out_seed}, never used for tuning). Method and limits: docs/evaluation.md.
+      </p>
+      {view === 'chart' ? (
+        <div className="grid-2 eval-charts">
+          <div>
+            <div className="chart-title">
+              Tainted cattle caught <span className="muted">higher is better</span>
+            </div>
+            <div className="legend-inline small">
+              <span><i style={{ background: 'var(--series)' }} /> Rastro flagged</span>
+              <span><i style={{ background: 'var(--series)', opacity: 0.4 }} /> + sent to review</span>
+              <span><i style={{ background: 'var(--grey)' }} /> Today's check</span>
+            </div>
             {rows.map((h) => (
-              <tr key={h.scenario}>
-                <th scope="row" className="mono small">{h.scenario}</th>
-                <td>{p(h.rastro_cattle_caught_flagged_pct)}</td>
-                <td>{p(h.rastro_cattle_caught_flag_or_review_pct)}</td>
-                <td>{p(h.baseline_cattle_caught_pct)}</td>
-                <td>{p(h.rastro_clean_lots_flagged_pct)}</td>
-                <td>{p(h.baseline_clean_lots_flagged_pct)}</td>
-              </tr>
+              <PairBars key={h.scenario} scenario={h.scenario} a={h.rastro_cattle_caught_flagged_pct} aExtra={h.rastro_cattle_caught_flag_or_review_pct} b={h.baseline_cattle_caught_pct} />
             ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="small muted">Synthetic worlds (seed {s.held_out_seed}, never used for tuning). Method and limits: docs/evaluation.md.</p>
+          </div>
+          <div>
+            <div className="chart-title">
+              Clean lots blocked <span className="muted">lower is better</span>
+            </div>
+            <div className="legend-inline small">
+              <span><i style={{ background: 'var(--series)' }} /> Rastro</span>
+              <span><i style={{ background: 'var(--grey)' }} /> Today's check</span>
+            </div>
+            {rows.map((h) => (
+              <PairBars key={h.scenario} scenario={h.scenario} a={h.rastro_clean_lots_flagged_pct} b={h.baseline_clean_lots_flagged_pct} warn={(h.rastro_clean_lots_flagged_pct ?? 0) > (h.baseline_clean_lots_flagged_pct ?? 100)} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="table-wrap">
+          <table className="data">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Tainted cattle caught</th>
+                <th>…incl. review</th>
+                <th>Today's check</th>
+                <th>Clean lots blocked</th>
+                <th>Today's check</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((h) => (
+                <tr key={h.scenario}>
+                  <th scope="row">
+                    {SCENARIO_NAMES[h.scenario] || h.scenario} <span className="mono small muted">{h.scenario}</span>
+                  </th>
+                  <td>{p(h.rastro_cattle_caught_flagged_pct)}</td>
+                  <td>{p(h.rastro_cattle_caught_flag_or_review_pct)}</td>
+                  <td>{p(h.baseline_cattle_caught_pct)}</td>
+                  <td>{p(h.rastro_clean_lots_flagged_pct)}</td>
+                  <td>{p(h.baseline_clean_lots_flagged_pct)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </Section>
+  );
+}
+
+/** One scenario: Rastro (optionally extended by the review share) above today's check, both on a 0-100% scale. */
+function PairBars({ scenario, a, aExtra, b, warn }: { scenario: string; a: number | null; aExtra?: number | null; b: number | null; warn?: boolean }) {
+  const w = (x: number | null | undefined) => `${Math.max(0, Math.min(100, x ?? 0))}%`;
+  return (
+    <div className="pair">
+      <div className="pair-label">
+        {SCENARIO_NAMES[scenario] || scenario}
+        <span className="mono muted">{scenario}</span>
+      </div>
+      <div className="pair-bars">
+        <div className="pair-row">
+          <div className="pair-track">
+            {aExtra != null && <div className="pair-fill pair-extra" style={{ width: w(aExtra) }} />}
+            <div className={`pair-fill pair-a ${warn ? 'pair-warn' : ''}`} style={{ width: w(a) }} />
+          </div>
+          <span className="pair-val">
+            {a === null ? '—' : pct(a)}
+            {aExtra != null && <span className="muted"> / {pct(aExtra)}</span>}
+          </span>
+        </div>
+        <div className="pair-row">
+          <div className="pair-track">
+            <div className="pair-fill pair-b" style={{ width: w(b) }} />
+          </div>
+          <span className="pair-val muted">{b === null ? '—' : pct(b)}</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -405,14 +494,40 @@ function Report({ r }: { r: EvaluationReport }) {
   if (!lot || !base) return null;
   return (
     <Section title={`This dataset (seed ${r.seed}, ${r.role})`}>
-      <div className="kpis">
-        <Kpi label="Tainted head caught (flagged)" value={pct(lot.tainted_head_caught_pct_flagged_only)} tone="green" />
-        <Kpi label="…incl. review" value={pct(lot.tainted_head_caught_pct_flag_or_review)} />
-        <Kpi label="Today's check" value={pct(base.tainted_head_caught_pct_flagged_only)} />
-        <Kpi label="Clean lots blocked" value={pct(lot.clean_lots_flagged_pct)} />
-        <Kpi label="Today's check" value={pct(base.clean_lots_flagged_pct)} tone="red" />
+      <div className="compare-grid">
+        <Compare
+          label="Tainted head caught"
+          better="higher"
+          rastro={lot.tainted_head_caught_pct_flagged_only}
+          extra={`${pct(lot.tainted_head_caught_pct_flag_or_review)} including review`}
+          today={base.tainted_head_caught_pct_flagged_only}
+        />
+        <Compare label="Clean lots blocked" better="lower" rastro={lot.clean_lots_flagged_pct} today={base.clean_lots_flagged_pct} />
       </div>
     </Section>
+  );
+}
+
+function Compare({ label: l, rastro, today, extra, better }: { label: string; rastro: number | null; today: number | null; extra?: string; better: 'higher' | 'lower' }) {
+  const wins = rastro !== null && today !== null && (better === 'higher' ? rastro > today : rastro < today);
+  const w = (x: number | null) => `${Math.max(0, Math.min(100, x ?? 0))}%`;
+  return (
+    <div className="compare">
+      <div className="compare-label">
+        {l} <span className="muted">{better} is better</span>
+      </div>
+      <div className="compare-nums">
+        <span className={`compare-big ${wins ? 'tone-text-green' : ''}`}>{rastro === null ? '—' : pct(rastro)}</span>
+        <span className="muted">vs {today === null ? '—' : pct(today)} today</span>
+      </div>
+      {extra && <div className="small muted">{extra}</div>}
+      <div className="pair-track compare-track">
+        <div className="pair-fill pair-a" style={{ width: w(rastro) }} />
+      </div>
+      <div className="pair-track compare-track">
+        <div className="pair-fill pair-b" style={{ width: w(today) }} />
+      </div>
+    </div>
   );
 }
 

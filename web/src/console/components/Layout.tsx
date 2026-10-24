@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { api, unwrap } from '../api/client';
 import type { CertificateView, Health, Ready } from '../api/types';
 import { useApi } from '../api/useApi';
@@ -6,18 +6,19 @@ import { resolveSearch } from '../lib/ids';
 import { href, navigate } from '../lib/router';
 import { Icon } from './Icon';
 
-export const NAV: { page: string; label: string; icon: string }[] = [
-  { page: 'overview', label: 'Overview', icon: 'overview' },
-  { page: 'map', label: 'Live Map', icon: 'map' },
-  { page: 'ranches', label: 'Ranches', icon: 'ranch' },
-  { page: 'movements', label: 'Movements', icon: 'movement' },
-  { page: 'shipments', label: 'Shipments', icon: 'shipment' },
-  { page: 'investigations', label: 'Investigations', icon: 'investigation' },
-  { page: 'certificates', label: 'Certificates', icon: 'certificate' },
-  { page: 'ledger', label: 'HerdLedger', icon: 'ledger' },
-  { page: 'evaluation', label: 'Evaluation', icon: 'evaluation' },
-  { page: 'sources', label: 'Data Sources', icon: 'sources' },
+export const NAV: { page: string; label: string; icon: string; group: string }[] = [
+  { page: 'overview', label: 'Overview', icon: 'overview', group: 'Monitor' },
+  { page: 'map', label: 'Live Map', icon: 'map', group: 'Monitor' },
+  { page: 'investigations', label: 'Investigations', icon: 'investigation', group: 'Investigate' },
+  { page: 'shipments', label: 'Shipments', icon: 'shipment', group: 'Investigate' },
+  { page: 'ranches', label: 'Ranches', icon: 'ranch', group: 'Investigate' },
+  { page: 'movements', label: 'Movements', icon: 'movement', group: 'Investigate' },
+  { page: 'certificates', label: 'Certificates', icon: 'certificate', group: 'Verify' },
+  { page: 'ledger', label: 'HerdLedger', icon: 'ledger', group: 'Verify' },
+  { page: 'evaluation', label: 'Evaluation', icon: 'evaluation', group: 'About' },
+  { page: 'sources', label: 'Data Sources', icon: 'sources', group: 'About' },
 ];
+const GROUPS = [...new Set(NAV.map((n) => n.group))];
 const ALIAS: Record<string, string> = { gtas: 'movements', lots: 'shipments' };
 
 export interface EnvInfo { kind: 'simulation' | 'local_chain' | 'public_testnet' | 'unknown'; label: string; detail: string }
@@ -38,9 +39,15 @@ export function envFrom(health: Health | null, ready: Ready | null, chain: Certi
   };
 }
 
-export function Layout({ page, env, children, demo }: { page: string; env: EnvInfo; children: ReactNode; demo: boolean }) {
+export function Layout({ page, routeKey, env, children, demo }: { page: string; routeKey: string; env: EnvInfo; children: ReactNode; demo: boolean }) {
   const active = ALIAS[page] || page;
   const [navOpen, setNavOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+  // Only the content pane scrolls; every new page starts at its top.
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+    setNavOpen(false);
+  }, [routeKey]);
   return (
     <div className="console">
       <header className="topbar">
@@ -69,14 +76,20 @@ export function Layout({ page, env, children, demo }: { page: string; env: EnvIn
       </header>
       <div className="shell">
         <nav className={`sidenav ${navOpen ? 'open' : ''}`} aria-label="Main">
-          {NAV.map((n) => (
-            <a key={n.page} href={href(n.page)} className={active === n.page ? 'active' : undefined} aria-current={active === n.page ? 'page' : undefined} onClick={() => setNavOpen(false)}>
-              <Icon name={n.icon} /> {n.label}
-            </a>
+          {GROUPS.map((g) => (
+            <div key={g} className="nav-group">
+              <div className="nav-group-label">{g}</div>
+              {NAV.filter((n) => n.group === g).map((n) => (
+                <a key={n.page} href={href(n.page)} className={active === n.page ? 'active' : undefined} aria-current={active === n.page ? 'page' : undefined} onClick={() => setNavOpen(false)}>
+                  <Icon name={n.icon} /> {n.label}
+                </a>
+              ))}
+            </div>
           ))}
           <div className="sidenav-foot small muted">All ranch, herd and permit data is synthetic.</div>
         </nav>
-        <main className="main" id="main">
+        {navOpen && <div className="nav-scrim" onClick={() => setNavOpen(false)} aria-hidden />}
+        <main className="main" id="main" ref={mainRef}>
           {children}
         </main>
       </div>
