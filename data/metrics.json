@@ -1,0 +1,121 @@
+{
+ "counts": {
+  "ranches": 409,
+  "external_suppliers": 5,
+  "movements": 10844,
+  "head_moved": 816674,
+  "shipments": 2837,
+  "head_to_sinks": 290275,
+  "herd_start": 349177
+ },
+ "eval": {
+  "status_quo": {
+   "precision": 0.221,
+   "recall": 0.284,
+   "tp": 21,
+   "predicted": 95,
+   "actual": 74,
+   "network_recall": 0.214,
+   "dirty_sources_found": 21,
+   "dirty_sources_total": 74,
+   "tainted_head_caught_pct": 33.0,
+   "clean_lots_failed_pct": 26.8
+  },
+  "rastro": {
+   "precision": 1.0,
+   "recall": 1.0,
+   "tp": 74,
+   "predicted": 74,
+   "actual": 74,
+   "network_recall": 1.0,
+   "dirty_sources_found": 74,
+   "dirty_sources_total": 74,
+   "tainted_head_caught_pct": 90.4,
+   "clean_lots_failed_pct": 7.0,
+   "clean_lots_reviewed_pct": 12.9
+  },
+  "lots": 3712,
+  "tainted_head_at_sinks": 82533,
+  "head_at_sinks": 315096
+ },
+ "ledger": {
+  "refused": {
+   "BirthsExceedBiology": {
+    "gtas_or_events": 191,
+    "head": 13234
+   },
+   "OriginEmbargoed": {
+    "gtas_or_events": 15,
+    "head": 883
+   },
+   "InsufficientHerd": {
+    "gtas_or_events": 90,
+    "head": 13542
+   }
+  },
+  "smuggled_head_without_gta": 13461
+ },
+ "headline": {
+  "tainted_head_pct_passing_status_quo": 67.0,
+  "tainted_head_pct_caught_rastro": 90.4,
+  "laundering_ranches_found": 14,
+  "laundering_ranches_total": 14,
+  "shipments_with_tainted_cattle_passing_status_quo": 809,
+  "voyages": 36,
+  "voyages_flagged": 36,
+  "voyages_failed": 34,
+  "voyage_markets": {
+   "EG": 13,
+   "IQ": 8,
+   "JO": 3,
+   "LB": 2,
+   "MA": 6,
+   "SA": 2,
+   "TR": 2
+  }
+ },
+ "real_data": {
+  "prodes_polygons_in_window": 2675,
+  "defor_post2020_ha": 9754.0,
+  "defor_2008_2025_ha": 44085.0,
+  "ibge_herd_municipality": 2730818,
+  "ibge_year": 2025,
+  "ibge_herd_para": 25559452,
+  "window_herd_share_of_municipality_pct": 12.8
+ },
+ "stress_test": {
+  "status_quo": {
+   "precision": 0.397,
+   "recall": 0.649,
+   "tp": 48,
+   "predicted": 121,
+   "actual": 74,
+   "network_recall": 0.214,
+   "dirty_sources_found": 48,
+   "dirty_sources_total": 74,
+   "tainted_head_caught_pct": 45.2,
+   "clean_lots_failed_pct": 26.4
+  },
+  "rastro": {
+   "precision": 0.986,
+   "recall": 0.946,
+   "tp": 70,
+   "predicted": 71,
+   "actual": 74,
+   "network_recall": 0.714,
+   "dirty_sources_found": 70,
+   "dirty_sources_total": 74,
+   "tainted_head_caught_pct": 83.0,
+   "clean_lots_failed_pct": 6.0,
+   "clean_lots_reviewed_pct": 13.6
+  },
+  "lots": 3817,
+  "tainted_head_at_sinks": 86003,
+  "head_at_sinks": 316567
+ },
+ "thresholds": {
+  "fail_flagged_pct": 25.0,
+  "review_flagged_pct": 5.0
+ },
+ "notes": "Synthetic ranch boundaries/herds/GTAs calibrated to public aggregates; evaluation is against the simulator's ground truth. stress_test = launderers hold cattle 60-120 days and chain two laundering hops."
+}

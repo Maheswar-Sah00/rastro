@@ -1,0 +1,39 @@
+{
+  "kind": "risk_attestation",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "ranch": "R0004",
+  "onchain_id": "0xf7d821807e7d4fe4c6839f34e97bb4e34c61e15ef4f275c5e9090d3c8fc35b73",
+  "as_of": "2026-10-24",
+  "model": "rastro-detect (mock run)",
+  "risk": {
+    "class": "watch",
+    "score": 0.45
+  },
+  "inputs": {
+    "head_now": 3961,
+    "capacity_head": 5757,
+    "pasture_ha": 3838,
+    "breeding_cows": 251,
+    "births_declared": 186,
+    "births_biological_max": 213,
+    "inflow_head": 1200,
+    "outflow_head": 771,
+    "median_holding_days": 207,
+    "defor_post2020_ha": 11.1,
+    "upstream_taint_pct": 0
+  },
+  "flags": [
+    {
+      "code": "POST2020_DEFORESTATION",
+      "severity": "medium",
+      "evidence": {
+        "defor_post2020_ha": 11.1,
+        "polygons": 1,
+        "years": [
+          2021
+        ],
+        "source": "PRODES (mock)"
+      }
+    }
+  ]
+}

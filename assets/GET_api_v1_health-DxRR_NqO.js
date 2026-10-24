@@ -1,0 +1,1 @@
+const e="ok",s="0.2.0",t="v1",n="1",o=!0,a={meta:"real",metrics:"real",ranches:"real",movements:"real",shipments:"real",destinations:"real",onchain:"real"},r={status:"ok",version:s,api_version:"v1",schema_version:"1",data_dir_found:!0,datasets:a};export{t as api_version,o as data_dir_found,a as datasets,r as default,n as schema_version,e as status,s as version};

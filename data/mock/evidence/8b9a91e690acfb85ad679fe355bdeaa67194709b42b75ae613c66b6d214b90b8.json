@@ -1,0 +1,116 @@
+{
+  "kind": "lot_certificate",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "shipment": "SHP-0008",
+  "lot_id": "0xffdd867c3d144ae70252256a227c6e29f62c7db09392304ed11d3c313f829656",
+  "destination": "S:SIF_MOCK04",
+  "market": "BR",
+  "head": 1008,
+  "date": "2024-11-29",
+  "gtas": [
+    "GTA-PA-2024-121838",
+    "GTA-PA-2024-121872",
+    "GTA-PA-2024-122079"
+  ],
+  "trace": {
+    "clean_pct": 54.7,
+    "watch_pct": 15.2,
+    "flagged_pct": 26.6,
+    "unknown_pct": 3.5,
+    "max_hops": 3,
+    "by_ranch": [
+      {
+        "ranch": "R0017",
+        "head_equiv": 220.1,
+        "risk_class": "clean",
+        "hops": 2
+      },
+      {
+        "ranch": "R0006",
+        "head_equiv": 173.3,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0037",
+        "head_equiv": 91.6,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0027",
+        "head_equiv": 91.3,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0019",
+        "head_equiv": 82.7,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0023",
+        "head_equiv": 66.1,
+        "risk_class": "clean",
+        "hops": 2
+      },
+      {
+        "ranch": "R0039",
+        "head_equiv": 52.1,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0002",
+        "head_equiv": 38.4,
+        "risk_class": "clean",
+        "hops": 3
+      },
+      {
+        "ranch": "R0026",
+        "head_equiv": 36.9,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R9002",
+        "head_equiv": 35.4,
+        "risk_class": "unknown",
+        "hops": 2
+      },
+      {
+        "ranch": "R0032",
+        "head_equiv": 32.5,
+        "risk_class": "watch",
+        "hops": 3
+      },
+      {
+        "ranch": "R0020",
+        "head_equiv": 31.1,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0009",
+        "head_equiv": 21.3,
+        "risk_class": "high",
+        "hops": 2
+      },
+      {
+        "ranch": "R0022",
+        "head_equiv": 17.3,
+        "risk_class": "high",
+        "hops": 3
+      },
+      {
+        "ranch": "R0014",
+        "head_equiv": 13.5,
+        "risk_class": "high",
+        "hops": 3
+      }
+    ]
+  },
+  "verdict": "flagged",
+  "rule": "fail if flagged >= 2%"
+}

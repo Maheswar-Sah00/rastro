@@ -1,0 +1,52 @@
+{
+ "project": "Rastro",
+ "aoi": {
+  "name": "São Félix do Xingu, Pará (study window)",
+  "bbox": [
+   -52.3,
+   -7.0,
+   -51.6,
+   -6.3
+  ]
+ },
+ "generated_at": "2026-10-24T00:00:00Z",
+ "years": [
+  2023,
+  2024,
+  2025
+ ],
+ "eudr_cutoff": "2020-12-31",
+ "synthetic_notice": "Ranch boundaries, herds and GTAs are synthetic, calibrated to public aggregates. Deforestation, protected areas, slaughterhouse locations and municipal herd are real.",
+ "sources": [
+  {
+   "name": "INPE PRODES yearly deforestation & accumulated to 2007 (TerraBrasilis)",
+   "url": "https://terrabrasilis.dpi.inpe.br",
+   "license": "CC BY-SA 4.0",
+   "real": true
+  },
+  {
+   "name": "Indigenous lands & conservation units (TerraBrasilis / FUNAI / MMA)",
+   "url": "https://terrabrasilis.dpi.inpe.br",
+   "license": "open",
+   "real": true
+  },
+  {
+   "name": "IBGE PPM cattle herd, table 3939",
+   "url": "https://sidra.ibge.gov.br/tabela/3939",
+   "license": "open",
+   "real": true
+  },
+  {
+   "name": "Trase Brazil beef logistics map v6 (slaughterhouse locations)",
+   "url": "https://trase.earth/open-data/datasets/brazil-facilities",
+   "license": "CC BY 4.0",
+   "real": true
+  },
+  {
+   "name": "Ranches, herds, GTAs, embargoes (simulated)",
+   "url": "https://github.com/",
+   "license": "MIT",
+   "real": false
+  }
+ ]
+}

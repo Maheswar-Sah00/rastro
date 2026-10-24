@@ -1,0 +1,38 @@
+{
+  "kind": "risk_attestation",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "ranch": "R0005",
+  "onchain_id": "0xd65aff4891299c4590e3ff2c688ec607fbf0f07c933248783b6b4d4f8bab2097",
+  "as_of": "2026-10-24",
+  "model": "rastro-detect (mock run)",
+  "risk": {
+    "class": "watch",
+    "score": 0.52
+  },
+  "inputs": {
+    "head_now": 3570,
+    "capacity_head": 4042,
+    "pasture_ha": 2694.6,
+    "breeding_cows": 0,
+    "births_declared": 0,
+    "births_biological_max": 0,
+    "inflow_head": 1270,
+    "outflow_head": 1256,
+    "median_holding_days": 30,
+    "defor_post2020_ha": 0,
+    "upstream_taint_pct": 0
+  },
+  "flags": [
+    {
+      "code": "PASS_THROUGH",
+      "severity": "medium",
+      "evidence": {
+        "median_holding_days": 30,
+        "share_resold_within_45d": 1,
+        "lots_bought": 5,
+        "lots_sold": 5,
+        "threshold_days": 45
+      }
+    }
+  ]
+}

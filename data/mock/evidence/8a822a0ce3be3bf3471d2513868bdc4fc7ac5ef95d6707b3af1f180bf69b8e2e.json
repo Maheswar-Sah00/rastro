@@ -1,0 +1,51 @@
+{
+  "kind": "risk_attestation",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "ranch": "R0040",
+  "onchain_id": "0xbd32b1642307c6dc91c94bc861de7e462a5858ab226bb0e19eefee8b037d9b0f",
+  "as_of": "2026-10-24",
+  "model": "rastro-detect (mock run)",
+  "risk": {
+    "class": "high",
+    "score": 0.83
+  },
+  "inputs": {
+    "head_now": 2069,
+    "capacity_head": 2797,
+    "pasture_ha": 1864.6,
+    "breeding_cows": 1015,
+    "births_declared": 662,
+    "births_biological_max": 862,
+    "inflow_head": 0,
+    "outflow_head": 1150,
+    "median_holding_days": null,
+    "defor_post2020_ha": 233,
+    "upstream_taint_pct": 0
+  },
+  "flags": [
+    {
+      "code": "POST2020_DEFORESTATION",
+      "severity": "high",
+      "evidence": {
+        "defor_post2020_ha": 233,
+        "polygons": 2,
+        "years": [
+          2022,
+          2025
+        ],
+        "source": "PRODES (mock)"
+      }
+    },
+    {
+      "code": "EMBARGOED",
+      "severity": "high",
+      "evidence": {
+        "since": "2024-08-15",
+        "reason": "illegal clearing",
+        "list": "Embargo list (mock match)",
+        "attempts_after_embargo": 7,
+        "refused_by_ledger": 7
+      }
+    }
+  ]
+}

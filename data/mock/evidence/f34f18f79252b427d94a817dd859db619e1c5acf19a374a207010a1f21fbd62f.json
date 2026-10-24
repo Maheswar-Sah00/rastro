@@ -1,0 +1,64 @@
+{
+  "kind": "risk_attestation",
+  "notice": "MOCK evidence bundle (synthetic)",
+  "ranch": "R0015",
+  "onchain_id": "0x5641d0bf35ccbe138d39d62b35af49a783f381a78f84f9c9bbabe8f37a4bb4e2",
+  "as_of": "2026-10-24",
+  "model": "rastro-detect (mock run)",
+  "risk": {
+    "class": "high",
+    "score": 0.79
+  },
+  "inputs": {
+    "head_now": 2179,
+    "capacity_head": 2573,
+    "pasture_ha": 1715.5,
+    "breeding_cows": 0,
+    "births_declared": 0,
+    "births_biological_max": 0,
+    "inflow_head": 3277,
+    "outflow_head": 3255,
+    "median_holding_days": 11,
+    "defor_post2020_ha": 0,
+    "upstream_taint_pct": 100
+  },
+  "flags": [
+    {
+      "code": "INSUFFICIENT_HERD",
+      "severity": "high",
+      "evidence": {
+        "date": "2025-04-09",
+        "requested": 186,
+        "available": 0,
+        "gta": "GTA-PA-2025-135351",
+        "refused_by_ledger": true
+      }
+    },
+    {
+      "code": "PASS_THROUGH",
+      "severity": "high",
+      "evidence": {
+        "median_holding_days": 11,
+        "share_resold_within_45d": 1,
+        "lots_bought": 14,
+        "lots_sold": 14,
+        "threshold_days": 45
+      }
+    },
+    {
+      "code": "TAINTED_SUPPLY",
+      "severity": "high",
+      "evidence": {
+        "upstream_taint_pct": 100,
+        "flagged_suppliers": [
+          "R0022",
+          "R0009",
+          "R0039",
+          "R0020",
+          "R0040"
+        ],
+        "hops_checked": 4
+      }
+    }
+  ]
+}
