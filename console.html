@@ -7,15 +7,22 @@
     <title>Rastro Console</title>
     <meta name="description" content="Rastro analyst console: cattle provenance, environmental evidence, lineage and risk decisions." />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <script type="module" crossorigin src="/rastro/assets/console-DP1oPx0K.js"></script>
-    <link rel="modulepreload" crossorigin href="/rastro/assets/preload-helper-ClW4P9a0.js">
+    <script>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('rastro-theme') === 'light' ? 'light' : 'dark';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+    <script type="module" crossorigin src="/rastro/assets/console-Wb9mFdlu.js"></script>
+    <link rel="modulepreload" crossorigin href="/rastro/assets/explain-YHHZc5So.js">
     <link rel="modulepreload" crossorigin href="/rastro/assets/maplibre-CU6hWBy6.js">
-    <link rel="stylesheet" crossorigin href="/rastro/assets/preload-helper-BkLEUeR9.css">
+    <link rel="stylesheet" crossorigin href="/rastro/assets/explain-BkLEUeR9.css">
     <link rel="stylesheet" crossorigin href="/rastro/assets/maplibre-DNVN2dqC.css">
-    <link rel="stylesheet" crossorigin href="/rastro/assets/console-CfBkwdTj.css">
+    <link rel="stylesheet" crossorigin href="/rastro/assets/console-CIzTqDiY.css">
   </head>
   <body>
     <div id="root"></div>
-    <noscript>The Rastro console needs JavaScript.</noscript>
+    <noscript>The Rastro console needs JavaScript.</noscript>
   </body>
 </html>
