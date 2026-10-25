@@ -115,4 +115,3 @@ npm test                         # vitest: lineage-graph and aggregation helpers
 
   No action can change a decision.
 * Map layers are the published `public/data/layers/*.geojson`. Ranch cells are labelled synthetic; routes join ranch-cell centroids to real facility coordinates.
-* Manual test results: [docs/console-test-checklist.md](../docs/console-test-checklist.md).

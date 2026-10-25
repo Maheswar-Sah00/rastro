@@ -29,3 +29,10 @@ pipeline/.venv/
 # canonical synthetic datasets: regenerate with `python -m rastro.synth.generate`; manifests are kept
 data/synthetic/*/*
 !data/synthetic/*/manifest.json
+
+# working files for the hackathon submission (kept locally, not published)
+docs/DEVPOST.md
+docs/VIDEO_SCRIPT.md
+docs/api-contracts.md
+docs/console-test-checklist.md
+docs/screenshots/devpost-thumbnail.png

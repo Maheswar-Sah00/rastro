@@ -1,6 +1,6 @@
 # Running the Rastro demo locally
 
-Everything runs offline after the first data fetch. No restricted government feed is needed: GTAs are synthetic. The narrated video walkthrough is in [VIDEO_SCRIPT.md](VIDEO_SCRIPT.md).
+Everything runs offline after the first data fetch. No restricted government feed is needed: GTAs are synthetic.
 
 ## 0. Prerequisites
 
